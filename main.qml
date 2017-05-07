@@ -259,6 +259,7 @@ ApplicationWindow {
         y:searchBar.y - 10
         height: mainAppPage.height / 2
         width: searchBar.width
+        searchedText: searchBar.text
     }
 
 

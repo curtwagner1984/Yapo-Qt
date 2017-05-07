@@ -5,6 +5,7 @@ import QtQuick.Controls.Material 2.1
 Popup {
     id: autoCompletePopup
     property alias listview: autoCompleteListView
+    property string searchedText: ""
     x: 200
     y: 200
     width: 200
@@ -58,8 +59,13 @@ Popup {
 
                     Text {
                         id: autoCompleteItemName
-                        text: name
-                        font.capitalization: Font.Capitalize
+
+                        text: {
+                            var result = name.replace(new RegExp('(' + searchedText + ')', 'gi'), "<b>$1</b>");
+                            return  result
+                        }
+
+                        font.capitalization: Font.Capitalize                        
                         anchors.left: autoCompleteThumb.right
                         anchors.leftMargin: 10
                         anchors.verticalCenter: autoCompleteDelegateBackground.verticalCenter

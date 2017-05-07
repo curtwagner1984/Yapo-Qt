@@ -51,9 +51,8 @@ QVariant AutoCompleteModel::data(const QModelIndex &index, int role) const
                 QString path = fInfo.path();
                 path = path + "/profile_320.jpg";
                 return path;
-            }else if (role == NameRole){
-                QString temp = currentItem["name"].toString();
-                return temp.replace(this->currentSearchString, "<b>" + this->currentSearchString + "</b>", Qt::CaseInsensitive);
+            }else if (role == NameRole){                
+                return currentItem["name"].toString();
             }else if (role == TableNameRole){
                 return currentItem["TableName"];
             }else if (role == AliasOfRole){
