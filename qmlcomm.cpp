@@ -184,6 +184,11 @@ void QmlComm::getActorPictures(QString actorId)
     this->pictureModel->getActorPictures(actorId);
 }
 
+void QmlComm::getActorTags(QString actorId)
+{
+    this->tagModel->getActorTags(actorId);
+}
+
 void QmlComm::playScene(QString scenePath)
 {
     QString scenePathNativeSep = QDir::toNativeSeparators( scenePath );
@@ -196,7 +201,19 @@ void QmlComm::playScene(QString scenePath)
     QString command = VLC_PATH + " " + scenePathNativeSep;
     qDebug() << "Starting playScene process... command: " + command;
     myProcess->start(VLC_PATH, arguments);
-//    myProcess->deleteLater();
+    //    myProcess->deleteLater();
+}
+
+void QmlComm::prepareActorDetailView(QString actorId)
+{
+    this->getActorScenes(actorId);
+    this->getActorPictures(actorId);
+    this->getActorTags(actorId);
+    this->aliasSearch(actorId,"Actor");
+    this->actorDetailObject->setActor(actorId);
+
+
+
 }
 
 QStringList QmlComm::splitCsv(QString csvString)

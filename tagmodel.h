@@ -13,6 +13,7 @@ public:
     TagModel(DbManager* dbManager);
     QVariant data(const QModelIndex &index, int role) const;
     void search(const QString searchString);
+    void getActorTags(const QString actorId);
     QHash<int, QByteArray> roleNames() const;
 
 

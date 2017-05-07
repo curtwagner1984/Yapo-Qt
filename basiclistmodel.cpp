@@ -3,6 +3,7 @@
 
 BasicListModel::BasicListModel(DbManager *dbManager) {
   this->dbManager = dbManager;
+  this->items = QList<QMap<QString,QVariant>>();
 }
 
 int BasicListModel::rowCount(const QModelIndex &parent) const {
@@ -102,4 +103,10 @@ void BasicListModel::noLimitSearch() {
   this->endResetModel();
 }
 
-void BasicListModel::clear() { this->items.clear(); }
+void BasicListModel::clear()
+{
+    if (this->items.size() > 0){
+        this->items.clear();
+    }
+
+}

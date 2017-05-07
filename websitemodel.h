@@ -11,7 +11,7 @@ class WebsiteModel: public BasicListModel
 public:
     WebsiteModel(DbManager* dbManager);
     QVariant data(const QModelIndex &index, int role) const;
-    void search(const QString searchString);
+    void search(const QString searchString);    
     QHash<int, QByteArray> roleNames() const;
 
 

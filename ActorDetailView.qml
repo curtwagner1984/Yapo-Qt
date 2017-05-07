@@ -124,24 +124,50 @@ Item {
         }
 
         Item {
-            ListView {
-                model: generalAlias
-                height: sidebarStackedLayout.height
-                delegate: Item {
-                    height: 20
-                    RowLayout {
+            RowLayout{
+                Layout.fillWidth: true
+                id: addAliasRow
+                Button{
+                    text: "Add"
+                    onClicked: {
+                        addAliasTextEdit.visible = true
+                        addAliasTextEdit.focus = true
+                    }
+                }
+                TextEdit{
+                    id: addAliasTextEdit
+                    text:"Alias to add"
+                    visible: false
+                }
+            }
 
-                        Text {
-                            text: name
-                        }
+            Rectangle{
+                color: "transparent"
+                width: parent.width
+                height: parent.height - addAliasRow.height
+                anchors.top: addAliasRow.bottom
 
-                        CheckBox {
-                            text: "One Word Exempt? "
-                            checked: isExemptFromOneWordSearch
+                ListView {
+                    model: generalAlias
+                    height: sidebarStackedLayout.height
+                    delegate: Item {
+                        height: 20
+                        RowLayout {
+
+                            Text {
+                                text: name
+                            }
+
+                            CheckBox {
+                                text: "One Word Exempt? "
+                                checked: isExemptFromOneWordSearch
+                            }
                         }
                     }
                 }
             }
+
+
         }
 
         Item {
