@@ -1,0 +1,40 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>qtquickcontrols2.conf</file>
+    </qresource>
+    <qresource prefix="/settings">
+        <file>SettingsView.qml</file>
+        <file>BulkAdd.qml</file>
+        <file>MediaFolderSettings.qml</file>
+        <file>FFmpegTest.qml</file>
+    </qresource>
+    <qresource prefix="/thumbview">
+        <file>SingleThumbDelegate.qml</file>
+        <file>ThumbView.qml</file>
+        <file>SingleActorThumbDelegate.qml</file>
+        <file>SingleSceneThumbDelegate.qml</file>
+        <file>SinglePictureThumbDelegate.qml</file>
+        <file>SingleTagThumbDelegate.qml</file>
+        <file>SingleWebsiteThumbDelegate.qml</file>
+    </qresource>
+    <qresource prefix="/actorView">
+        <file>ActorView.qml</file>
+        <file>ActorDetailView.qml</file>
+    </qresource>
+    <qresource prefix="/sceneView">
+        <file>SceneView.qml</file>
+    </qresource>
+    <qresource prefix="/pictureView">
+        <file>PictureView.qml</file>
+    </qresource>
+    <qresource prefix="/tagView">
+        <file>TagView.qml</file>
+    </qresource>
+    <qresource prefix="/websiteView">
+        <file>WebsiteView.qml</file>
+    </qresource>
+    <qresource prefix="/autoComplete">
+        <file>AutoCompletePopup.qml</file>
+    </qresource>
+</RCC>
