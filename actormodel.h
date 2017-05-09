@@ -29,6 +29,14 @@ public:
         };
 private:
 
+    QString SEARCH_SELECT = "SELECT * ,"
+                            "(SELECT COUNT(*) FROM Scene_Actor WHERE Scene_Actor.actor_id = Actor.id) as NumberOfScenes, "
+                            "(SELECT COUNT(*) FROM Picture_Actor WHERE Picture_Actor.actor_id = Actor.id) as NumberOfPictures ";
+
+    QString SEARCH_FROM = "FROM Actor";
+
+    QString SEARCH_WHERE = "WHERE Actor.name LIKE '%%1%'";
+
 };
 
 #endif // ACTORMODEL_H

@@ -3,13 +3,16 @@
 #include <QFileInfo>
 #include <QDateTime>
 
+
+
+
 SceneModel::SceneModel(DbManager *dbManager)
            : BasicListModel(dbManager)
 {
     qDebug() << "Making test scene search ...";
 
-    this->baseSqlSelect =  "SELECT * ";
-    this->baseSqlFrom = "FROM Scene";
+    this->baseSqlSelect =  SEARCH_SELECT;
+    this->baseSqlFrom = SEARCH_FROM;
 
     this->generateSqlLimit();
     this->search("");
@@ -48,12 +51,12 @@ QVariant SceneModel::data(const QModelIndex &index, int role) const
 void SceneModel::search(const QString searchString)
 {
     QString escapedSearchString = this->escaleSqlChars(searchString);
-    this->baseSqlWhere = "WHERE Scene.path_to_file LIKE '%" + escapedSearchString  +"%'";
-    this->baseSqlFrom = "FROM Scene";
+    this->baseSqlWhere = SEARCH_WHERE.arg(escapedSearchString);
+    this->baseSqlFrom = SEARCH_FROM;
 //    http://stackoverflow.com/questions/1253561/sqlite-order-by-rand
 //    SELECT * FROM table WHERE id IN (SELECT id FROM table ORDER BY RANDOM() LIMIT x)
 
-    this->baseSqlOrder = "ORDER BY Scene.id DESC";
+    this->baseSqlOrder = SEARCH_ORDER;
 
 
 //  Resets count and gets number of items and executes search
@@ -64,9 +67,8 @@ void SceneModel::getActorScenes(const QString actorId)
 {
     this->baseSqlWhere = "";
     this->baseSqlOrder = "";
-    this->baseSqlFrom = QString("FROM (SELECT * FROM Scene) AS T1 "
-                                "JOIN (SELECT * FROM Scene_Actor WHERE Scene_Actor.actor_id = %1) AS T2 "
-                                "ON T1.id = T2.scene_id").arg(actorId);
+    this->baseSqlFrom = ACTOR_SEARCH_FROM.arg(actorId);
+    this->baseSqlSelect = ACTOR_SEARCH_SELECT;
     this->baseSearch();
 }
 

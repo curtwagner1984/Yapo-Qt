@@ -71,7 +71,13 @@ void BasicListModel::baseSearch() {
     QString countStmt = this->countSqlStmt();
     this->itemCount =
         this->dbManager->executeArbitrarySqlWithReturnValue(countStmt);
-    this->count = itemCount.at(0)["COUNT(*)"].toInt();
+    if ( this->itemCount.size() > 0 ){
+        qDebug() << "item count is: " << this->itemCount.size();
+        this->count = itemCount.at(0)["COUNT(*)"].toInt();
+    }else{
+        this->count = 0;
+    }
+
   };
 
   this->beginResetModel();

@@ -2,14 +2,17 @@
 #include <QDebug>
 #include <QFileInfo>
 
+
+
+
 PictureModel::PictureModel(DbManager *dbManager)
              : BasicListModel(dbManager)
 {
     qDebug() << "Making test picture search ...";
 
 
-    this->baseSqlSelect =  "SELECT * ";
-    this->baseSqlFrom = "FROM Picture";
+    this->baseSqlSelect =  SEARCH_SELECT;
+    this->baseSqlFrom = SEARCH_FROM;
     this->generateSqlLimit();
 
 
@@ -46,7 +49,9 @@ QVariant PictureModel::data(const QModelIndex &index, int role) const
 void PictureModel::search(const QString searchString)
 {
     QString escapedSearchString = this->escaleSqlChars(searchString);
-    this->baseSqlWhere = "WHERE Picture.path_to_file LIKE '%" + escapedSearchString  +"%'";
+    this->baseSqlSelect =  SEARCH_SELECT;
+    this->baseSqlFrom = SEARCH_FROM;
+    this->baseSqlWhere = SEARCH_WHERE.arg(escapedSearchString);
 
 //  Resets count and gets number of items and executes search
     this->baseSearch();
@@ -56,9 +61,7 @@ void PictureModel::getActorPictures(const QString actorId)
 {
     this->baseSqlWhere = "";
     this->baseSqlOrder = "";
-    this->baseSqlFrom = QString("FROM (SELECT * FROM Picture) AS T1 "
-                                "JOIN (SELECT * FROM Picture_Actor WHERE Picture_Actor.actor_id = %1) AS T2 "
-                                "ON T1.id = T2.picture_id").arg(actorId);
+    this->baseSqlFrom = ACTOR_SEARCH_FROM.arg(actorId);
     this->baseSearch();
 }
 

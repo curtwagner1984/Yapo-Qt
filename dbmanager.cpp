@@ -348,6 +348,36 @@ bool DbManager::addActor(QString actorName, bool isMainstream) {
   return success;
 }
 
+
+
+bool DbManager::addActorTag(QString tagId, QString tagName, QString actorId)
+{
+    bool success = false;
+
+    if (tagId == "")
+    {
+        QString stmt = "INSERT OR IGNORE INTO Tag (name) VALUES ('%1')";
+        stmt  = stmt.arg(tagName);
+
+        this->executeArbitrarySqlWithoutReturnValue(stmt);
+
+        QList<QMap<QString, QVariant>> res = this->executeArbitrarySqlWithReturnValue("SELECT last_insert_rowid();");
+
+        tagId = res[0]["last_insert_rowid()"].toString();
+
+    }
+
+    QString stmt2 = "INSERT OR IGNORE INTO Actor_Tag (actor_id,tag_id) VALUES ('%1','%2')";
+    stmt2 = stmt2.arg(actorId,tagId);
+
+    this->executeArbitrarySqlWithoutReturnValue(stmt2);
+
+    return true;
+
+
+
+}
+
 bool DbManager::addTag(QString tagName)
 {
     bool success = false;

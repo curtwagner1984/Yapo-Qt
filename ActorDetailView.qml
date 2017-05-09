@@ -1,13 +1,20 @@
-import QtQuick 2.5
+import QtQuick 2.7
 import QtQuick.Layouts 1.1
 import QtQuick.Controls 1.4
 import QtQuick.Controls 2.1
 import QtQuick.Controls.Material 2.1
 import QtQuick.Layouts 1.3
 
+
+//import QtQuick.Controls 2.0
+//import QtQuick.Layouts 1.3
+//import QtQuick.Controls.Material 2.1
+//import QtQuick.Dialogs 1.2
+//import QtQuick.Window 2.0
 import "qrc:/sceneView"
 import "qrc:/pictureView"
 import "qrc:/tagView"
+import "qrc:/autoComplete"
 
 Item {
     id: actorDetailView
@@ -100,11 +107,14 @@ Item {
                 RowLayout {
 
                     CheckBox {
-                        id:isActorExempt
+                        id: isActorExempt
                         text: "One Word Exempt? "
-                        checked: actorDetailObject.getActorAttrib("is_exempt_from_one_word_search") === "0" ? false : true
+                        checked: actorDetailObject.getActorAttrib(
+                                     "is_exempt_from_one_word_search") === "0" ? false : true
                         onCheckStateChanged: {
-                            actorDetailObject.setActorAttrib("is_exempt_from_one_word_search",isActorExempt.checked ? "1" : "0")
+                            actorDetailObject.setActorAttrib(
+                                        "is_exempt_from_one_word_search",
+                                        isActorExempt.checked ? "1" : "0")
                         }
                     }
                 }
@@ -124,24 +134,41 @@ Item {
         }
 
         Item {
-            RowLayout{
+            RowLayout {
                 Layout.fillWidth: true
                 id: addAliasRow
-                Button{
+                Button {
                     text: "Add"
                     onClicked: {
-                        addAliasTextEdit.visible = true
-                        addAliasTextEdit.focus = true
+                        if (addAliasTextEdit.visible === false) {
+                            addAliasTextEdit.visible = true
+                            addAliasTextEdit.focus = true
+                            addAliasTextEdit.text = ""
+                        } else {
+                            if (addAliasTextEdit.text !== "") {
+                                console.log("Would try to add alias " + addAliasTextEdit.text
+                                            + " To actor id: " + actorDetailObject.getActorAttrib(
+                                                "id"))
+                                qmlComm.addAlias(
+                                            addAliasTextEdit.text, "Actor",
+                                            actorDetailObject.getActorAttrib(
+                                                "id"))
+                                qmlComm.aliasSearch(
+                                            actorDetailObject.getActorAttrib(
+                                                "id"), "Actor")
+                            }
+                            addAliasTextEdit.visible = false
+                        }
                     }
                 }
-                TextEdit{
+                TextEdit {
                     id: addAliasTextEdit
-                    text:"Alias to add"
+                    text: "Alias to add"
                     visible: false
                 }
             }
 
-            Rectangle{
+            Rectangle {
                 color: "transparent"
                 width: parent.width
                 height: parent.height - addAliasRow.height
@@ -166,8 +193,6 @@ Item {
                     }
                 }
             }
-
-
         }
 
         Item {
@@ -238,9 +263,78 @@ Item {
             height: mainview.height - mainViewTabBar.height
         }
 
-        TagView {
-            width: mainview.width
-            height: mainview.height - mainViewTabBar.height
+        Item {
+            id: tagViewTab
+            focus: true
+            Rectangle {
+                id: background
+                color: Material.color(Material.BlueGrey)
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.margins: 20
+                height: 60
+            }
+
+            Button {
+                id: tagAddButton
+                text: "Add"
+                anchors.left: background.left
+                onClicked: {
+                    console.log("tagAddButton clicked")
+                    addTagTextEdit.visible = true
+                    addTagTextEdit.focus = true
+                }
+            }
+
+            TextField {
+                id: addTagTextEdit
+                placeholderText: "Search..."
+                width: background.width
+                anchors.left: tagAddButton.right
+                anchors.right: background.right
+                anchors.verticalCenter: background.verticalCenter
+                anchors.margins: 20
+
+                onTextChanged: {
+                    qmlComm.autoCompleteSearch(addTagTextEdit.text,"Tag")
+                    if (!autocomplete.visible) {
+                        autocomplete.open()
+                    }
+                }
+
+                Connections{
+                    target: autocomplete
+                    onSelected: {
+
+
+//                        var newName = selectedItemName.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()})
+                        console.log("Autocomplete selected " + selectedItemName + " Type:" + selectedItemType + "Inside ActorDetailView ")
+                        qmlComm.addTag(selectedItemId,selectedItemName,"Actor",actorDetailObject.getActorAttrib("id"))
+                        qmlComm.getActorTags(actorDetailObject.getActorAttrib("id"))
+
+                    }
+                }
+
+                Keys.forwardTo: [autocomplete.listview.currentItem,autocomplete.listview]
+            }
+
+            TagView {
+                anchors.top: background.bottom
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.bottom: parent.bottom
+                //              width: mainview.width
+                //              height: mainview.height - mainViewTabBar.height
+            }
+
+            AutoCompletePopup {
+                id: autocomplete
+                x: background.x
+                y: 60
+                height: mainAppPage.height / 2
+                width: background.width
+                searchedText: addTagTextEdit.text
+            }
         }
     }
 }

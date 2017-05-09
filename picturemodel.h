@@ -23,6 +23,19 @@ public:
                 NameRole = Qt::UserRole + 6
 
             };
+private:
+    QString SEARCH_SELECT = "SELECT * ";
+
+    QString SEARCH_FROM = "FROM Picture";
+
+    QString SEARCH_WHERE = "WHERE Picture.path_to_file LIKE '%%1%'";
+
+
+
+    QString ACTOR_SEARCH_SELECT = "SELECT * ";
+    QString ACTOR_SEARCH_FROM = "FROM (SELECT * FROM Picture) AS T1 "
+                                "JOIN (SELECT * FROM Picture_Actor WHERE Picture_Actor.actor_id = %1) AS T2 "
+                                "ON T1.id = T2.picture_id";
 };
 
 #endif // PICTUREMODEL_H

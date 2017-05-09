@@ -35,7 +35,7 @@ protected:
     QString baseSqlLimit = "";
 
     int count = 0;
-    int NUMBER_OF_ITEMS_PER_PAGE = 20;
+    int NUMBER_OF_ITEMS_PER_PAGE = 100;
     int currentPageNumber = 0;
     bool isAutoComplete = false;
     void clear();

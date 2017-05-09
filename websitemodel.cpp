@@ -2,16 +2,16 @@
 #include <QDebug>
 #include <QFileInfo>
 
+
+
 WebsiteModel::WebsiteModel(DbManager *dbManager)
              :BasicListModel(dbManager)
 {
     qDebug() << "Making test website search ...";
 
-    this->baseSqlSelect =  "SELECT * ,"
-                           "(SELECT COUNT(*) FROM Scene_Website WHERE Scene_Website.website_id = Website.id) as NumberOfScenes, "
-                           "(SELECT COUNT(*) FROM Picture_Website WHERE Picture_Website.website_id = Website.id) as NumberOfPictures ";
+    this->baseSqlSelect =  SEARCH_SELECT;
 
-    this->baseSqlFrom = "FROM Website";
+    this->baseSqlFrom = SEARCH_FROM;
     this->generateSqlLimit();
     this->search("");
 
@@ -55,7 +55,9 @@ QVariant WebsiteModel::data(const QModelIndex &index, int role) const
 void WebsiteModel::search(const QString searchString)
 {
     QString escapedSearchString = this->escaleSqlChars(searchString);
-    this->baseSqlWhere = "WHERE Website.name LIKE '%" + escapedSearchString  +"%'";
+    this->baseSqlWhere = SEARCH_WHERE.arg(escapedSearchString);
+    this->baseSqlSelect = SEARCH_SELECT;
+    this->baseSqlFrom = SEARCH_FROM;
 
 //  Resets count and gets number of items and executes search
     this->baseSearch();

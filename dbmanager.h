@@ -39,6 +39,8 @@ public:
 
 //    Add Single Item Functions
     bool addActor(QString actorName, bool isMainstream);
+    bool addActorTag (QString tagId, QString tagName, QString actorId);
+
     bool addTag(QString tagName);
     bool addWebsite(QString websiteName);
     bool addScene(QString name, QString path);
@@ -49,6 +51,8 @@ public:
     //  Bulk Add functions
     bool addActors(QList<QStringList> scenesToAdd);
     bool addActorsAliases (QList<QStringList> aliasesToAdd);
+
+
 
     bool addSceneActors (QList<QStringList> sceneActorsToAdd);
     bool addSceneTags (QList<QStringList> sceneTagsToAdd);

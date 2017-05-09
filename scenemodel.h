@@ -45,6 +45,19 @@ public:
                 DurationRole = Qt::UserRole + 7
 
             };
+private:
+    QString SEARCH_SELECT = "SELECT * ";
+
+    QString SEARCH_FROM = "FROM Scene";
+    QString SEARCH_WHERE = "WHERE Scene.path_to_file LIKE '%%1%'";
+    QString SEARCH_ORDER = "ORDER BY Scene.id DESC";
+
+
+
+    QString ACTOR_SEARCH_SELECT = "SELECT * ";
+    QString ACTOR_SEARCH_FROM = "FROM (SELECT * FROM Scene) AS T1 "
+                                "JOIN (SELECT * FROM Scene_Actor WHERE Scene_Actor.actor_id = %1) AS T2 "
+                                "ON T1.id = T2.scene_id";
 };
 
 #endif // SCENEMODEL_H

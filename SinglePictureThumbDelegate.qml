@@ -28,7 +28,7 @@ Item{
         sourceSize.height: singleThumbDelegate.height
         onStatusChanged: {
                     if (thumb.status == Image.Error)
-                        thumb.source = currentPlaceHolder
+                        thumb.source = currentPlaceHolder                        
 
                 }
 
@@ -39,6 +39,7 @@ Item{
         anchors.fill: thumb
         onClicked: {
             pictureView.popTestImgSource = imageSource
+            pictureView.popTest.curIndex = index
             pictureView.popTest.open()
         }
 

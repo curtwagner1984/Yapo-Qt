@@ -6,6 +6,9 @@ Popup {
     id: autoCompletePopup
     property alias listview: autoCompleteListView
     property string searchedText: ""
+    property string placeHolderTag: "file:///D:/YAPOC++/resource/unkown/placeHolderTag_64.jpg"
+    property string placeHolderSite: "file:///D:/YAPOC++/resource/unkown/placeHolderWebsite_64.jpg"
+    signal selected(string selectedItemType, string selectedItemName, string selectedItemId, string selectedItemAliasOfId)
     x: 200
     y: 200
     width: 200
@@ -21,8 +24,9 @@ Popup {
             width: autoCompleteListView.width
             height: 60
             color: Material.color(Material.Pink)
-            opacity: 0.7
+            opacity: 0.2
             y: autoCompleteListView.currentItem.y
+            z: 1
         }
     }
 
@@ -47,13 +51,37 @@ Popup {
                     focus: true
                     color: "transparent"
 
-                    Image {
+//                    Image {
+//                        id: autoCompleteThumb
+//                        asynchronous: true
+//                        source: 'file:///' + thumb_64
+//                        height: 60
+//                        fillMode: Image.PreserveAspectFit
+//                        anchors.left: autoCompleteDelegateBackground.left
+//                        onStatusChanged: {
+//                            if (autoCompleteThumb.status === Image.Error)
+//                                if (tableName === "Tag") {
+//                                    autoCompleteThumb.source = placeHolderTag
+//                                } else if (tableName === "Website") {
+//                                    autoCompleteThumb.source = placeHolderSite
+//                                }
+//                        }
+//                    }
+
+                    Rectangle{
                         id: autoCompleteThumb
-                        asynchronous: true
-                        source: 'file:///' + thumb_64
                         height: 60
-                        fillMode: Image.PreserveAspectFit
-                        anchors.left: autoCompleteDelegateBackground.left
+                        width: 30
+                        color: Material.color(Material.Green)
+                    }
+
+                    Text{
+                        id: firstLetterText
+                        text: name.charAt(0)
+                        font.pixelSize: 30
+                        font.capitalization: Font.AllUppercase
+                        anchors.horizontalCenter: autoCompleteThumb.horizontalCenter
+                        anchors.verticalCenter: autoCompleteThumb.verticalCenter
                     }
 
                     Text {
@@ -63,6 +91,10 @@ Popup {
                             var result = name.replace(
                                         new RegExp('(' + searchedText + ')',
                                                    'gi'), "<b>$1</b>")
+                            if (tableName.indexOf('New') !== -1){
+                                result = tableName + " " + result
+                            }
+
                             return result
                         }
 
@@ -94,16 +126,8 @@ Popup {
                     }
                 }
                 Keys.onReturnPressed: {
-                    console.log("Pressed Enter on" + name + " " + tableName)
-                    if (tableName === "Actor")
-                    {
-                        qmlComm.prepareActorDetailView(id);
-                        mainAppPage.changeView("Actor Detail View")
-                    }else if (tableName === "ActorAlias"){
-                        qmlComm.prepareActorDetailView(aliasOfId);
-                        mainAppPage.changeView("Actor Detail View")
-                    }
-
+                    var newName = name.replace(/(.*?)( |\.|$)/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()})
+                    autoCompletePopup.selected(tableName,newName,id,aliasOfId)
                     autoCompletePopup.close()
                 }
             }

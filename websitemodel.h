@@ -27,6 +27,14 @@ public:
 
         };
 private:
+    QString SEARCH_SELECT = "SELECT * ,"
+                            "(SELECT COUNT(*) FROM Scene_Website WHERE Scene_Website.website_id = Website.id) as NumberOfScenes, "
+                            "(SELECT COUNT(*) FROM Picture_Website WHERE Picture_Website.website_id = Website.id) as NumberOfPictures ";
+
+    QString SEARCH_FROM = "FROM Website";
+
+    QString SEARCH_WHERE = "WHERE Website.name LIKE '%%1%'";
+
 
 };
 

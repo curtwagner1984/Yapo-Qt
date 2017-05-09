@@ -30,6 +30,24 @@ public:
 
         };
 private:
+    QString SEARCH_SELECT = "SELECT * ,"
+                            "(SELECT COUNT(*) FROM Scene_Tag WHERE Scene_Tag.tag_id = Tag.id) as "
+                            "NumberOfScenes, "
+                            "(SELECT COUNT(*) FROM Actor_Tag WHERE Actor_Tag.tag_id = Tag.id) as "
+                            "NumberOfActors, "
+                            "(SELECT COUNT(*) FROM Picture_Tag WHERE Picture_Tag.tag_id = Tag.id) as "
+                            "NumberOfPictures ";
+
+    QString SEARCH_FROM = "FROM Tag";
+    QString SEARCH_WHERE = "WHERE Tag.name LIKE '%%1%'";
+
+
+
+    QString ACTOR_SEARCH_SELECT = "SELECT * ";
+    QString ACTOR_SEARCH_FROM = "FROM (%1 FROM Tag) AS T1 "
+                                "JOIN (SELECT * FROM Actor_Tag WHERE Actor_Tag.actor_id = %2) AS T2 "
+                                "ON T1.id = T2.tag_id";
+
 
 };
 

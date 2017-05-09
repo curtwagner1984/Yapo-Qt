@@ -8,8 +8,9 @@ Item {
     property alias popTest: popup
     property alias popTestImgSource: popupImage.source
 
-    Popup {
+    Popup {        
             id: popup
+            property int curIndex: -1
             x: 0
             y: 0
             width: parent.width - 5
@@ -32,6 +33,21 @@ Item {
 //                                thumb.source = currentPlaceHolder
 
 //                        }
+
+            }
+            MouseArea{
+                id: popupImageMouseArea
+                anchors.fill: popupImage
+                onClicked: {
+                    popup.close()
+                }
+            }
+
+            Button{
+                text:"next"
+                onClicked: {
+                    popupImage.source = thumbGridView.itemAt(6).thumb.source.ds
+                }
 
             }
         }

@@ -4,27 +4,21 @@
 #include <QModelIndex>
 
 
+
+
+
 AutoCompleteModel::AutoCompleteModel(DbManager *dbManager)
     :BasicListModel(dbManager)
 {
     qDebug() << "Making test autocomplete search ...";
     this->isAutoComplete = true;
 
-    this->baseSqlSelect =  "SELECT *";
+    this->baseSqlSelect =  SEARCH_SELECT;
 
-    this->baseSqlFrom = "FROM ( "
-                        "SELECT Actor.id as id, Actor.name as name, 'Actor' as TableName, 'na' as alias_of, 'na' as alias_of_id, Actor.thumbnail as thumbnail FROM Actor "
-                        "UNION ALL "
-                        "SELECT Tag.id as id, Tag.name as name, 'Tag' as TableName, 'na' as alias_of,'na' as alias_of_id, Tag.thumbnail as thumbnail FROM Tag "
-                        "UNION ALL "
-                        "SELECT Website.id as id, Website.name as name , 'Website' as TableName, 'na' as alias_of,'na' as alias_of_id, Website.thumbnail as thumbnail FROM Website "
-                        "UNION ALL "
-                        "SELECT ActorAlias.id as id, ActorAlias.name as name, 'ActorAlias' as TableName, Actor.name as alias_of, Actor.id as alias_of_id, Actor.thumbnail as thumbnail FROM ActorAlias "
-                        "JOIN Actor on Actor.id = ActorAlias.actor_id)";
+    this->baseSqlFrom = SEARCH_FROM;
 
-    this->baseSqlLimit = "LIMIT 15";
-//    this->generateSqlLimit();
-//    this->search("");
+    this->baseSqlLimit = SEARCH_LIMIT;
+
 }
 
 QVariant AutoCompleteModel::data(const QModelIndex &index, int role) const
@@ -64,11 +58,50 @@ QVariant AutoCompleteModel::data(const QModelIndex &index, int role) const
             }
 }
 
-void AutoCompleteModel::search(const QString searchString)
+void AutoCompleteModel::search(const QString searchString , QString searchType)
+{
+   if (searchType == "Tag"){
+       this->tagSearch(searchString);
+   }else{
+       this->generalSearch(searchString);
+   }
+
+
+
+}
+
+void AutoCompleteModel::tagSearch(const QString searchString)
+{
+
+    QString escapedSearchString = this->escaleSqlChars(searchString);
+    this->baseSqlWhere = SEARCH_WHERE.arg(escapedSearchString);
+    this->baseSqlOrder = SEARCH_ORDER;
+    this->baseSqlFrom = TAG_SEARCH_FROM;
+
+//  Resets count and gets number of items and executes search
+    this->currentSearchString = searchString;
+    this->baseSearch();
+
+    QModelIndex a = QModelIndex();
+    this->beginInsertRows(a,this->items.size(), this->items.size());
+
+
+    QMap<QString,QVariant> newTag;
+    newTag["name"] = this->currentSearchString;
+    newTag["TableName"] = QString("New Tag");
+    this->items.append(newTag);
+
+
+    this->endInsertRows();
+
+}
+
+void AutoCompleteModel::generalSearch(const QString searchString)
 {
     QString escapedSearchString = this->escaleSqlChars(searchString);
-    this->baseSqlWhere = "WHERE name LIKE '%" + escapedSearchString  +"%'";
-    this->baseSqlOrder = "ORDER BY name";
+    this->baseSqlWhere = SEARCH_WHERE.arg(escapedSearchString);
+    this->baseSqlOrder = SEARCH_ORDER;
+    this->baseSqlFrom = SEARCH_FROM;
 
 //  Resets count and gets number of items and executes search
     this->currentSearchString = searchString;
@@ -78,24 +111,21 @@ void AutoCompleteModel::search(const QString searchString)
     this->beginInsertRows(a,this->items.size(), this->items.size() + 2 );
 
     QMap<QString,QVariant> newActor;
-    newActor["name"] = QString("Create new Actor '%1'").arg(this->currentSearchString);
+    newActor["name"] = this->currentSearchString;
     newActor["TableName"] = QString("New Actor");
     this->items.append(newActor);
 
     QMap<QString,QVariant> newTag;
-    newTag["name"] = QString("Create new Tag '%1'").arg(this->currentSearchString);
+    newTag["name"] = this->currentSearchString;
     newTag["TableName"] = QString("New Tag");
     this->items.append(newTag);
 
     QMap<QString,QVariant> newWebsite;
-    newTag["name"] = QString("Create new Website '%1'").arg(this->currentSearchString);
+    newTag["name"] = this->currentSearchString;
     newTag["TableName"] = QString("New Website");
-    this->items.append(newTag);
-
+    this->items.append(newWebsite);
 
     this->endInsertRows();
-
-
 
 }
 

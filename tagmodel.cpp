@@ -2,19 +2,18 @@
 #include <QDebug>
 #include <QFileInfo>
 
+
+
+
+
+
+
+
 TagModel::TagModel(DbManager *dbManager) : BasicListModel(dbManager) {
   qDebug() << "Making test tag search ...";
 
-  this->baseSqlSelect =
-      "SELECT * ,"
-      "(SELECT COUNT(*) FROM Scene_Tag WHERE Scene_Tag.tag_id = Tag.id) as "
-      "NumberOfScenes, "
-      "(SELECT COUNT(*) FROM Actor_Tag WHERE Actor_Tag.tag_id = Tag.id) as "
-      "NumberOfActors, "
-      "(SELECT COUNT(*) FROM Picture_Tag WHERE Picture_Tag.tag_id = Tag.id) as "
-      "NumberOfPictures ";
-
-  this->baseSqlFrom = "FROM Tag";
+  this->baseSqlSelect = SEARCH_SELECT;
+  this->baseSqlFrom = SEARCH_FROM;
   this->generateSqlLimit();
   this->search("");
 }
@@ -57,39 +56,21 @@ QVariant TagModel::data(const QModelIndex &index, int role) const {
 
 void TagModel::search(const QString searchString) {
   QString escapedSearchString = this->escaleSqlChars(searchString);
-  this->baseSqlWhere = "WHERE Tag.name LIKE '%" + escapedSearchString + "%'";
-  this->baseSqlSelect =
-      "SELECT * ,"
-      "(SELECT COUNT(*) FROM Scene_Tag WHERE Scene_Tag.tag_id = Tag.id) as "
-      "NumberOfScenes, "
-      "(SELECT COUNT(*) FROM Actor_Tag WHERE Actor_Tag.tag_id = Tag.id) as "
-      "NumberOfActors, "
-      "(SELECT COUNT(*) FROM Picture_Tag WHERE Picture_Tag.tag_id = Tag.id) as "
-      "NumberOfPictures ";
+  this->baseSqlWhere = SEARCH_WHERE.arg(escapedSearchString);
+  this->baseSqlSelect = SEARCH_SELECT;
+  this->baseSqlFrom = SEARCH_FROM;
+
 
   //  Resets count and gets number of items and executes search
   this->baseSearch();
 }
 
 void TagModel::getActorTags(const QString actorId) {
-  QString temp =
-      "SELECT * ,"
-      "(SELECT COUNT(*) FROM Scene_Tag WHERE Scene_Tag.tag_id = Tag.id) as "
-      "NumberOfScenes, "
-      "(SELECT COUNT(*) FROM Actor_Tag WHERE Actor_Tag.tag_id = Tag.id) as "
-      "NumberOfActors, "
-      "(SELECT COUNT(*) FROM Picture_Tag WHERE Picture_Tag.tag_id = Tag.id) as "
-      "NumberOfPictures ";
 
   this->baseSqlSelect ="SELECT * ";
   this->baseSqlWhere = "";
   this->baseSqlOrder = "";
-  this->baseSqlFrom =
-      QString(
-          "FROM (%1 FROM Tag) AS T1 "
-          "JOIN (SELECT * FROM Actor_Tag WHERE Actor_Tag.actor_id = %2) AS T2 "
-          "ON T1.id = T2.tag_id")
-          .arg(temp,actorId);
+  this->baseSqlFrom = ACTOR_SEARCH_FROM.arg(SEARCH_SELECT,actorId);
   this->baseSearch();
 }
 

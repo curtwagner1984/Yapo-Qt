@@ -51,7 +51,7 @@ public:
     Q_INVOKABLE void pictureSearch (QString searchTerm);
     Q_INVOKABLE void tagSearch (QString searchTerm);
     Q_INVOKABLE void websiteSearch (QString searchTerm);
-    Q_INVOKABLE void autoCompleteSearch (QString searchTerm);
+    Q_INVOKABLE void autoCompleteSearch (QString searchTerm, QString searchType);
 
     Q_INVOKABLE void aliasSearch (QString parentId, QString aliasType);
 
@@ -63,6 +63,10 @@ public:
     Q_INVOKABLE void playScene (QString scenePath);
 
     Q_INVOKABLE void prepareActorDetailView (QString actorId);
+
+    Q_INVOKABLE void addAlias (QString aliasName, QString aliasType, QString aliasOfId);
+    Q_INVOKABLE void addTag (QString tagId, QString tagName, QString tagType, QString tagOfId);
+
 
 
     ~QmlComm();

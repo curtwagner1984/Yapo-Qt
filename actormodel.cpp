@@ -3,16 +3,16 @@
 #include <QFileInfo>
 
 
+
+
 ActorModel::ActorModel(DbManager *dbManager)
     : BasicListModel(dbManager)
 {
     qDebug() << "Making test actor search ...";
 
-    this->baseSqlSelect =  "SELECT * ,"
-                           "(SELECT COUNT(*) FROM Scene_Actor WHERE Scene_Actor.actor_id = Actor.id) as NumberOfScenes, "
-                           "(SELECT COUNT(*) FROM Picture_Actor WHERE Picture_Actor.actor_id = Actor.id) as NumberOfPictures ";
+    this->baseSqlSelect =  SEARCH_SELECT;
+    this->baseSqlFrom = SEARCH_FROM ;
 
-    this->baseSqlFrom = "FROM Actor";
     this->generateSqlLimit();
     this->search("");
 
@@ -65,7 +65,9 @@ void ActorModel::search(const QString searchString)
 {
 
     QString escapedSearchString = this->escaleSqlChars(searchString);
-    this->baseSqlWhere = "WHERE Actor.name LIKE '%" + escapedSearchString  +"%'";
+    this->baseSqlSelect =  SEARCH_SELECT;
+    this->baseSqlFrom = SEARCH_FROM ;
+    this->baseSqlWhere = SEARCH_WHERE.arg(escapedSearchString);
 
 //  Resets count and gets number of items and executes search
     this->baseSearch();

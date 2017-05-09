@@ -164,9 +164,9 @@ void QmlComm::websiteSearch(QString searchTerm)
     this->websiteModel->search(searchTerm);
 }
 
-void QmlComm::autoCompleteSearch(QString searchTerm)
+void QmlComm::autoCompleteSearch(QString searchTerm, QString searchType)
 {
-    this->autoCompleteModel->search(searchTerm);
+    this->autoCompleteModel->search(searchTerm,searchType);
 }
 
 void QmlComm::aliasSearch(QString parentId, QString aliasType)
@@ -213,6 +213,31 @@ void QmlComm::prepareActorDetailView(QString actorId)
     this->actorDetailObject->setActor(actorId);
 
 
+
+}
+
+void QmlComm::addAlias(QString aliasName, QString aliasType, QString aliasOfId)
+{
+    if (aliasType == "Actor"){
+        QList< QStringList > tempList;
+        QStringList temp;
+
+        temp.append(aliasName);
+        temp.append(aliasOfId);
+        tempList.append(temp);
+
+        this->dbManager->addActorsAliases(tempList);
+    }
+
+}
+
+void QmlComm::addTag(QString tagId, QString tagName, QString tagType, QString tagOfId)
+{
+    if (tagType == "Actor")
+    {
+        this->dbManager->addActorTag(tagId,tagName,tagOfId);
+
+    }
 
 }
 

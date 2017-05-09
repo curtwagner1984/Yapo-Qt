@@ -1,5 +1,5 @@
 import QtQuick 2.7
-import QtQuick.Controls 2.0
+import QtQuick.Controls 2.1
 import QtQuick.Layouts 1.3
 import QtQuick.Controls.Material 2.1
 import QtQuick.Dialogs 1.2
@@ -69,7 +69,7 @@ ApplicationWindow {
                     console.log("You are in Website View")
                     qmlComm.websiteSearch(searchBar.text)
                 } else {
-                    qmlComm.autoCompleteSearch(searchBar.text)
+                    qmlComm.autoCompleteSearch(searchBar.text,"")
                     if (!autocomplete.visible){
                         autocomplete.open()
                     }
@@ -78,6 +78,21 @@ ApplicationWindow {
                 }
 
                 console.log("Text changed to: " + searchBar.text)
+            }
+
+            Connections{
+                target: autocomplete
+                onSelected: {
+
+                    console.log("Autocomplete selected " + selectedItemName + " Type:" + selectedItemType)
+                    if (selectedItemType === "Actor") {
+                        qmlComm.prepareActorDetailView(selectedItemId)
+                        mainAppPage.changeView("Actor Detail View")
+                    } else if (selectedItemType === "ActorAlias") {
+                        qmlComm.prepareActorDetailView(selectedItemAliasOfId)
+                        mainAppPage.changeView("Actor Detail View")
+                    }
+                }
             }
 
             Keys.forwardTo: [autocomplete.listview.currentItem,autocomplete.listview]
