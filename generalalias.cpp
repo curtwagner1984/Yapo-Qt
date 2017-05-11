@@ -36,7 +36,11 @@ void GeneralAlias::search(const QString searchString, const QString aliasOf)
     if (aliasOf == "Actor"){
         tableName = "ActorAlias";
         columnName = "actor_id";
+    }else if (aliasOf == "Tag"){
+        tableName = "TagAlias";
+        columnName = "tag_id";
     }
+
 
     QString baseFrom = QString("FROM %1").arg(tableName);
     QString baseWhere = QString("WHERE %1.%2 = %3").arg(tableName,columnName,searchString);

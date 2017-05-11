@@ -51,38 +51,38 @@ Popup {
                     focus: true
                     color: "transparent"
 
-//                    Image {
+                    Image {
+                        id: autoCompleteThumb
+                        asynchronous: true
+                        source: 'file:///' + thumb_64
+                        height: 60
+                        fillMode: Image.PreserveAspectFit
+                        anchors.left: autoCompleteDelegateBackground.left
+                        onStatusChanged: {
+                            if (autoCompleteThumb.status === Image.Error)
+                                if (tableName === "Tag") {
+                                    autoCompleteThumb.source = placeHolderTag
+                                } else if (tableName === "Website") {
+                                    autoCompleteThumb.source = placeHolderSite
+                                }
+                        }
+                    }
+
+//                    Rectangle{
 //                        id: autoCompleteThumb
-//                        asynchronous: true
-//                        source: 'file:///' + thumb_64
 //                        height: 60
-//                        fillMode: Image.PreserveAspectFit
-//                        anchors.left: autoCompleteDelegateBackground.left
-//                        onStatusChanged: {
-//                            if (autoCompleteThumb.status === Image.Error)
-//                                if (tableName === "Tag") {
-//                                    autoCompleteThumb.source = placeHolderTag
-//                                } else if (tableName === "Website") {
-//                                    autoCompleteThumb.source = placeHolderSite
-//                                }
-//                        }
+//                        width: 30
+//                        color: Material.color(Material.Green)
 //                    }
 
-                    Rectangle{
-                        id: autoCompleteThumb
-                        height: 60
-                        width: 30
-                        color: Material.color(Material.Green)
-                    }
-
-                    Text{
-                        id: firstLetterText
-                        text: name.charAt(0)
-                        font.pixelSize: 30
-                        font.capitalization: Font.AllUppercase
-                        anchors.horizontalCenter: autoCompleteThumb.horizontalCenter
-                        anchors.verticalCenter: autoCompleteThumb.verticalCenter
-                    }
+//                    Text{
+//                        id: firstLetterText
+//                        text: name.charAt(0)
+//                        font.pixelSize: 30
+//                        font.capitalization: Font.AllUppercase
+//                        anchors.horizontalCenter: autoCompleteThumb.horizontalCenter
+//                        anchors.verticalCenter: autoCompleteThumb.verticalCenter
+//                    }
 
                     Text {
                         id: autoCompleteItemName
@@ -119,7 +119,7 @@ Popup {
                         anchors.fill: autoCompleteDelegateBackground
                         onClicked: {
                             console.log("You clicked " + tableName + " " + name + " " + id)
-                            autoCompleteListView.forceActiveFocus()
+//                            autoCompleteListView.forceActiveFocus()
                             console.log(activeFocus ? "I have active focus!" : "I do not have active focus")
                             autoCompleteListView.currentIndex = index
                         }
@@ -130,14 +130,31 @@ Popup {
                     autoCompletePopup.selected(tableName,newName,id,aliasOfId)
                     autoCompletePopup.close()
                 }
+
+//                Keys.on {
+//                    var newName = name.replace(/(.*?)( |\.|$)/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()})
+//                    console.log("Text to be passed is: " + newName)
+//                }
+
+//                Shortcut {
+//                    id:shortcut
+//                    sequence: "Alt+E"
+//                    context: Qt.ApplicationShortcut
+//                    onActivated:
+//                    {
+//                        var newName = name.replace(/(.*?)( |\.|$)/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()})
+//                        console.log("Text to be passed is: " + newName)
+
+//                    }
+//                }
             }
 
             highlight: highlightBar
             highlightFollowsCurrentItem: false
             ScrollBar.vertical: ScrollBar {
             }
-            focus: false
-            clip: true
+//            focus: false
+//            clip: true
         }
     }
 }

@@ -12,6 +12,7 @@ public:
     QVariant data(const QModelIndex &index, int role) const;
     void search(const QString searchString);
     void getActorPictures(const QString actorId);
+    void getTagPictures(const QString tagId);
     QHash<int, QByteArray> roleNames() const;
 
     enum PictureRoles {
@@ -36,6 +37,32 @@ private:
     QString ACTOR_SEARCH_FROM = "FROM (SELECT * FROM Picture) AS T1 "
                                 "JOIN (SELECT * FROM Picture_Actor WHERE Picture_Actor.actor_id = %1) AS T2 "
                                 "ON T1.id = T2.picture_id";
+
+
+    QString TAG_SEARCH_SELECT = "SELECT * ";
+    QString TAG_SEARCH_FROM =
+            "FROM ( "
+            "SELECT T1.* "
+            "FROM (SELECT * FROM Picture) AS T1 "
+            "JOIN (SELECT * FROM Picture_Tag WHERE Picture_Tag.tag_id = %1) AS T2 "
+            "ON T1.id = T2.picture_id "
+            "UNION "
+            "SELECT Picture.* FROM Picture "
+            "JOIN Picture_Actor ON Picture.id = Picture_Actor.picture_id "
+            "JOIN Actor ON Actor.id = Picture_Actor.actor_id "
+            "JOIN Actor_Tag ON Actor.id = Actor_Tag.actor_id "
+            "JOIN Tag ON Tag.id = Actor_Tag.tag_id "
+            "WHERE Tag.id = %1 "
+            "UNION "
+            "SELECT Picture.* FROM Picture "
+            "JOIN Picture_Website ON Picture.id = Picture_Website.picture_id "
+            "JOIN Website ON Website.id = Picture_Website.website_id "
+            "JOIN Website_Tag ON Website.id = Website_Tag.website_id "
+            "JOIN Tag ON Tag.id = Website_Tag.tag_id "
+            "WHERE Tag.id = %1 "
+            ") ";
+
+
 };
 
 #endif // PICTUREMODEL_H

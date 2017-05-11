@@ -65,6 +65,15 @@ void PictureModel::getActorPictures(const QString actorId)
     this->baseSearch();
 }
 
+void PictureModel::getTagPictures(const QString tagId)
+{
+    this->baseSqlWhere = "";
+    this->baseSqlOrder = "";
+    this->baseSqlFrom = TAG_SEARCH_FROM.arg(tagId);
+    this->baseSearch();
+
+}
+
 QHash<int, QByteArray> PictureModel::roleNames() const
 {
     QHash<int, QByteArray> roles;

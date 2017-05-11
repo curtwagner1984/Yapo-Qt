@@ -64,6 +64,16 @@ void WebsiteModel::search(const QString searchString)
 
 }
 
+void WebsiteModel::getTagWebsites(const QString tagId)
+{
+
+    this->baseSqlWhere = "";
+    this->baseSqlSelect = TAG_SEARCH_SELECT;
+    this->baseSqlFrom = TAG_SEARCH_FROM.arg(tagId);
+    this->baseSearch();
+
+}
+
 QHash<int, QByteArray> WebsiteModel::roleNames() const
 {
     QHash<int, QByteArray> roles;

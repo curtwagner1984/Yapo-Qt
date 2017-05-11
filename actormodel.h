@@ -12,7 +12,8 @@ class ActorModel : public BasicListModel
 public:
     ActorModel(DbManager* dbManager);
     QVariant data(const QModelIndex &index, int role) const;
-    void search(const QString searchString);
+    void search (const QString searchString);
+    void getTagActor (const QString tagId);
     QHash<int, QByteArray> roleNames() const;
 
 
@@ -36,6 +37,14 @@ private:
     QString SEARCH_FROM = "FROM Actor";
 
     QString SEARCH_WHERE = "WHERE Actor.name LIKE '%%1%'";
+
+
+    QString TAG_SEARCH_FROM = "FROM ACTOR "
+            "JOIN Actor_Tag ON Actor.id = Actor_Tag.actor_id "
+            "WHERE Actor_Tag.tag_id = 1";
+
+
+
 
 };
 

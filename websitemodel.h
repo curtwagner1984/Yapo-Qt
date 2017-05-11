@@ -11,7 +11,8 @@ class WebsiteModel: public BasicListModel
 public:
     WebsiteModel(DbManager* dbManager);
     QVariant data(const QModelIndex &index, int role) const;
-    void search(const QString searchString);    
+    void search(const QString searchString);
+    void getTagWebsites(const QString tagId);
     QHash<int, QByteArray> roleNames() const;
 
 
@@ -34,6 +35,17 @@ private:
     QString SEARCH_FROM = "FROM Website";
 
     QString SEARCH_WHERE = "WHERE Website.name LIKE '%%1%'";
+
+
+    QString TAG_SEARCH_SELECT = "SELECT * ,"
+                            "(SELECT COUNT(*) FROM Scene_Website WHERE Scene_Website.website_id = Website.id) as NumberOfScenes, "
+                            "(SELECT COUNT(*) FROM Picture_Website WHERE Picture_Website.website_id = Website.id) as NumberOfPictures ";
+
+    QString TAG_SEARCH_FROM = "FROM Website "
+                              "JOIN Website_Tag ON Website.id = Website_Tag.website_id "
+                              "WHERE Website_Tag.tag_id = %1 ";
+
+    QString TAG_SEARCH_WHERE = "";
 
 
 };

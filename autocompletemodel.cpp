@@ -121,8 +121,8 @@ void AutoCompleteModel::generalSearch(const QString searchString)
     this->items.append(newTag);
 
     QMap<QString,QVariant> newWebsite;
-    newTag["name"] = this->currentSearchString;
-    newTag["TableName"] = QString("New Website");
+    newWebsite["name"] = this->currentSearchString;
+    newWebsite["TableName"] = QString("New Website");
     this->items.append(newWebsite);
 
     this->endInsertRows();

@@ -30,6 +30,7 @@
     </qresource>
     <qresource prefix="/tagView">
         <file>TagView.qml</file>
+        <file>TagDetailView.qml</file>
     </qresource>
     <qresource prefix="/websiteView">
         <file>WebsiteView.qml</file>

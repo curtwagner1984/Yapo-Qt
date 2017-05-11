@@ -72,6 +72,16 @@ void SceneModel::getActorScenes(const QString actorId)
     this->baseSearch();
 }
 
+void SceneModel::getTagScenes(const QString tagId)
+{
+    this->baseSqlWhere = "";
+    this->baseSqlOrder = "";
+    this->baseSqlFrom = TAG_SEARCH_FROM.arg(tagId);
+    this->baseSqlSelect = TAG_SEARCH_SELECT;
+    this->baseSearch();
+
+}
+
 QHash<int, QByteArray> SceneModel::roleNames() const
 {
     QHash<int, QByteArray> roles;

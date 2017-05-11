@@ -39,6 +39,10 @@ ApplicationWindow {
             mainStack.push(actorDetailViewComponenet, {
                                objectName: "Actor Detail View"
                            })
+        }else if (viewToChangeTo === "Tag Detail View") {
+            mainStack.push(tagDetailViewComponenet, {
+                               objectName: "Tag Detail View"
+                           })
         }
     }
 
@@ -86,10 +90,10 @@ ApplicationWindow {
 
                     console.log("Autocomplete selected " + selectedItemName + " Type:" + selectedItemType)
                     if (selectedItemType === "Actor") {
-                        qmlComm.prepareActorDetailView(selectedItemId)
+                        qmlComm.prepareDetailView(selectedItemId,"Actor")
                         mainAppPage.changeView("Actor Detail View")
                     } else if (selectedItemType === "ActorAlias") {
-                        qmlComm.prepareActorDetailView(selectedItemAliasOfId)
+                        qmlComm.prepareDetailView(selectedItemAliasOfId,"Actor")
                         mainAppPage.changeView("Actor Detail View")
                     }
                 }
@@ -263,6 +267,14 @@ ApplicationWindow {
     Component {
         id: actorDetailViewComponenet
         ActorDetailView {
+            width: mainAppPage.width
+            height: mainAppPage.height - searchBarRow.height
+        }
+    }
+
+    Component {
+        id: tagDetailViewComponenet
+        TagDetailView {
             width: mainAppPage.width
             height: mainAppPage.height - searchBarRow.height
         }

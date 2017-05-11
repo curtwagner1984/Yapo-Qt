@@ -40,7 +40,7 @@ Item{
         id: thumbMouseArea
         anchors.fill: thumb
         onClicked: {
-            qmlComm.prepareActorDetailView(actorId)
+            qmlComm.prepareDetailView(actorId,"Actor")
             mainAppPage.changeView("Actor Detail View")
         }
     }

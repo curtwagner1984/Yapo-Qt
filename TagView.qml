@@ -30,6 +30,7 @@ Item {
             numOfScenes: numberOfScenes
             numOfPictures: numberOfPictures
             numOfActors: numberOfActors
+            tagId: id
 
 
 

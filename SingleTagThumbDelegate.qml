@@ -2,7 +2,7 @@ import QtQuick 2.0
 import QtQuick.Layouts 1.1
 import QtQuick.Controls 2.1
 import QtGraphicalEffects 1.0
-
+import QtQuick.Controls.Material 2.1
 
 
 Item{
@@ -10,6 +10,7 @@ Item{
 
     property string imageSource: ""
     property string tagName: ""
+    property string tagId: ""
     property string numOfScenes: ""
     property string numOfPictures: ""
     property string numOfActors: ""
@@ -35,14 +36,14 @@ Item{
 
     }
 
-//    MouseArea{
-//        id: thumbMouseArea
-//        anchors.fill: thumb
-//        hoverEnabled: true
-//        onEntered: {
-//            console.log("Entered " + singleThumbDelegate.scenePath +". Thumb Path is: " + singleThumbDelegate.imageSource )
-//        }
-//    }
+    MouseArea{
+        id: thumbMouseArea
+        anchors.fill: thumb
+        onClicked: {
+            qmlComm.prepareDetailView(tagId,"Tag")
+            mainAppPage.changeView("Tag Detail View")
+        }
+    }
 
     Rectangle{
         id: buttonBar
@@ -102,6 +103,15 @@ Item{
         }
 
 
+    Rectangle
+    {
+        id: durationLableBackground
+        anchors.fill: durationLable
+        color: Material.color(Material.Red)
+
+    }
+
+
     Text {
             id: durationLable
             text: "(#S:"+ singleThumbDelegate.numOfScenes + " #A: "  + singleThumbDelegate.numOfActors + "#P: " + singleThumbDelegate.numOfPictures + ")"
@@ -118,6 +128,8 @@ Item{
             color: "White"
 
         }
+
+
 
 
 }

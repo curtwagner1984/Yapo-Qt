@@ -77,6 +77,18 @@ void ActorModel::search(const QString searchString)
 
 }
 
+void ActorModel::getTagActor(const QString tagId)
+{
+
+
+    this->baseSqlFrom = TAG_SEARCH_FROM.arg(tagId);
+    this->baseSqlWhere = "";
+
+//  Resets count and gets number of items and executes search
+    this->baseSearch();
+
+}
+
 
 QHash<int, QByteArray> ActorModel::roleNames() const
 {

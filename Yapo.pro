@@ -16,9 +16,9 @@ SOURCES += main.cpp \
     picturemodel.cpp \
     tagmodel.cpp \
     websitemodel.cpp \
-    actordetailobject.cpp \
     generalalias.cpp \
-    autocompletemodel.cpp
+    autocompletemodel.cpp \
+    detailobject.cpp
 
 RESOURCES += qml.qrc
 
@@ -59,8 +59,8 @@ HEADERS += \
     picturemodel.h \
     tagmodel.h \
     websitemodel.h \
-    actordetailobject.h \
     generalalias.h \
-    autocompletemodel.h
+    autocompletemodel.h \
+    detailobject.h
 
 DISTFILES +=

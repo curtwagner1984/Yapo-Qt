@@ -6,18 +6,13 @@ import QtQuick.Controls.Material 2.1
 import QtQuick.Layouts 1.3
 
 
-//import QtQuick.Controls 2.0
-//import QtQuick.Layouts 1.3
-//import QtQuick.Controls.Material 2.1
-//import QtQuick.Dialogs 1.2
-//import QtQuick.Window 2.0
 import "qrc:/sceneView"
 import "qrc:/pictureView"
-import "qrc:/tagView"
+import "qrc:/websiteView"
 import "qrc:/autoComplete"
 
 Item {
-    id: actorDetailView
+    id: tagDetailView
     height: 400
 
     Rectangle {
@@ -147,15 +142,15 @@ Item {
                         } else {
                             if (addAliasTextEdit.text !== "") {
                                 console.log("Would try to add alias " + addAliasTextEdit.text
-                                            + " To actor id: " + detailObject.getDetailObjectAttrib(
+                                            + " To objectId id: " + detailObject.getDetailObjectAttrib(
                                                 "id"))
                                 qmlComm.addAlias(
-                                            addAliasTextEdit.text, "Actor",
+                                            addAliasTextEdit.text, "Tag",
                                             detailObject.getDetailObjectAttrib(
                                                 "id"))
                                 qmlComm.aliasSearch(
                                             detailObject.getDetailObjectAttrib(
-                                                "id"), "Actor")
+                                                "id"), "Tag")
                             }
                             addAliasTextEdit.visible = false
                         }

@@ -21,7 +21,7 @@
 #include "generalalias.h"
 #include "autocompletemodel.h"
 
-#include "actordetailobject.h"
+#include "detailobject.h"
 
 
 class QmlComm : public QObject
@@ -62,7 +62,7 @@ public:
 
     Q_INVOKABLE void playScene (QString scenePath);
 
-    Q_INVOKABLE void prepareActorDetailView (QString actorId);
+    Q_INVOKABLE void prepareDetailView (QString detailObjectId, QString detailObjectType);
 
     Q_INVOKABLE void addAlias (QString aliasName, QString aliasType, QString aliasOfId);
     Q_INVOKABLE void addTag (QString tagId, QString tagName, QString tagType, QString tagOfId);
@@ -86,7 +86,7 @@ private:
     TagModel* tagModel;
     WebsiteModel* websiteModel;
 
-    ActorDetailObject* actorDetailObject;
+    DetailObject* detailObject;
 
     GeneralAlias* generalAlias;
     AutoCompleteModel* autoCompleteModel;
