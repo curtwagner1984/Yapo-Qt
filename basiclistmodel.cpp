@@ -26,11 +26,14 @@ bool BasicListModel::canFetchMore(const QModelIndex &parent) const {
 void BasicListModel::fetchMore(const QModelIndex &parent) {
   qDebug() << "fetchmore triggered" << parent.row();
 
-  this->currentPageNumber++;
+  this->currentPageNumber++;  
   this->generateSqlLimit();
   QString stmt = this->sqlStmt();
   QList<QMap<QString, QVariant>> itmesToAppend =
       this->dbManager->executeArbitrarySqlWithReturnValue(stmt);
+  if (itmesToAppend.size() == 0){
+      return;
+  }
   this->beginInsertRows(parent, this->items.size(),
                         this->items.size() + itmesToAppend.size() - 1);
   this->items.append(itmesToAppend);
@@ -63,6 +66,7 @@ void BasicListModel::generateSqlLimit() {
 }
 
 void BasicListModel::baseSearch() {
+
   if (!this->isAutoComplete)
   {
     this->currentPageNumber = 0;

@@ -14,6 +14,7 @@ public:
     QVariant data(const QModelIndex &index, int role) const;
     void search(const QString searchString);
     void getActorTags(const QString actorId);
+    void getWebsiteTags(const QString websiteId);
     QHash<int, QByteArray> roleNames() const;
 
 
@@ -30,13 +31,68 @@ public:
 
         };
 private:
-    QString SEARCH_SELECT = "SELECT * ,"
-                            "(SELECT COUNT(*) FROM Scene_Tag WHERE Scene_Tag.tag_id = Tag.id) as "
-                            "NumberOfScenes, "
-                            "(SELECT COUNT(*) FROM Actor_Tag WHERE Actor_Tag.tag_id = Tag.id) as "
-                            "NumberOfActors, "
-                            "(SELECT COUNT(*) FROM Picture_Tag WHERE Picture_Tag.tag_id = Tag.id) as "
-                            "NumberOfPictures ";
+    QString NUMBER_OF_PICTURES = "SELECT COUNT (*) FROM ( "
+            "SELECT Picture.* FROM Picture "
+            "JOIN Picture_Tag ON Picture.id = Picture_Tag.picture_id "
+            "WHERE Picture_Tag.tag_id = Tag.id "
+            "UNION "
+            "SELECT Picture.* FROM Picture JOIN Picture_Actor ON Picture.id = Picture_Actor.picture_id "
+            "JOIN Actor ON Actor.id = Picture_Actor.actor_id "
+            "JOIN Actor_Tag ON Actor.id = Actor_Tag.actor_id "
+            "WHERE Actor_Tag.tag_id = Tag.id "
+            "UNION "
+            "SELECT Picture.* FROM Picture JOIN Picture_Website ON Picture.id = Picture_Website.picture_id "
+            "JOIN Website ON Website.id = Picture_Website.website_id "
+            "JOIN Website_Tag ON Website.id = Website_Tag.website_id "
+            "WHERE Website_Tag.tag_id = Tag.id)";
+
+    QString NUMBER_OF_ACTORS = " SELECT COUNT(*) FROM Actor_Tag WHERE Actor_Tag.tag_id = Tag.id ";
+
+
+//    QString NUMBER_OF_SCENES = " SELECT COUNT(*)  FROM "
+//            "( SELECT T1.* FROM (SELECT * FROM Scene) AS T1 "
+//            "JOIN (SELECT * FROM Scene_Tag) AS T2 ON T1.id = T2.scene_id "
+//            "UNION "
+//            "SELECT Scene.* FROM Scene JOIN Scene_Actor ON Scene.id = Scene_Actor.scene_id "
+//            "JOIN Actor ON Actor.id = Scene_Actor.actor_id "
+//            "JOIN Actor_Tag ON Actor.id = Actor_Tag.actor_id "
+//            "JOIN Tag ON Tag.id = Actor_Tag.tag_id "
+//            "UNION "
+//            "SELECT Scene.* FROM Scene JOIN Scene_Website ON Scene.id = Scene_Website.scene_id "
+//            "JOIN Website ON Website.id = Scene_Website.website_id "
+//            "JOIN Website_Tag ON Website.id = Website_Tag.website_id "
+//            "JOIN Tag ON Tag.id = Website_Tag.tag_id) ";
+
+
+    QString NUMBER_OF_SCENES = "SELECT COUNT (*) FROM ("
+                "SELECT Scene.* FROM SCENE "
+                "JOIN Scene_Tag ON Scene.id = Scene_Tag.scene_id "
+                "WHERE Scene_Tag.tag_id = Tag.id "
+                "UNION "
+                "SELECT Scene.* FROM Scene JOIN Scene_Actor ON Scene.id = Scene_Actor.scene_id "
+                "JOIN Actor ON Actor.id = Scene_Actor.actor_id "
+                "JOIN Actor_Tag ON Actor.id = Actor_Tag.actor_id "
+                "WHERE Actor_Tag.tag_id = Tag.id "
+                "UNION "
+                "SELECT Scene.* FROM Scene JOIN Scene_Website ON Scene.id = Scene_Website.scene_id "
+                "JOIN Website ON Website.id = Scene_Website.website_id "
+                "JOIN Website_Tag ON Website.id = Website_Tag.website_id "
+                "WHERE Website_Tag.tag_id = Tag.id)";
+
+
+    QString NUMBER_OF_WEBSITES = " SELECT COUNT(*) FROM Website_Tag WHERE Website_Tag.tag_id = Tag.id ";
+
+
+
+    QString SEARCH_SELECT = QString("SELECT * ,"
+                                    "( %1 ) as "
+                                    "NumberOfScenes, "
+                                    "( %2) as "
+                                    "NumberOfActors, "
+                                    "( %3) as "
+                                    "NumberOfPictures, "
+                                    "( %4) as "
+                                    "NumberOfWebsites ").arg(NUMBER_OF_SCENES,NUMBER_OF_ACTORS,NUMBER_OF_PICTURES,NUMBER_OF_WEBSITES);
 
     QString SEARCH_FROM = "FROM Tag";
     QString SEARCH_WHERE = "WHERE Tag.name LIKE '%%1%'";
@@ -44,9 +100,12 @@ private:
 
 
     QString ACTOR_SEARCH_SELECT = "SELECT * ";
-    QString ACTOR_SEARCH_FROM = "FROM (%1 FROM Tag) AS T1 "
-                                "JOIN (SELECT * FROM Actor_Tag WHERE Actor_Tag.actor_id = %2) AS T2 "
-                                "ON T1.id = T2.tag_id";
+    QString ACTOR_SEARCH_FROM = "FROM Tag JOIN Actor_Tag ON Tag.id = Actor_Tag.tag_id ";
+    QString ACTOR_SEARCH_WHERE = "WHERE Actor_Tag.actor_id = %1";
+
+    QString WEBSITE_SEARCH_SELECT = "SELECT * ";
+    QString WEBSITE_SEARCH_FROM = "FROM Tag JOIN Website_Tag ON Tag.id = Website_Tag.tag_id ";
+    QString WEBSITE_SEARCH_WHERE = "WHERE Website_Tag.website_id = %1";
 
 
 };

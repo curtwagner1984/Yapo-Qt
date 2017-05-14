@@ -9,6 +9,8 @@ WebsiteModel::WebsiteModel(DbManager *dbManager)
 {
     qDebug() << "Making test website search ...";
 
+    this->MODEL_TYPE = "WebsiteModel";
+
     this->baseSqlSelect =  SEARCH_SELECT;
 
     this->baseSqlFrom = SEARCH_FROM;

@@ -11,6 +11,7 @@ import "qrc:/pictureView"
 import "qrc:/websiteView"
 import "qrc:/actorView"
 import "qrc:/autoComplete"
+import "qrc:/tagView"
 
 Item {
     property bool loaded: false
@@ -151,12 +152,12 @@ Item {
                                             + " To objectId id: " + detailObject.getDetailObjectAttrib(
                                                 "id"))
                                 qmlComm.addAlias(
-                                            addAliasTextEdit.text, "Tag",
+                                            addAliasTextEdit.text, "Website",
                                             detailObject.getDetailObjectAttrib(
                                                 "id"))
                                 qmlComm.aliasSearch(
                                             detailObject.getDetailObjectAttrib(
-                                                "id"), "Tag")
+                                                "id"), "Website")
                             }
                             addAliasTextEdit.visible = false
                         }
@@ -257,14 +258,11 @@ Item {
             text: qsTr("Pictures" + " (" + detailObject.getDetailObjectAttrib(
                            "NumberOfPictures") + ")")
         }
-        TabButton {
-            text: qsTr("Actors" + " (" + detailObject.getDetailObjectAttrib(
-                           "NumberOfActors") + ")")
-        }
+
 
         TabButton {
-            text: qsTr("Websites" + " (" + detailObject.getDetailObjectAttrib(
-                           "NumberOfWebsites") + ")")
+            text: qsTr("Tags" + " (" + detailObject.getDetailObjectAttrib(
+                           "NumberOfTags") + ")")
         }
     }
 
@@ -285,10 +283,7 @@ Item {
             height: mainview.height - mainViewTabBar.height
         }
 
-        ActorView {
-            width: mainview.width
-            height: mainview.height - mainViewTabBar.height
-        }
+
 
         Item {
             id: tagViewTab
@@ -336,8 +331,8 @@ Item {
 
 //                        var newName = selectedItemName.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()})
                         console.log("Autocomplete selected " + selectedItemName + " Type:" + selectedItemType + "Inside ActorDetailView ")
-                        qmlComm.addTag(selectedItemId,selectedItemName,"Actor",detailObject.getDetailObjectAttrib("id"))
-                        qmlComm.getActorTags(detailObject.getDetailObjectAttrib("id"))
+                        qmlComm.addTag(selectedItemId,selectedItemName,"Website",detailObject.getDetailObjectAttrib("id"))
+                        qmlComm.getTagsOfItem(detailObject.getDetailObjectAttrib("id"),"Website")
 
                     }
                 }

@@ -10,6 +10,7 @@ PictureModel::PictureModel(DbManager *dbManager)
 {
     qDebug() << "Making test picture search ...";
 
+    this->MODEL_TYPE = "PictureModel";
 
     this->baseSqlSelect =  SEARCH_SELECT;
     this->baseSqlFrom = SEARCH_FROM;
@@ -70,6 +71,15 @@ void PictureModel::getTagPictures(const QString tagId)
     this->baseSqlWhere = "";
     this->baseSqlOrder = "";
     this->baseSqlFrom = TAG_SEARCH_FROM.arg(tagId);
+    this->baseSearch();
+
+}
+
+void PictureModel::getWebsitePictures(const QString websiteId)
+{
+    this->baseSqlWhere = this->WEBSITE_SEARCH_WHERE.arg(websiteId);;
+    this->baseSqlOrder = "";
+    this->baseSqlFrom = this->WEBSITE_SEARCH_FROM;
     this->baseSearch();
 
 }

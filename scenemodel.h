@@ -32,6 +32,7 @@ class SceneModel : public BasicListModel {
   void search(const QString searchString);
   void getActorScenes(const QString actorId);
   void getTagScenes(const QString tagId);
+  void getWebsiteScenes(const QString websiteId);
   QHash<int, QByteArray> roleNames() const;
 
   enum SceneRoles {
@@ -80,6 +81,10 @@ class SceneModel : public BasicListModel {
       "JOIN Tag ON Tag.id = Website_Tag.tag_id "
       "WHERE Tag.id = %1 "
       ") ";
+
+  QString WEBSITE_SEARCH_SELECT = "SELECT * ";
+  QString WEBSITE_SEARCH_FROM = "FROM Scene JOIN Scene_Website ON Scene.id = Scene_Website.scene_id ";
+  QString WEBSITE_SEARCH_WHERE = "WHERE Scene_Website.website_id = %1 ";
 };
 
 #endif  // SCENEMODEL_H

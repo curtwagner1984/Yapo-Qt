@@ -114,7 +114,7 @@ void DbManager::createTables() {
       "name VARCHAR NOT NULL, website_id INTEGER, "
       "is_exempt_from_one_word_search BOOLEAN DEFAULT 0, created_at DEFAULT (DATETIME('now','localtime')), "
       "updated_at DATETIME, FOREIGN KEY(website_id) REFERENCES \"Website\" "
-      "(id)), UNIQUE(name, website_id))");
+      "(id), UNIQUE(name, website_id))");
 
   createStatmentList.append(
       "CREATE TABLE IF NOT EXISTS \"Actor_Tag\" ( actor_id INTEGER, tag_id "
@@ -153,6 +153,10 @@ void DbManager::createTables() {
       "CREATE TABLE IF NOT EXISTS \"TreeFolder\" ( id INTEGER PRIMARY KEY , "
       "path_to_dir VARCHAR NOT NULL UNIQUE, level INTEGER NOT NULL,created_at DEFAULT (DATETIME('now','localtime')), "
       "updated_at DATETIME)");
+
+  createStatmentList.append(
+      "CREATE TABLE IF NOT EXISTS \"LastLookup\" ( id INTEGER PRIMARY KEY , "
+      "Last_Lookup DATETIME)");
 
   //  CREATE [UNIQUE] INDEX index_name ON table_name(indexed_column);
   createStatmentList.append(
@@ -227,6 +231,8 @@ void DbManager::createTables() {
   createStatmentList.append(
       "CREATE INDEX IF NOT EXISTS ix_Website_Tag_tag_id ON "
       "Website_Tag(tag_id)");
+
+
 
   for (int i = 0; i < createStatmentList.size(); i++) {
     QSqlQuery query;
@@ -328,6 +334,58 @@ bool DbManager::executeArbitrarySqlWithoutReturnValue(const QString sqlStatment)
 
 }
 
+bool DbManager::executeArbitrarySqlWithoutReturnValueForTransaction(QSqlQuery query)
+{
+
+    qDebug() << "DbManager: Executing: " << query.lastQuery();
+
+//    QMapIterator<QString, QVariant> i(query.boundValues());
+//          while (i.hasNext()) {
+//              i.next();
+//              qDebug() << i.key().toUtf8().data() << ": "
+//                   << i.value().toString().toUtf8().data() << endl;
+//          }
+
+    QList<QVariant> list = query.boundValues().values();
+          for (int i = 0; i < list.size(); ++i)
+              qDebug() << i << ": " << list.at(i).toString().toUtf8().data() << endl;
+
+    bool ans = query.exec();
+    if (ans){
+        qDebug() << "Success";
+    }else{
+        qDebug() << "Sql error: " << query.lastError();
+    }
+
+    return ans;
+//    return true;
+//    return this->executeQueryForTransaction(sqlStatment,"executeArbitrarySqlWithoutReturnValue");
+
+}
+
+bool DbManager::beginTransaction()
+{
+    return this->m_db.transaction();
+}
+
+bool DbManager::commitTransaction()
+{
+    bool success = false;
+
+        if (this->m_db.commit()){
+            success = true;
+
+            qDebug() << "Succesfully commited transaction "  ;
+    //        qDebug() << "Last query error" << this->m_db.lastError();
+    //        qDebug() << "Last query" << query.lastQuery();
+        }else{
+            qDebug() << "SQL error in ";
+//            qDebug() << "Executed Query: ";
+
+        }
+        return success;
+}
+
 //QSqlQuery DbManager::getNewScenes()
 //{
 //    QString stmt = "select * from Scene where (Scene.thumbnail is NULL and Scene.date_last_lookup is NULL)";
@@ -350,9 +408,12 @@ bool DbManager::addActor(QString actorName, bool isMainstream) {
 
 
 
-bool DbManager::addActorTag(QString tagId, QString tagName, QString actorId)
+bool DbManager::addTagWithRelation(QString tagId, QString tagName, QString tagType, QString tagOfId)
 {
     bool success = false;
+    QString tableName;
+    QString firstColumnName;
+    QString secondColumnName;
 
     if (tagId == "")
     {
@@ -367,12 +428,37 @@ bool DbManager::addActorTag(QString tagId, QString tagName, QString actorId)
 
     }
 
-    QString stmt2 = "INSERT OR IGNORE INTO Actor_Tag (actor_id,tag_id) VALUES ('%1','%2')";
-    stmt2 = stmt2.arg(actorId,tagId);
+    if (tagType == "Actor")
+    {
+         tableName = "Actor_Tag";
+         firstColumnName = "actor_id";
+         secondColumnName = "tag_id";
+    }else if (tagType == "Scene")
+    {
+         tableName = "Scene_Tag";
+         firstColumnName = "scene_id";
+         secondColumnName = "tag_id";
+    }else if (tagType == "Website")
+    {
+         tableName = "Website_Tag";
+         firstColumnName = "website_id";
+         secondColumnName = "tag_id";
+    }else if (tagType == "Picture")
+    {
+         tableName = "Picture_Tag";
+         firstColumnName = "picture_id";
+         secondColumnName = "tag_id";
+    }
 
-    this->executeArbitrarySqlWithoutReturnValue(stmt2);
+    QString firstValue = tagOfId;
+    QString secondValue = tagId;
 
-    return true;
+    QString stmt2 = "INSERT OR IGNORE INTO %1 (%2,%3) VALUES ('%4','%5')";
+    stmt2 = stmt2.arg(tableName,firstColumnName,secondColumnName,firstValue,secondValue);
+
+
+
+    return this->executeArbitrarySqlWithoutReturnValue(stmt2);
 
 
 
@@ -741,6 +827,8 @@ QString DbManager::escapeSqlChars(QString string)
     return escapedString;
 }
 
+
+
 bool DbManager::executeQuery(QString sqlStmt, QString sendingFunction)
 {
     this->m_db.transaction();
@@ -760,6 +848,16 @@ bool DbManager::executeQuery(QString sqlStmt, QString sendingFunction)
 
     }
     return success;
+
+}
+
+bool DbManager::executeQueryForTransaction(QString sqlStmt, QString sendingFunction)
+{
+//    this->m_db.transaction();
+    QSqlQuery query(sqlStmt);
+    query.exec();
+
+    return true;
 
 }
 

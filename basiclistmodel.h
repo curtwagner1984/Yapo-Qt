@@ -23,6 +23,7 @@ protected:
     QString sqlStmt ();
     QString countSqlStmt ();
     QString escaleSqlChars (QString unescapedString);
+    QString MODEL_TYPE;
     void generateSqlLimit();
     void baseSearch();
     void noLimitSearch();

@@ -148,9 +148,18 @@ void QmlComm::getActorPictures(QString actorId) {
   this->pictureModel->getActorPictures(actorId);
 }
 
-void QmlComm::getActorTags(QString actorId) {
-  this->tagModel->getActorTags(actorId);
+void QmlComm::getTagsOfItem (QString itemId, QString tagType) {
+
+    if (tagType == "Actor")
+    {
+        this->tagModel->getActorTags(itemId);
+    }else if (tagType == "Website")
+    {
+        this->tagModel->getWebsiteTags(itemId);
+    }
+
 }
+
 
 void QmlComm::playScene(QString scenePath) {
   QString scenePathNativeSep = QDir::toNativeSeparators(scenePath);
@@ -171,7 +180,7 @@ void QmlComm::prepareDetailView(QString detailObjectId,
   if (detailObjectType == "Actor") {
     this->getActorScenes(detailObjectId);
     this->getActorPictures(detailObjectId);
-    this->getActorTags(detailObjectId);
+    this->tagModel->getActorTags(detailObjectId);
     this->aliasSearch(detailObjectId, "Actor");
     this->detailObject->setDetailObject(detailObjectId, detailObjectType);
 
@@ -180,6 +189,16 @@ void QmlComm::prepareDetailView(QString detailObjectId,
     this->pictureModel->getTagPictures(detailObjectId);
     this->sceneModel->getTagScenes(detailObjectId);
     this->websiteModel->getTagWebsites(detailObjectId);
+    this->generalAlias->search(detailObjectId, detailObjectType);
+    this->detailObject->setDetailObject(detailObjectId, detailObjectType);
+
+  } else if (detailObjectType == "Website") {
+
+    this->pictureModel->getWebsitePictures (detailObjectId);
+    this->sceneModel->getWebsiteScenes(detailObjectId);
+
+    this->tagModel->getWebsiteTags(detailObjectId);
+
     this->generalAlias->search(detailObjectId, detailObjectType);
     this->detailObject->setDetailObject(detailObjectId, detailObjectType);
   }
@@ -196,7 +215,10 @@ void QmlComm::addAlias(QString aliasName, QString aliasType,
   } else if (aliasType == "Tag") {
     tableName = "TagAlias";
     columnName = "tag_id";
-  }
+  }else if (aliasType == "Website") {
+      tableName = "WebsiteAlias";
+      columnName = "website_id";
+    }
 
   QString stmt = "INSERT OR IGNORE INTO %1 (name,%2) VALUES ('%3','%4')";
   this->dbManager->executeArbitrarySqlWithoutReturnValue(
@@ -205,9 +227,9 @@ void QmlComm::addAlias(QString aliasName, QString aliasType,
 
 void QmlComm::addTag(QString tagId, QString tagName, QString tagType,
                      QString tagOfId) {
-  if (tagType == "Actor") {
-    this->dbManager->addActorTag(tagId, tagName, tagOfId);
-  }
+
+    this->dbManager->addTagWithRelation(tagId,tagName,tagType,tagOfId);
+
 }
 
 QStringList QmlComm::splitCsv(QString csvString) {

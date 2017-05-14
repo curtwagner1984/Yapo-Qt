@@ -58,9 +58,10 @@ public:
 
     Q_INVOKABLE void getActorScenes (QString actorId);
     Q_INVOKABLE void getActorPictures (QString actorId);
-    Q_INVOKABLE void getActorTags (QString actorId);
+    Q_INVOKABLE void getTagsOfItem (QString itemId, QString tagType);
 
     Q_INVOKABLE void playScene (QString scenePath);
+
 
     Q_INVOKABLE void prepareDetailView (QString detailObjectId, QString detailObjectType);
 

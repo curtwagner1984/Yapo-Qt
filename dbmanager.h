@@ -34,12 +34,14 @@ public:
     QList<QMap<QString, QVariant>> executeArbitrarySqlWithReturnValue(const QString sqlStatment);
 
     bool executeArbitrarySqlWithoutReturnValue(const QString sqlStatment);
+    bool executeArbitrarySqlWithoutReturnValueForTransaction(QSqlQuery query);
 
-
+    bool beginTransaction();
+    bool commitTransaction();
 
 //    Add Single Item Functions
     bool addActor(QString actorName, bool isMainstream);
-    bool addActorTag (QString tagId, QString tagName, QString actorId);
+    bool addTagWithRelation (QString tagId, QString tagName, QString tagType, QString tagOfId);
 
     bool addTag(QString tagName);
     bool addWebsite(QString websiteName);
@@ -83,6 +85,7 @@ private:
 
 
     bool executeQuery(QString sqlStmt, QString sendingFunction);
+    bool executeQueryForTransaction(QString sqlStmt, QString sendingFunction);
     bool executeQuery(QSqlQuery query, QString sendingFunction);
 
 

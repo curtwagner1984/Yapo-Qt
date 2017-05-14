@@ -14,7 +14,7 @@ public:
     QVariant data(const QModelIndex &index, int role) const;
     void search (const QString searchString);
     void getTagActor (const QString tagId);
-    QHash<int, QByteArray> roleNames() const;
+    QHash<int, QByteArray> roleNames() const;    
 
 
     enum ActorRoles {
@@ -32,7 +32,8 @@ private:
 
     QString SEARCH_SELECT = "SELECT * ,"
                             "(SELECT COUNT(*) FROM Scene_Actor WHERE Scene_Actor.actor_id = Actor.id) as NumberOfScenes, "
-                            "(SELECT COUNT(*) FROM Picture_Actor WHERE Picture_Actor.actor_id = Actor.id) as NumberOfPictures ";
+                            "(SELECT COUNT(*) FROM Picture_Actor WHERE Picture_Actor.actor_id = Actor.id) as NumberOfPictures, "
+                            "(SELECT COUNT(*) FROM Actor_tag WHERE Actor_tag.actor_id = Actor.id) as NumberOfTags ";
 
     QString SEARCH_FROM = "FROM Actor";
 
@@ -41,7 +42,7 @@ private:
 
     QString TAG_SEARCH_FROM = "FROM ACTOR "
             "JOIN Actor_Tag ON Actor.id = Actor_Tag.actor_id "
-            "WHERE Actor_Tag.tag_id = 1";
+            "WHERE Actor_Tag.tag_id = %1";
 
 
 

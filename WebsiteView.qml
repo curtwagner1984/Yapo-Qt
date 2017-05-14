@@ -29,6 +29,7 @@ Item {
             websiteName: name
             numOfScenes: numberOfScenes
             numOfPictures: numberOfPictures
+            websiteId: id
 
         }
 

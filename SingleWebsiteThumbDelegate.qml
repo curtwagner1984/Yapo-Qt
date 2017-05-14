@@ -10,6 +10,7 @@ Item{
 
     property string imageSource: ""
     property string websiteName: ""
+    property string websiteId: ""
     property string numOfScenes: ""
     property string numOfPictures: ""
 
@@ -35,14 +36,14 @@ Item{
 
     }
 
-//    MouseArea{
-//        id: thumbMouseArea
-//        anchors.fill: thumb
-//        hoverEnabled: true
-//        onEntered: {
-//            console.log("Entered " + singleThumbDelegate.scenePath +". Thumb Path is: " + singleThumbDelegate.imageSource )
-//        }
-//    }
+    MouseArea{
+        id: thumbMouseArea
+        anchors.fill: thumb
+        onClicked: {
+            qmlComm.prepareDetailView(websiteId,"Website")
+            mainAppPage.changeView("Website Detail View")
+        }
+    }
 
     Rectangle{
         id: buttonBar

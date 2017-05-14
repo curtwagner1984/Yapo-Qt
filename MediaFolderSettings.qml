@@ -6,14 +6,14 @@ import QtQuick.Controls.Material 2.1
 
 Item {
     anchors.fill: parent
-    id:mediaFolderSettingsView
+    id: mediaFolderSettingsView
     property font myFont: Qt.font({
-        pixelSize: 14,
-        color: "white"
-    });
+                                      pixelSize: 14,
+                                      color: "white"
+                                  })
 
     Component.onCompleted: {
-        mediaFolderModel.search("");
+        mediaFolderModel.search("")
     }
 
     FileDialog {
@@ -23,126 +23,125 @@ Item {
         onAccepted: {
             console.log("You chose: " + fileDialog.fileUrls)
             selectedFolderLable.text = fileDialog.fileUrl
-//            Qt.quit()
+            //            Qt.quit()
         }
         onRejected: {
             console.log("Canceled")
-//            Qt.quit()
+            //            Qt.quit()
         }
-//        Component.onCompleted: visible = true
+        //        Component.onCompleted: visible = true
     }
 
-    ColumnLayout{
+    ColumnLayout {
+        id: myColumnLayout
 
-        RowLayout{
-            Text{
-                id:selectFolderLable
-                text:"Select Folder"
+        RowLayout {
+            Text {
+                id: selectFolderLable
+                text: "Select Folder"
             }
-            Text{
-                id:selectedFolderLable
-                text: qmlComm.getCurrentDateTime();
+            Text {
+                id: selectedFolderLable
+                text: qmlComm.getCurrentDateTime()
             }
-            Button{
-                id:browseButton
-                text:"Browse"
+            Button {
+                id: browseButton
+                text: "Browse"
                 onClicked: fileDialog.visible = true
             }
         }
 
-        RowLayout{
-            CheckBox{
-                id:isVideo
-                text:"Is Video?"
+        RowLayout {
+            CheckBox {
+                id: isVideo
+                text: "Is Video?"
             }
 
-            CheckBox{
-                id:isPicture
-                text:"Is Picture?"
+            CheckBox {
+                id: isPicture
+                text: "Is Picture?"
             }
 
-            Button{
-                id:addFolder
-                text:"Add Folder"
+            Button {
+                id: addFolder
+                text: "Add Folder"
                 onClicked: {
                     var isVideoBool = isVideo.checked
                     var isPictureBool = isPicture.checked
-                    var pathToAdd = selectedFolderLable.text.replace('file:///','');
-                    if (pathToAdd === ""){
+                    var pathToAdd = selectedFolderLable.text.replace(
+                                'file:///', '')
+                    if (pathToAdd === "") {
                         console.log("Select a folder!")
-                    }else{
-                        console.log(pathToAdd,isPictureBool,isVideoBool)
-                        qmlComm.addMediaFolder(pathToAdd,isPictureBool,isVideoBool);
-                        mediaFolderModel.search("");
-
+                    } else {
+                        console.log(pathToAdd, isPictureBool, isVideoBool)
+                        qmlComm.addMediaFolder(pathToAdd, isPictureBool,
+                                               isVideoBool)
+                        mediaFolderModel.search("")
                     }
-
-
-
                 }
             }
         }
+    }
+    Rectangle {
+        id: listviewBackground
+        color: "blue"
+        width: mainAppPage.width
+        height: mainAppPage.height - 300
+        anchors.left: mediaFolderSettingsView.left
+        anchors.right: mediaFolderSettingsView.right
+        anchors.top: myColumnLayout.bottom
 
-        ListView{
-            id:mediaFoldersView
-            Layout.fillHeight: true
-            height: 600
+
+        ListView {
+            id: mediaFoldersView
+            anchors.fill: parent
+
             model: mediaFolderModel
-            delegate: Item{
+            delegate: Item {
                 height: 50
-                RowLayout{
-                    Text{
-                        id:idLable
+                RowLayout {
+                    Text {
+                        id: idLable
                         text: "ID: "
                         font: mediaFolderSettingsView.myFont
                     }
-                    Text{
-                        id:idValue
+                    Text {
+                        id: idValue
                         text: id
                         font: mediaFolderSettingsView.myFont
                     }
-                    Text{
-                        id:pathLable
+                    Text {
+                        id: pathLable
                         text: "Path: "
                         font: mediaFolderSettingsView.myFont
                     }
-                    Text{
-                        id:pathValue
+                    Text {
+                        id: pathValue
                         text: path
                         font: mediaFolderSettingsView.myFont
                     }
 
-                    CheckBox{
-                        id:isPictureValue
-                        text:"Is Picture"
+                    CheckBox {
+                        id: isPictureValue
+                        text: "Is Picture"
                         checked: isPic
-
                     }
 
-                    CheckBox{
-                        id:isVideoValue
+                    CheckBox {
+                        id: isVideoValue
                         text: "Is Video"
                         checked: isVid
-
                     }
 
-                    Button{
-                        id:scanFolderButton
+                    Button {
+                        id: scanFolderButton
                         text: "Scan"
                         onClicked: {
-                            qmlComm.scanMediaFolder(path,isVid,isPic);
+                            qmlComm.scanMediaFolder(path, isVid, isPic)
                         }
                     }
-
                 }
-
             }
-
         }
-
     }
-
-
-
-
 }

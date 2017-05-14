@@ -9,6 +9,7 @@ ActorModel::ActorModel(DbManager *dbManager)
     : BasicListModel(dbManager)
 {
     qDebug() << "Making test actor search ...";
+    this->MODEL_TYPE = "Actor";
 
     this->baseSqlSelect =  SEARCH_SELECT;
     this->baseSqlFrom = SEARCH_FROM ;
@@ -104,6 +105,8 @@ QHash<int, QByteArray> ActorModel::roleNames() const
             return roles;
 
 }
+
+
 
 
 

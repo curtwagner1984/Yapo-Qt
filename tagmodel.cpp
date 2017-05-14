@@ -12,6 +12,8 @@
 TagModel::TagModel(DbManager *dbManager) : BasicListModel(dbManager) {
   qDebug() << "Making test tag search ...";
 
+  this->MODEL_TYPE = "TagModel";
+
   this->baseSqlSelect = SEARCH_SELECT;
   this->baseSqlFrom = SEARCH_FROM;
   this->generateSqlLimit();
@@ -67,11 +69,20 @@ void TagModel::search(const QString searchString) {
 
 void TagModel::getActorTags(const QString actorId) {
 
-  this->baseSqlSelect ="SELECT * ";
-  this->baseSqlWhere = "";
-  this->baseSqlOrder = "";
-  this->baseSqlFrom = ACTOR_SEARCH_FROM.arg(SEARCH_SELECT,actorId);
+  this->baseSqlSelect = SEARCH_SELECT;
+  this->baseSqlWhere = ACTOR_SEARCH_WHERE.arg(actorId);
+  this->baseSqlFrom = ACTOR_SEARCH_FROM;
   this->baseSearch();
+}
+
+void TagModel::getWebsiteTags(const QString websiteId)
+{
+
+    this->baseSqlSelect = SEARCH_SELECT;
+    this->baseSqlWhere = WEBSITE_SEARCH_WHERE.arg(websiteId);
+    this->baseSqlFrom = this->WEBSITE_SEARCH_FROM;
+    this->baseSearch();
+
 }
 
 QHash<int, QByteArray> TagModel::roleNames() const {

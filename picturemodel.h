@@ -13,6 +13,7 @@ public:
     void search(const QString searchString);
     void getActorPictures(const QString actorId);
     void getTagPictures(const QString tagId);
+    void getWebsitePictures(const QString websiteId);
     QHash<int, QByteArray> roleNames() const;
 
     enum PictureRoles {
@@ -61,6 +62,13 @@ private:
             "JOIN Tag ON Tag.id = Website_Tag.tag_id "
             "WHERE Tag.id = %1 "
             ") ";
+
+
+    QString WEBSITE_SEARCH_SELECT = "SELECT * ";
+    QString WEBSITE_SEARCH_FROM = "FROM Picture JOIN Picture_Website ON Picture.id = Picture_Website.picture_id ";
+    QString WEBSITE_SEARCH_WHERE = "WHERE Picture_Website.website_id = %1 ";
+
+
 
 
 };

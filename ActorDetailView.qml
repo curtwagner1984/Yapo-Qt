@@ -186,8 +186,18 @@ Item {
                             }
 
                             CheckBox {
+                                id: isExemptCheckBox
                                 text: "One Word Exempt? "
-                                checked: isExemptFromOneWordSearch
+                                checked: isExemptFromOneWordSearch                                
+                                property bool currentCheckState: isExemptCheckBox.checked
+                                onClicked: {
+                                    console.log("Checkbox clicked")
+                                    isExemptFromOneWordSearch = isExemptCheckBox.checked
+                                    if (isExemptCheckBox.checked !== currentCheckState){
+                                        console.log("Current check state is diffrent than previouse")
+                                        isExemptFromOneWordSearch = isExemptCheckBox.checked
+                                    }
+                                }
                             }
                         }
                     }
@@ -242,7 +252,8 @@ Item {
                            "NumberOfPictures") + ")")
         }
         TabButton {
-            text: qsTr("Tags")
+            text: qsTr("Tags" + " (" + detailObject.getDetailObjectAttrib(
+                           "NumberOfTags") + ")")
         }
     }
 
@@ -310,7 +321,7 @@ Item {
 //                        var newName = selectedItemName.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()})
                         console.log("Autocomplete selected " + selectedItemName + " Type:" + selectedItemType + "Inside ActorDetailView ")
                         qmlComm.addTag(selectedItemId,selectedItemName,"Actor",detailObject.getDetailObjectAttrib("id"))
-                        qmlComm.getActorTags(detailObject.getDetailObjectAttrib("id"))
+                        qmlComm.getTagsOfItem(detailObject.getDetailObjectAttrib("id"),"Actor")
 
                     }
                 }

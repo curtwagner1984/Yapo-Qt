@@ -6,6 +6,7 @@ MediafolderModel::MediafolderModel(DbManager *dbManager)
                 :BasicListModel(dbManager)
 {
     qDebug() << "initiating MediafolderModel  ...";
+    this->MODEL_TYPE = "MediafolderModel";
     this->baseSqlSelect =  "SELECT * ";
     this->baseSqlFrom = "FROM MediaFolder";
     this->generateSqlLimit();

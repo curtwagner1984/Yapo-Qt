@@ -35,6 +35,22 @@ Item{
 
     }
 
+    MouseArea{
+        id: thumbMouseArea
+        anchors.fill: thumb
+        onClicked: {
+//            pictureView.popTestImgSource = imageSource
+//            sceneView.popup.video.source = singleThumbDelegate.scenePath
+            sceneView.popup.setupVideo(singleThumbDelegate.scenePath)
+//            sceneView.popup.open()
+//            sceneView.popup.video.source =
+//            sceneView.popup.video.play()
+
+        }
+
+
+    }
+
 //    MouseArea{
 //        id: thumbMouseArea
 //        anchors.fill: thumb

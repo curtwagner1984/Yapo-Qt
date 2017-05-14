@@ -43,6 +43,10 @@ ApplicationWindow {
             mainStack.push(tagDetailViewComponenet, {
                                objectName: "Tag Detail View"
                            })
+        }else if (viewToChangeTo === "Website Detail View") {
+            mainStack.push(websiteDetailViewComponenet, {
+                               objectName: "Website Detail View"
+                           })
         }
     }
 
@@ -275,6 +279,14 @@ ApplicationWindow {
     Component {
         id: tagDetailViewComponenet
         TagDetailView {
+            width: mainAppPage.width
+            height: mainAppPage.height - searchBarRow.height
+        }
+    }
+
+    Component {
+        id: websiteDetailViewComponenet
+        WebsiteDetailView {
             width: mainAppPage.width
             height: mainAppPage.height - searchBarRow.height
         }

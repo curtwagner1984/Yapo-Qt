@@ -38,7 +38,7 @@ Item{
         id: thumbMouseArea
         anchors.fill: thumb
         onClicked: {
-            pictureView.popTestImgSource = imageSource
+//            pictureView.popTestImgSource = imageSource
             pictureView.popTest.curIndex = index
             pictureView.popTest.open()
         }

@@ -10,6 +10,7 @@ SceneModel::SceneModel(DbManager *dbManager)
            : BasicListModel(dbManager)
 {
     qDebug() << "Making test scene search ...";
+    this->MODEL_TYPE = "SceneModel";
 
     this->baseSqlSelect =  SEARCH_SELECT;
     this->baseSqlFrom = SEARCH_FROM;
@@ -79,6 +80,15 @@ void SceneModel::getTagScenes(const QString tagId)
     this->baseSqlFrom = TAG_SEARCH_FROM.arg(tagId);
     this->baseSqlSelect = TAG_SEARCH_SELECT;
     this->baseSearch();
+
+}
+
+void SceneModel::getWebsiteScenes(const QString websiteId)
+{
+        this->baseSqlWhere = this->WEBSITE_SEARCH_WHERE.arg(websiteId);;
+        this->baseSqlOrder = "";
+        this->baseSqlFrom = this->WEBSITE_SEARCH_FROM;
+        this->baseSearch();
 
 }
 
