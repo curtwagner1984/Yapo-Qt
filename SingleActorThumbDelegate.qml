@@ -39,9 +39,14 @@ Item{
     MouseArea{
         id: thumbMouseArea
         anchors.fill: thumb
-        onClicked: {
+        onDoubleClicked: {
             qmlComm.prepareDetailView(actorId,"Actor")
             mainAppPage.changeView("Actor Detail View")
+
+        }
+
+        onClicked: {
+            console.log("Single Clicked on " + actorName)
         }
     }
 

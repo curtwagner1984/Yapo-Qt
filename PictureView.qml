@@ -13,10 +13,10 @@ Item {
         id: popup
         property int curIndex: -1
         transformOrigin: Popup.TopLeft
-        x: - mainAppPage.x
-        y: - mainAppPage.y
-        width: Screen.desktopAvailableWidth
-        height: Screen.desktopAvailableHeight
+        x: mainItem.x
+        y: mainItem.y
+        width: mainItem.width
+        height: mainItem.height
         modal: true
 //        activeFocus: true
         focus: true

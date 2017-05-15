@@ -8,7 +8,7 @@
 #include <QQmlContext>
 #include <QQuickView>
 
-QmlComm::QmlComm(QQuickView &view, QObject *parent) : QObject(parent) {
+QmlComm::QmlComm(QQmlApplicationEngine &view, QObject *parent) : QObject(parent) {
   this->dbManager = new DbManager("");
   this->fileImporterMutex = new QMutex;
   this->fileImporter =

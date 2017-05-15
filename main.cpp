@@ -15,13 +15,13 @@ int main(int argc, char *argv[])
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QGuiApplication app(argc, argv);
 
-    QQuickView view;
+//    QQuickView view;
 
 
-    QmlComm* qmlComm = new QmlComm(view);
+//    QmlComm* qmlComm = new QmlComm(view);
 
-    view.rootContext()->setContextProperty("qmlComm", qmlComm);
-    view.setSource(QUrl(QLatin1String("qrc:/main.qml")));
+//    view.rootContext()->setContextProperty("qmlComm", qmlComm);
+//    view.setSource(QUrl(QLatin1String("qrc:/main.qml")));
 
 
 
@@ -30,8 +30,13 @@ int main(int argc, char *argv[])
 
 //    view.show();
 
-//    QQmlApplicationEngine engine;
-//    engine.load(QUrl(QLatin1String("qrc:/main.qml")));
+    QQmlApplicationEngine engine;
+
+    QmlComm* qmlComm = new QmlComm(engine);
+
+    engine.rootContext()->setContextProperty("qmlComm", qmlComm);
+
+    engine.load(QUrl(QLatin1String("qrc:/main.qml")));
 
     return app.exec();
 }

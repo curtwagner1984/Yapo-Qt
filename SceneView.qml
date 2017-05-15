@@ -37,24 +37,29 @@ Item {
 
             Timer {
                    id:popupContentItemTimer
-                   interval: 3000; running: false; repeat: true
+                   interval: 2000; running: false; repeat: true
                    onTriggered:
                    {
+
                        console.log("Timer was triggered");
                        if (sceneViewPopup.seekSum > (popupVideo.duration - sceneViewPopup.seekValue))
                        {
-                           console.log("Last 15 seconds")
-                           sceneViewPopup.seekSum = popupVideo.duration - 15000
+                           popupContentItemTimer.stop()
+                           console.log("Last 30 seconds")
+                           sceneViewPopup.seekSum = popupVideo.duration - 30000
                            popupVideo.seek(sceneViewPopup.seekSum);
-                           running = false
+
                        }else{
-                           console.log("Seek sum before adding " + sceneViewPopup.seekSum);
+                           console.log("Running is " + running + " Seek sum before adding " + sceneViewPopup.seekSum);
                            popupVideo.seek(sceneViewPopup.seekSum);
                            sceneViewPopup.seekSum = sceneViewPopup.seekSum + sceneViewPopup.seekValue;
-                           console.log("Seek sum after adding " + sceneViewPopup.seekSum + " Duration is: " + popupVideo.duration);
+                           console.log("Running is " + running + " Seek sum after adding " + sceneViewPopup.seekSum + " Duration is: " + popupVideo.duration);
                        }
 
 
+                   }
+                   onRunningChanged: {
+                       console.log("Running Changed to " + popupContentItemTimer.running)
                    }
                }
 
@@ -66,18 +71,20 @@ Item {
                 height: sceneViewPopup.height
                 fillMode: VideoOutput.PreserveAspectFit
                 onStatusChanged: {
-                        if(status === MediaPlayer.Loaded){
-                            popupVideo.play()
-                            sceneViewPopup.seekValue = popupVideo.duration / 12;
+                    console.log("Status changed triggered in popupVideo, Status is " + status)
+                        if(status === MediaPlayer.Loaded && sceneViewPopup.visible){
+
+
+                            sceneViewPopup.seekValue = popupVideo.duration / 20;
                             sceneViewPopup.seekSum = sceneViewPopup.seekValue
                             console.log("Seek value is: " + sceneViewPopup.seekValue + " duration is " + popupVideo.duration)
                             if (!(popupVideo.duration < 60000))
                             {
-
                                 popupContentItemTimer.running = true
                             }else{
                                 console.log("This is a short Video")
                             }
+                            popupVideo.play()
 
 
                         }
@@ -100,7 +107,7 @@ Item {
                 }
                 onPositionChanged:
                 {
-                    console.log("Position changed");
+//                    console.log("Position changed");
                     var ratio1 = popupVideo.position / popupVideo.duration
                     var seekBarX = statusBar.width * ratio1
                     statusBarSeekHead.x = seekBarX
@@ -125,8 +132,8 @@ Item {
                 {
                     id:statusBarBackground
                     color: Material.color(Material.Grey)
-                    height: 2
-                    anchors.fill: parent
+                    height: 1
+                    width: parent.width
                 }
 
                 Rectangle
@@ -156,7 +163,7 @@ Item {
         onClosed:
         {
             console.log("On Closed Evene triggered ...")
-            popupContentItemTimer.running = false
+            popupContentItemTimer.stop()
             popupVideo.stop()
 
 

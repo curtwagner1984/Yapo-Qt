@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QDateTime>
 #include <QQuickView>
+#include <QQmlApplicationEngine>
 #include <QMutex>
 
 #include "dbmanager.h"
@@ -28,7 +29,7 @@ class QmlComm : public QObject
 {
     Q_OBJECT
 public:
-    explicit QmlComm(QQuickView &view, QObject *parent = 0);
+    explicit QmlComm(QQmlApplicationEngine &view, QObject *parent = 0);
     Q_INVOKABLE QDateTime getCurrentDateTime() const {
         return QDateTime::currentDateTime();
     }
