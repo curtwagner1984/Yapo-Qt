@@ -39,4 +39,7 @@
     <qresource prefix="/autoComplete">
         <file>AutoCompletePopup.qml</file>
     </qresource>
+    <qresource prefix="/treeFolderView">
+        <file>TreeFolderView.qml</file>
+    </qresource>
 </RCC>

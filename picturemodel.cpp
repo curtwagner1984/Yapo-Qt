@@ -16,8 +16,8 @@ PictureModel::PictureModel(DbManager *dbManager)
     this->baseSqlFrom = SEARCH_FROM;
     this->generateSqlLimit();
 
-
-    this->search("");
+    qDebug() << "Picture Model initialized ...";
+//    this->search("");
 }
 
 QVariant PictureModel::data(const QModelIndex &index, int role) const

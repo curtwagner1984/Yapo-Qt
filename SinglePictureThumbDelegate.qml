@@ -39,8 +39,9 @@ Item{
         anchors.fill: thumb
         onClicked: {
 //            pictureView.popTestImgSource = imageSource
-            pictureView.popTest.curIndex = index
-            pictureView.popTest.open()
+            mainAppPage.showImage.curIndex = index
+//            pictureView.popTest.curIndex = index
+            mainAppPage.showImage.open()
         }
 
 

@@ -4,7 +4,7 @@ import QtQuick.Controls 1.4
 import QtQuick.Controls 2.1
 import QtQuick.Controls.Material 2.1
 import QtQuick.Layouts 1.3
-
+import QtGraphicalEffects 1.0
 
 //import QtQuick.Controls 2.0
 //import QtQuick.Layouts 1.3
@@ -19,6 +19,11 @@ import "qrc:/autoComplete"
 Item {
     id: actorDetailView
     height: 400
+
+    Component.onCompleted: {
+        console.log("Actor detail view *ON COMPLETED* triggered..")
+        sceneViewLoader.sourceComponent = actorDetailSceneViewComponenet
+    }
 
     Rectangle {
         id: sideBar
@@ -175,11 +180,16 @@ Item {
                 anchors.top: addAliasRow.bottom
 
                 ListView {
+                    id: alaisList
                     model: generalAlias
                     height: sidebarStackedLayout.height
+                    width: parent.width
                     delegate: Item {
+                        id:alaisListDelegate
                         height: 20
+                        width: alaisList.width
                         RowLayout {
+                            width: parent.width
 
                             Text {
                                 text: name
@@ -198,6 +208,39 @@ Item {
                                         isExemptFromOneWordSearch = isExemptCheckBox.checked
                                     }
                                 }
+                            }
+
+                            Button{
+                                id:removeAlias
+                                text:""
+                                height: alaisListDelegate.height - 4
+                                implicitWidth: height
+                                anchors.right: parent.right
+//                                anchors.verticalCenter: alaisListDelegate.verticalCenter
+                                hoverEnabled: true
+                                ToolTip.visible: hovered
+                                ToolTip.text: qsTr("Remove Alias " + name)
+                                onClicked: {
+                                    console.log("Remove alias clicked")
+                                    qmlComm.deleteAlias(id,"Actor")
+//                                    qmlComm.playScene(singleThumbDelegate.scenePath)
+                                }
+
+                                Image {
+                                        id: image
+                                        fillMode: Image.PreserveAspectFit
+                                        anchors.centerIn: parent
+                                        sourceSize.height: removeAlias.background.height - 6
+                                        height: sourceSize.height
+                                        source: "file:///D:/YAPOC++/resource/icons/close.png"
+                                    }
+                                    ColorOverlay {
+                                        anchors.fill: image
+                                        source: image
+                                        // In dark styles background is dark, this makes the image white
+                                        color: "#ffffffff"
+                                    }
+
                             }
                         }
                     }
@@ -239,23 +282,40 @@ Item {
         width: mainview.width
         anchors.top: mainview.top
         anchors.horizontalCenter: mainview.horizontalCenter
+
         TabButton {
+
+            onClicked: {
+                console.log("Clicked Scenes Tab")
+//                sceneViewLoader.sourceComponent = actorDetailSceneViewComponenet
+            }
+
             text: qsTr("Scenes" + " (" + detailObject.getDetailObjectAttrib(
                            "NumberOfScenes") + ")")
-            //            onClicked: {
-            //                console.log("Clicked Scenes tab button")
-            //                mainViewStackLayout.push(mainAppPage.sceneViewComp)
-            //            }
+
+
+
         }
         TabButton {
+            onClicked: {
+                console.log("Clicked Pictures Tab")
+                pictureViewLoader.sourceComponent = actorDetailPictureViewComponenet
+            }
             text: qsTr("Pictures" + " (" + detailObject.getDetailObjectAttrib(
                            "NumberOfPictures") + ")")
         }
         TabButton {
+            onClicked: {
+                console.log("Clicked Tags Tab")
+                tagViewLoader.sourceComponent = actorDetailtagViewComponenet
+            }
             text: qsTr("Tags" + " (" + detailObject.getDetailObjectAttrib(
                            "NumberOfTags") + ")")
         }
+
     }
+
+
 
     StackLayout {
         id: mainViewStackLayout
@@ -264,16 +324,56 @@ Item {
         anchors.left: sideBar.right
         currentIndex: mainViewTabBar.currentIndex
 
+
+        Loader{
+            id:sceneViewLoader
+            sourceComponent : actorDetailSceneViewComponenet
+
+        }
+
+        Loader{
+            id:pictureViewLoader
+
+        }
+
+        Loader{
+            id:tagViewLoader
+
+        }
+
+//        SceneView {
+//            width: mainview.width
+//            height: mainview.height - mainViewTabBar.height
+//        }
+
+//        PictureView {
+//            width: mainview.width
+//            height: mainview.height - mainViewTabBar.height
+//        }
+
+
+
+
+    }
+
+    Component{
+        id:actorDetailSceneViewComponenet
         SceneView {
-            width: mainview.width
-            height: mainview.height - mainViewTabBar.height
+            width:  mainItem.width
+            height: mainItem.height
         }
+    }
 
+    Component{
+        id:actorDetailPictureViewComponenet
         PictureView {
-            width: mainview.width
-            height: mainview.height - mainViewTabBar.height
+            width:  mainItem.width
+            height: mainItem.height
         }
+    }
 
+    Component{
+        id: actorDetailtagViewComponenet
         Item {
             id: tagViewTab
             focus: true

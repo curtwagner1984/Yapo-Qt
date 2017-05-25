@@ -232,11 +232,26 @@ void DbManager::createTables() {
       "CREATE INDEX IF NOT EXISTS ix_Website_Tag_tag_id ON "
       "Website_Tag(tag_id)");
 
+  createStatmentList.append(
+      "CREATE INDEX IF NOT EXISTS ix_TreeFolder_path_to_dir ON "
+      "TreeFolder(path_to_dir)");
+
+  createStatmentList.append(
+      "CREATE INDEX IF NOT EXISTS ix_Scene_path_to_file ON "
+      "Scene(path_to_file)");
+
+  createStatmentList.append(
+      "CREATE INDEX IF NOT EXISTS ix_Picture_path_to_file ON "
+      "Picture(path_to_file)");
+
 
 
   for (int i = 0; i < createStatmentList.size(); i++) {
     QSqlQuery query;
-    query.exec(createStatmentList.at(i));
+    if (!query.exec(createStatmentList.at(i))){
+        qDebug() << "SQL ERROR: " << query.lastError();
+    }
+
   }
 }
 

@@ -4,6 +4,7 @@
 GeneralAlias::GeneralAlias(DbManager *dbManager) : BasicListModel(dbManager)
 {
     this->MODEL_TYPE = "GeneralAlias";
+    qDebug() << "General Alias Model initialized ...";
 }
 
 QVariant GeneralAlias::data(const QModelIndex &index, int role) const {
@@ -39,6 +40,7 @@ bool GeneralAlias::setData(const QModelIndex &index, const QVariant &value,
 
   QString stmt = "UPDATE %1 SET %2 = '%3' WHERE id = %4";
 
+
   if (role == NameRole) {
     currentItem["name"] = value.toString();
     success = this->dbManager->executeArbitrarySqlWithoutReturnValue(
@@ -68,8 +70,8 @@ void GeneralAlias::search(const QString aliasOfId, const QString aliasOf) {
     tableName = "TagAlias";
     columnName = "tag_id";
   } else if (aliasOf == "Website"){
-      tableName = "WebsiteAlias";
-      columnName = "website_id";
+    tableName = "WebsiteAlias";
+    columnName = "website_id";
   }
 
   //    QString baseFrom = QString("FROM %1").arg(tableName);
@@ -82,6 +84,32 @@ void GeneralAlias::search(const QString aliasOfId, const QString aliasOf) {
 
   this->generateSqlLimit();
   this->baseSearch();
+}
+
+bool GeneralAlias::deleteAlias(const QString aliasToDeleteId, const QString aliasOf)
+{
+
+    if (aliasOf == "Actor") {
+      tableName = "ActorAlias";
+      columnName = "actor_id";
+    } else if (aliasOf == "Tag") {
+      tableName = "TagAlias";
+      columnName = "tag_id";
+    } else if (aliasOf == "Website"){
+      tableName = "WebsiteAlias";
+      columnName = "website_id";
+    }
+
+    QString stmt = "DELETE FROM %1 WHERE id = %2";
+    if (this->dbManager->executeArbitrarySqlWithoutReturnValue(stmt.arg(tableName,aliasToDeleteId)))
+    {
+        this->generateSqlLimit();
+        this->baseSearch();
+        return true;
+    }else{
+        return false;
+    }
+
 }
 
 void GeneralAlias::updateAlias(QString aliasOf, QString updatedField,

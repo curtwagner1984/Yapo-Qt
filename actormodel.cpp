@@ -1,21 +1,23 @@
 #include "actormodel.h"
 #include <qdebug.h>
 #include <QFileInfo>
-
+#include <QModelIndex>
 
 
 
 ActorModel::ActorModel(DbManager *dbManager)
     : BasicListModel(dbManager)
 {
-    qDebug() << "Making test actor search ...";
+
     this->MODEL_TYPE = "Actor";
 
     this->baseSqlSelect =  SEARCH_SELECT;
     this->baseSqlFrom = SEARCH_FROM ;
 
     this->generateSqlLimit();
-    this->search("");
+//    this->search("");
+
+    qDebug() << "Actor Model initialized ...";
 
 }
 
@@ -23,8 +25,6 @@ ActorModel::ActorModel(DbManager *dbManager)
 
 QVariant ActorModel::data(const QModelIndex &index, int role) const
 {
-
-
 
     if (!index.isValid()){
             return QVariant();
@@ -103,6 +103,18 @@ QHash<int, QByteArray> ActorModel::roleNames() const
             roles[NameRole] = "name";
             roles[GenderRole] = "gender";
             return roles;
+
+}
+
+QVariant ActorModel::directData(QString roleName, int index)
+{
+    QByteArray temp = roleName.toLatin1();
+    QHash<int, QByteArray> roles = roleNames();
+    int currentRole = roles.key(temp);
+    QModelIndex ix = this->index(index);
+    QVariant ans = this->data(ix,currentRole);
+    return ans;
+
 
 }
 

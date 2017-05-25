@@ -18,7 +18,9 @@ SOURCES += main.cpp \
     websitemodel.cpp \
     generalalias.cpp \
     autocompletemodel.cpp \
-    detailobject.cpp
+    detailobject.cpp \
+    treefolderitem.cpp \
+    treefoldermodel.cpp
 
 RESOURCES += qml.qrc
 
@@ -61,6 +63,8 @@ HEADERS += \
     websitemodel.h \
     generalalias.h \
     autocompletemodel.h \
-    detailobject.h
+    detailobject.h \
+    treefolderitem.h \
+    treefoldermodel.h
 
 DISTFILES +=

@@ -17,7 +17,8 @@ TagModel::TagModel(DbManager *dbManager) : BasicListModel(dbManager) {
   this->baseSqlSelect = SEARCH_SELECT;
   this->baseSqlFrom = SEARCH_FROM;
   this->generateSqlLimit();
-  this->search("");
+  qDebug() << "Tag Model initialized ...";
+//  this->search("");
 }
 
 QVariant TagModel::data(const QModelIndex &index, int role) const {

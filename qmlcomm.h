@@ -19,6 +19,8 @@
 #include "tagmodel.h"
 #include "websitemodel.h"
 
+#include "treefoldermodel.h"
+
 #include "generalalias.h"
 #include "autocompletemodel.h"
 
@@ -69,6 +71,8 @@ public:
     Q_INVOKABLE void addAlias (QString aliasName, QString aliasType, QString aliasOfId);
     Q_INVOKABLE void addTag (QString tagId, QString tagName, QString tagType, QString tagOfId);
 
+    Q_INVOKABLE bool deleteAlias (QString aliasToDeleteId, QString aliasOf);
+
 
 
     ~QmlComm();
@@ -87,6 +91,8 @@ private:
     PictureModel* pictureModel;
     TagModel* tagModel;
     WebsiteModel* websiteModel;
+
+    TreeFolderModel* treeFolderModel;
 
     DetailObject* detailObject;
 

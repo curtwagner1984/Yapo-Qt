@@ -14,7 +14,8 @@ void DetailObject::setDetailObject(QString objectId, QString objectType) {
                 "SELECT * ,"
                 "(SELECT COUNT(*) FROM Scene_Actor WHERE Scene_Actor.actor_id = Actor.id) as NumberOfScenes, "
                 "(SELECT COUNT(*) FROM Picture_Actor WHERE Picture_Actor.actor_id = Actor.id) as NumberOfPictures, "
-                "(SELECT COUNT(*) FROM Actor_tag WHERE Actor_tag.actor_id = Actor.id) as NumberOfTags "
+                "(SELECT COUNT(*) FROM Actor_tag WHERE Actor_tag.actor_id = Actor.id) as NumberOfTags, "
+                "'Actor' as TableName "
                 "FROM Actor WHERE Actor.id = %1")
                .arg(objectId);
 //    TODO: Make this use a variable instead of copy pasted String

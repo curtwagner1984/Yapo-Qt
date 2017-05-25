@@ -11,10 +11,12 @@ class ActorModel : public BasicListModel
     Q_OBJECT
 public:
     ActorModel(DbManager* dbManager);
-    QVariant data(const QModelIndex &index, int role) const;
+    Q_INVOKABLE QVariant data(const QModelIndex &index, int role) const;
     void search (const QString searchString);
     void getTagActor (const QString tagId);
-    QHash<int, QByteArray> roleNames() const;    
+    QHash<int, QByteArray> roleNames() const;
+
+    Q_INVOKABLE QVariant directData(QString roleName, int index);
 
 
     enum ActorRoles {

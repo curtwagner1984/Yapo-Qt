@@ -90,7 +90,7 @@ Popup {
                         text: {
                             var result = name.replace(
                                         new RegExp('(' + searchedText + ')',
-                                                   'gi'), "<b>$1</b>")
+                                                   'gi'), "<font color=\"white\"><b>$1</b></font>")
                             if (tableName.indexOf('New') !== -1){
                                 result = tableName + " " + result
                             }
@@ -99,6 +99,7 @@ Popup {
                         }
 
                         font.capitalization: Font.Capitalize
+                        font.pixelSize: autoCompleteDelegateBackground.height / 3
                         anchors.left: autoCompleteThumb.right
                         anchors.leftMargin: 10
                         anchors.verticalCenter: autoCompleteDelegateBackground.verticalCenter

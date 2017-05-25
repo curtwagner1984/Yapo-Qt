@@ -3,6 +3,7 @@ import QtQuick.Layouts 1.1
 import QtQuick.Controls 2.1
 import QtGraphicalEffects 1.0
 import QtQuick.Controls.Material 2.1
+import QtQuick.Controls.Material 2.1
 
 
 Item{
@@ -17,24 +18,37 @@ Item{
 
     property string currentPlaceHolder: "file:///D:/Webstorm/Yapo-Electron/app/media/unknown/unknown scene_360.jpg"
 
-
-
-    Image {
-        id: thumb
-        source: singleThumbDelegate.imageSource
-        asynchronous: true
-        fillMode: Image.PreserveAspectCrop
-        width: singleThumbDelegate.width
-        height: singleThumbDelegate.height
-        sourceSize.width: singleThumbDelegate.width
-        sourceSize.height: singleThumbDelegate.height
-        onStatusChanged: {
-                    if (thumb.status == Image.Error)
-                        thumb.source = currentPlaceHolder
-
-                }
+    Rectangle{
+        id:background
+        anchors.fill: parent
+        color: Material.color(Material.Grey)
 
     }
+
+    Rectangle{
+        id:thumb
+        anchors.fill: background
+        anchors.margins: 2
+        color: "white"
+
+    }
+
+//    Image {
+//        id: thumb
+//        source: singleThumbDelegate.imageSource
+//        asynchronous: true
+//        fillMode: Image.PreserveAspectCrop
+//        width: singleThumbDelegate.width
+//        height: singleThumbDelegate.height
+//        sourceSize.width: singleThumbDelegate.width
+//        sourceSize.height: singleThumbDelegate.height
+//        onStatusChanged: {
+//                    if (thumb.status == Image.Error)
+//                        thumb.source = currentPlaceHolder
+
+//                }
+
+//    }
 
     MouseArea{
         id: thumbMouseArea
@@ -85,22 +99,39 @@ Item{
 
     }
 
-    Text {
-        id: lable
-                text: singleThumbDelegate.tagName
-                anchors.bottom: buttonBar.top
-                anchors.left: thumb.left
-                anchors.bottomMargin: 15
-                anchors.leftMargin: 5
+    Item{
+        id:lableContainer
+        width: thumb.width - 10
+        height: thumb.height * (3/4)
+
+        Text {
+            id: lable
+            text: singleThumbDelegate.tagName
+//                    wrapMode: Text.Wrap
+
+
+//                anchors.bottom: buttonBar.top
+//                anchors.left: thumb.left
+//                anchors.bottomMargin: 15
+//                anchors.leftMargin: 5
+            anchors.centerIn: lableContainer
 //                width: thumb.width
-                style: Text.Outline
-                styleColor: "black"
-                font.pixelSize: singleThumbDelegate.width / 26
-                font.bold: true
-                font.capitalization: Font.Capitalize
-//                clip: true
-                color: "White"
-        }
+            style: Text.Outline
+            styleColor: "black"
+            font.pixelSize: thumb.height / 8
+            font.bold: true
+            font.capitalization: Font.Capitalize
+            clip: true
+            color: "White"
+
+
+
+
+            }
+
+    }
+
+
 
 
     Rectangle
@@ -116,13 +147,16 @@ Item{
             id: durationLable
             text: "(#S:"+ singleThumbDelegate.numOfScenes + " #A: "  + singleThumbDelegate.numOfActors + "#P: " + singleThumbDelegate.numOfPictures + ")"
 //            anchors.top: thumb.top
-            anchors.left: lable.left
-            anchors.top: lable.bottom
-//            anchors.topMargin: 5
+//            anchors.left: lable.left
+//            anchors.top: lable.bottom
+            anchors.horizontalCenter: lableContainer.horizontalCenter
+//            anchors.top: lable.bottom
+            anchors.bottom: buttonBar.top
+            anchors.bottomMargin: 10
 //            anchors.rightMargin: 5
             style: Text.Outline
             styleColor: "black"
-            font.pixelSize: singleThumbDelegate.width / 28
+            font.pixelSize: thumb.height / 10
             font.capitalization: Font.Capitalize
 //            clip: true
             color: "White"

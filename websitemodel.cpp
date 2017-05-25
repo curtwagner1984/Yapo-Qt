@@ -15,7 +15,8 @@ WebsiteModel::WebsiteModel(DbManager *dbManager)
 
     this->baseSqlFrom = SEARCH_FROM;
     this->generateSqlLimit();
-    this->search("");
+    qDebug() << "Website Model initialized ...";
+//    this->search("");
 
 }
 

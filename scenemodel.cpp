@@ -16,7 +16,8 @@ SceneModel::SceneModel(DbManager *dbManager)
     this->baseSqlFrom = SEARCH_FROM;
 
     this->generateSqlLimit();
-    this->search("");
+//    this->search("");
+    qDebug() << "Scene Model initialized ...";
 }
 
 QVariant SceneModel::data(const QModelIndex &index, int role) const

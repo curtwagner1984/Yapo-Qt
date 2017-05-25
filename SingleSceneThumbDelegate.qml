@@ -41,7 +41,8 @@ Item{
         onClicked: {
 //            pictureView.popTestImgSource = imageSource
 //            sceneView.popup.video.source = singleThumbDelegate.scenePath
-            sceneView.popup.setupVideo(singleThumbDelegate.scenePath)
+            mainAppPage.showVideo.setupVideo(singleThumbDelegate.scenePath)
+//            sceneView.popup.setupVideo(singleThumbDelegate.scenePath)
 //            sceneView.popup.open()
 //            sceneView.popup.video.source =
 //            sceneView.popup.video.play()

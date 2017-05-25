@@ -10,6 +10,7 @@ MediafolderModel::MediafolderModel(DbManager *dbManager)
     this->baseSqlSelect =  "SELECT * ";
     this->baseSqlFrom = "FROM MediaFolder";
     this->generateSqlLimit();
+    qDebug() << "MediaFolder Model initialized ...";
     this->search("");
 }
 

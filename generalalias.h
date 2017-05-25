@@ -18,6 +18,8 @@ public:
 
     void search(const QString aliasOfId, const QString aliasOf);
 
+    bool deleteAlias(const QString aliasToDeleteId, const QString aliasOf);
+
     void updateAlias(QString aliasOf, QString updatedField, QString updatedValue);
 
 

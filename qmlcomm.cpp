@@ -29,6 +29,8 @@ QmlComm::QmlComm(QQmlApplicationEngine &view, QObject *parent) : QObject(parent)
 
   this->detailObject = new DetailObject(this->dbManager);
 
+  this->treeFolderModel = new TreeFolderModel(this->dbManager);
+
   view.rootContext()->setContextProperty("dbManager", this->dbManager);
   view.rootContext()->setContextProperty("mediaFolderModel",
                                          this->mediaFolderModel);
@@ -43,6 +45,8 @@ QmlComm::QmlComm(QQmlApplicationEngine &view, QObject *parent) : QObject(parent)
   view.rootContext()->setContextProperty("detailObject", this->detailObject);
   view.rootContext()->setContextProperty("autoCompleteModel",
                                          this->autoCompleteModel);
+
+  view.rootContext()->setContextProperty("treeFolderModel", this->treeFolderModel);
 }
 
 bool QmlComm::addMediaFolder(QString folderPath, bool isPicture, bool isVideo) {
@@ -229,6 +233,12 @@ void QmlComm::addTag(QString tagId, QString tagName, QString tagType,
                      QString tagOfId) {
 
     this->dbManager->addTagWithRelation(tagId,tagName,tagType,tagOfId);
+
+}
+
+bool QmlComm::deleteAlias(QString aliasToDeleteId, QString aliasOf)
+{
+    return this->generalAlias->deleteAlias(aliasToDeleteId,aliasOf);
 
 }
 

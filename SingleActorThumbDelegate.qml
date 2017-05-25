@@ -19,6 +19,9 @@ Item{
 
 
 
+
+
+
     Image {
         id: thumb
         source: singleThumbDelegate.imageSource
@@ -39,15 +42,42 @@ Item{
     MouseArea{
         id: thumbMouseArea
         anchors.fill: thumb
+        acceptedButtons: Qt.LeftButton | Qt.RightButton
+
         onDoubleClicked: {
-            qmlComm.prepareDetailView(actorId,"Actor")
-            mainAppPage.changeView("Actor Detail View")
+            if(mouse.button & Qt.RightButton)
+            {
+
+            }else{
+                qmlComm.prepareDetailView(actorId,"Actor")
+                mainAppPage.changeView("Actor Detail View")
+            }
 
         }
 
         onClicked: {
-            console.log("Single Clicked on " + actorName)
+            if(mouse.button & Qt.RightButton)
+            {
+
+
+//                var contextMenuY = (singleThumbDelegate.y + mouseY) % actorView.height
+//                console.log("Right click on " + actorName + " singleThumbDelegate.y + mouseY = " + (singleThumbDelegate.y + mouseY) + " contextMenuY = " + contextMenuY + " singleThumbDelegate.y=" + singleThumbDelegate.y + " actorView.height=" + actorView.height)
+                var cords = singleThumbDelegate.mapToItem(actorView,0,0)
+                console.log("Cordsx: " + cords.x + " Cordsy:" + cords.y)
+
+                actorView.openContextMenu(cords.x + mouseX,cords.y + mouseY,index)
+
+            }else{
+                console.log("Single Clicked on " + actorName)
+                actorView.selected("Actor", name, id, "", index)
+    //            singleThumbDelegate.selected
+
+            }
+
+
         }
+
+
     }
 
     Rectangle{

@@ -1,3 +1,4 @@
+
 #include "tagger.h"
 
 #include "qdebug.h"
@@ -188,7 +189,9 @@ void Tagger::beginTagging()
     int taggingTime = timer.elapsed();
     QString taggingTimeString = timer.toString("hh:mm:ss");
     qDebug() << "Tagger is finished!";
-    qDebug() << QString("Tagging took %1 ms .# Of Scenes updated: %2, # Of Pictures updated: %3").arg(QString::number(taggingTime),this->updatedScenesCount,this->updatedPicturesCount);
+    qDebug() << QString("Tagging took %1 ms .# Of Scenes updated: %2, # Of Pictures updated: %3").arg(QString::number(taggingTime),
+                                                                                                      QString::number(this->updatedScenesCount),
+                                                                                                      QString::number(this->updatedPicturesCount));
 
 
 
