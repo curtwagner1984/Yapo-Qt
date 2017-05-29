@@ -40,6 +40,10 @@
     </qresource>
     <qresource prefix="/autoComplete">
         <file>AutoCompletePopup.qml</file>
+        <file>AutoCompletePopupTwo.qml</file>
+        <file>AutoCompleteContentItem.qml</file>
+        <file>AutoCompleteListViewDelegate.qml</file>
+        <file>AutoCompleteWithTextBox.qml</file>
     </qresource>
     <qresource prefix="/treeFolderView">
         <file>TreeFolderView.qml</file>

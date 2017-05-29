@@ -10,7 +10,7 @@ class AutoCompleteModel : public BasicListModel {
  public:
   AutoCompleteModel(DbManager* dbManager);
   QVariant data(const QModelIndex& index, int role) const;
-  void search(const QString searchString, QString searchType);
+  Q_INVOKABLE void search(const QString searchString, QString searchType);
   void tagSearch(const QString searchString);
   void generalSearch(const QString searchString);
   QHash<int, QByteArray> roleNames() const;

@@ -71,8 +71,8 @@ bool BasicListModel::addItem(QString itemToAddId, QString itemToAddName,
   }
 
   if (itemToAddRelationTableName != "") {
-    QString firstColumnName = QString("%1_id").arg(itemToAddType);
-    QString secondColumnName = QString("%1_id").arg(itemRelationType);
+    QString firstColumnName = QString("%1_id").arg(itemToAddType).toLower();
+    QString secondColumnName = QString("%1_id").arg(itemRelationType).toLower();
     QString relationInsertStmt =
         QString("INSERT INTO %1 (%2,%3) VALUES (%4,%5)")
             .arg(itemToAddRelationTableName, firstColumnName, secondColumnName,
@@ -158,8 +158,8 @@ bool BasicListModel::removeItem(QString itemToRemoveId,
 
     }
   } else {
-      QString firstColumnName = QString("%1_id").arg(itemToRemoveType);
-      QString secondColumnName = QString("%1_id").arg(itemRelationType);
+      QString firstColumnName = QString("%1_id").arg(itemToRemoveType).toLower();
+      QString secondColumnName = QString("%1_id").arg(itemRelationType).toLower();
       QString removeRelationStmt = QString("DELETE FROM %1 WHERE %2=%3 AND %4=%5").arg(itemToRemoveRelationTableName,firstColumnName,itemToRemoveId,secondColumnName,itemToRemoveRelationItemId);
 
       if (this->dbManager->executeArbitrarySqlWithoutReturnValue(

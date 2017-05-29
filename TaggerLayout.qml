@@ -2,6 +2,8 @@ import QtQuick 2.5
 import QtQuick.Controls 2.1
 import QtQuick.Controls.Material 2.1
 
+import "qrc:/autoComplete"
+
 Item {
     id: taggerLayout
 
@@ -82,28 +84,73 @@ Item {
         anchors.right: parent.right
         anchors.bottom: parent.bottom
 
-        Rectangle {
-            id: searchTextEditPlaceholder
-            //            width: parent.width
-            height: parent.width / 14
-            color: "blue"
+        AutoCompleteWithTextBox
+        {
+            id:autoCompleteWithTextBox
+            popupHeight: contentBackgrond.height * 0.75
+//            height: parent.width / 14
+            height: 50
             anchors.top: parent.top
             anchors.left: parent.left
             anchors.right: parent.right
-            //            anchors.horizontalCenter: parent.horizontalCenter
-            anchors.margins: 10
+            anchors.margins: 5
+//            z:2
 
-            Text {
-                id: searchTextPlaceholder
-                text: "SearchTextEdit"
-                anchors.centerIn: parent
+        }
+
+        Connections{
+            target: autoCompleteWithTextBox
+            onSelected:{
+                console.log("TaggerLayout: Selected :" + selectedItemName)
+//                selected(selectedItemType,selectedItemName,selectedItemId,selectedItemAliasOfId)
+                if (taggerPopup.itemToTagType === "Actor"){
+                    if (selectedItemType === "Tag"){
+                        tagModel.addItem(selectedItemId,selectedItemName,"Tag","Actor_Tag",taggerPopup.itemToTagId,"Tag","Actor")
+                    }else if (selectedItemType === "New Tag"){
+                        tagModel.addItem("",selectedItemName,"Tag","Actor_Tag",taggerPopup.itemToTagId,"Tag","Actor")
+                    }
+                }else if (taggerPopup.itemToTagType === "Scene"){
+                    if (selectedItemType === "Tag"){
+                        tagModel.addItem(selectedItemId,selectedItemName,"Tag","Scene_Tag",taggerPopup.itemToTagId,"Tag","Scene")
+                    }else if (selectedItemType === "New Tag"){
+                        tagModel.addItem("",selectedItemName,"Tag","Scene_Tag",taggerPopup.itemToTagId,"Tag","Scene")
+                    }else if (selectedItemType === "Actor"){
+                        actorModel.addItem(selectedItemId,selectedItemName,"Actor","Scene_Actor",taggerPopup.itemToTagId,"Actor","Scene")
+                    }else if (selectedItemType === "ActorAlias"){
+                        actorModel.addItem(selectedItemAliasOfId,selectedItemName,"Actor","Scene_Actor",taggerPopup.itemToTagId,"Actor","Scene")
+                    }else if (selectedItemType === "New Actor"){
+                        actorModel.addItem("",selectedItemName,"Actor","Scene_Actor",taggerPopup.itemToTagId,"Actor","Scene")
+                    }else if (selectedItemType === "Website"){
+                        websiteModel.addItem(selectedItemId,selectedItemName,"Website","Scene_Website",taggerPopup.itemToTagId,"Website","Scene")
+                    }else if (selectedItemType === "New Website"){
+                        websiteModel.addItem("",selectedItemName,"Website","Scene_Website",taggerPopup.itemToTagId,"Website","Scene")
+                    }
+                }
             }
         }
+
+//        Rectangle {
+//            id: searchTextEditPlaceholder
+//            //            width: parent.width
+//            height: parent.width / 14
+//            color: "blue"
+//            anchors.top: parent.top
+//            anchors.left: parent.left
+//            anchors.right: parent.right
+//            //            anchors.horizontalCenter: parent.horizontalCenter
+//            anchors.margins: 10
+
+//            Text {
+//                id: searchTextPlaceholder
+//                text: "SearchTextEdit"
+//                anchors.centerIn: parent
+//            }
+//        }
 
         Loader {
             id: contentLoader
             //            source: "TaggerActor.qml"
-            anchors.top: searchTextEditPlaceholder.bottom
+            anchors.top: autoCompleteWithTextBox.bottom
             anchors.left: parent.left
             anchors.right: parent.right
             anchors.bottom: parent.bottom

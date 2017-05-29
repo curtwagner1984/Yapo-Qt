@@ -92,9 +92,13 @@ ApplicationWindow {
                         qmlComm.websiteSearch(searchBar.text)
                     } else {
                         //                        autoCompleteComponenetLoader.sourceComponent = autoCompleteComponenet
-                        qmlComm.autoCompleteSearch(searchBar.text, "")
-                        if (!autocomplete.visible) {
+//                        qmlComm.autoCompleteSearch(searchBar.text, "")
+                        autocomplete.searchedText = searchBar.text
+                        autocomplete.searchType = ""
+                        if (!autocomplete.isOpened) {
                             autocomplete.open()
+                        }else{
+                            autocomplete.search()
                         }
                     }
 
@@ -133,8 +137,15 @@ ApplicationWindow {
                         }
                     }
                 }
+//                  Keys.forwardTo: [autocomplete.contentLoader.item,
+//                      autocomplete.contentLoader.item.autoCompleteContnetItemListView,
+//                      autocomplete.contentLoader.item.autoCompleteContnetItemListView.currentItem,
+//                  autocomplete.contentLoader.item.autoCompleteContnetItemListView.currentItem.item]
 
-                Keys.forwardTo: [autocomplete.listview.currentItem, autocomplete.listview]
+                  Keys.forwardTo: [
+                      autocomplete.contentLoader.item.autoCompleteContnetItemListView,
+                      autocomplete.contentLoader.item.autoCompleteContnetItemListView.currentItem.item]
+//                Keys.forwardTo: [autocomplete.listview.currentItem, autocomplete.listview]
             }
 
             OrderByComboBox {
@@ -553,13 +564,25 @@ ApplicationWindow {
         }
     }
 
-    AutoCompletePopup {
+//    AutoCompletePopup {
+//        id: autocomplete
+//        x: searchBar.x
+//        y: searchBar.y + searchBar.height
+//        height: mainItem.height / 2
+//        width: searchBar.width
+//        searchedText: searchBar.text
+//    }
+
+
+    AutoCompletePopupTwo{
         id: autocomplete
         x: searchBar.x
         y: searchBar.y + searchBar.height
-        height: mainItem.height / 2
+        height: mainItem.height * 0.75
         width: searchBar.width
         searchedText: searchBar.text
+
+
     }
 
     Popup {
