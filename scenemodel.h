@@ -34,6 +34,7 @@ class SceneModel : public BasicListModel {
   void getTagScenes(const QString tagId);
   void getWebsiteScenes(const QString websiteId);
   QHash<int, QByteArray> roleNames() const;
+  Q_INVOKABLE void setOrder(QString orderBy, QString orderDirection);
 
   enum SceneRoles {
     IdRole = Qt::UserRole + 1,

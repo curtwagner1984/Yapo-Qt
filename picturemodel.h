@@ -16,6 +16,8 @@ public:
     void getWebsitePictures(const QString websiteId);
     QHash<int, QByteArray> roleNames() const;
 
+    Q_INVOKABLE void setOrder(QString orderBy, QString orderDirection);
+
     enum PictureRoles {
                 IdRole = Qt::UserRole + 1,
                 ThumbRole = Qt::UserRole + 2,

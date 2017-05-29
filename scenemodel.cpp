@@ -105,3 +105,8 @@ QHash<int, QByteArray> SceneModel::roleNames() const
             roles[DurationRole] = "duration";
             return roles;
 }
+
+void SceneModel::setOrder(QString orderBy, QString orderDirection)
+{
+    BasicListModel::setOrder(orderBy,orderDirection);
+}

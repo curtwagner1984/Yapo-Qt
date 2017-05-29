@@ -16,7 +16,7 @@ public:
     bool setData(const QModelIndex &index, const QVariant &value, int role);
 
 
-    void search(const QString aliasOfId, const QString aliasOf);
+    Q_INVOKABLE void search(const QString aliasOfId, const QString aliasOf);
 
     bool deleteAlias(const QString aliasToDeleteId, const QString aliasOf);
 

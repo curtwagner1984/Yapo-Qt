@@ -411,6 +411,7 @@ bool DbManager::commitTransaction()
 bool DbManager::addActor(QString actorName, bool isMainstream) {
   bool success = false;
   QString stmt = "INSERT OR IGNORE INTO Actor (name,is_mainstream) VALUES ('"+ actorName +"','" + int(isMainstream) + "')";
+
   QSqlQuery query (stmt);
   if (query.exec()) {
     success = true;
@@ -483,7 +484,9 @@ bool DbManager::addTag(QString tagName)
 {
     bool success = false;
     QString stmt = "INSERT OR IGNORE INTO Tag (name) VALUES ('"+ tagName +"')";
-    QSqlQuery query (stmt);
+    QSqlQuery query;
+    query.prepare(stmt);
+//    QSqlQuery query (stmt);
     if (query.exec()) {
       success = true;
       qDebug() << "added Tag :  " << tagName << " To database...";
@@ -846,13 +849,16 @@ QString DbManager::escapeSqlChars(QString string)
 
 bool DbManager::executeQuery(QString sqlStmt, QString sendingFunction)
 {
-    this->m_db.transaction();
-    QSqlQuery query(sqlStmt);
-    query.exec();
+//    this->m_db.transaction();
+    QSqlQuery query;
+    query.prepare(sqlStmt);
+//    QSqlQuery query();
+
     bool success = false;
     QElapsedTimer timer;
     timer.start();
-    if (this->m_db.commit()){
+//    this->m_db.commit()
+    if (query.exec()){
         success = true;
         qDebug() << "Succesfully executed query for "<< sendingFunction <<" in " << timer.elapsed() << " ms";
 //        qDebug() << "Last query error" << this->m_db.lastError();
@@ -869,10 +875,24 @@ bool DbManager::executeQuery(QString sqlStmt, QString sendingFunction)
 bool DbManager::executeQueryForTransaction(QString sqlStmt, QString sendingFunction)
 {
 //    this->m_db.transaction();
-    QSqlQuery query(sqlStmt);
-    query.exec();
+//    QSqlQuery query(sqlStmt);
 
-    return true;
+    QSqlQuery query;
+    query.prepare(sqlStmt);
+    bool success = false;
+    QElapsedTimer timer;
+    if (query.exec()){
+        success = true;
+        qDebug() << "Succesfully executed query for "<< sendingFunction <<" in " << timer.elapsed() << " ms";
+//        qDebug() << "Last query error" << this->m_db.lastError();
+//        qDebug() << "Last query" << query.lastQuery();
+    }else{
+        qDebug() << "SQL error in " << sendingFunction  << query.lastError();
+        qDebug() << "Executed Query: " << query.executedQuery();
+
+    }
+
+    return success;
 
 }
 
@@ -904,6 +924,7 @@ QList<QMap<QString, QVariant>> DbManager::parseQueryResult(QSqlQuery query)
         for (int i = 0 ; i < r.count(); i++){
             tempMap[r.fieldName(i)] = query.value(i);
         }
+        tempMap["isSelected"] = false;
         result.append(tempMap);
 
     }

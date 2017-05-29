@@ -246,25 +246,21 @@ Item {
         anchors.top: mainview.top
         anchors.horizontalCenter: mainview.horizontalCenter
         TabButton {
-            text: qsTr("Scenes" + " (" + detailObject.getDetailObjectAttrib(
-                           "NumberOfScenes") + ")")
+            text: qsTr("Scenes" + " (" + sceneModel.getCount() + ")")
             //            onClicked: {
             //                console.log("Clicked Scenes tab button")
             //                mainViewStackLayout.push(mainAppPage.sceneViewComp)
             //            }
         }
         TabButton {
-            text: qsTr("Pictures" + " (" + detailObject.getDetailObjectAttrib(
-                           "NumberOfPictures") + ")")
+            text: qsTr("Pictures" + " (" + pictureModel.getCount() + ")")
         }
         TabButton {
-            text: qsTr("Actors" + " (" + detailObject.getDetailObjectAttrib(
-                           "NumberOfActors") + ")")
+            text: qsTr("Actors" + " (" + actorModel.getCount() + ")")
         }
 
         TabButton {
-            text: qsTr("Websites" + " (" + detailObject.getDetailObjectAttrib(
-                           "NumberOfWebsites") + ")")
+            text: qsTr("Websites" + " (" + websiteModel.getCount() + ")")
         }
     }
 

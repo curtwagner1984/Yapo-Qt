@@ -90,3 +90,13 @@ QHash<int, QByteArray> WebsiteModel::roleNames() const
             return roles;
 
 }
+
+void WebsiteModel::getSceneWebsitesForTagger(const QString sceneId)
+{
+    this->baseSqlSelect = SCENE_SEARCH_SELECT;
+    this->baseSqlWhere = SCENE_SEARCH_WHERE.arg(sceneId);
+    this->baseSqlFrom = SCENE_SEARCH_FROM;
+    this->baseSqlOrder = SCENE_ORDER_BY;
+    this->baseSearch();
+
+}

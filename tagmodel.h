@@ -14,6 +14,12 @@ public:
     QVariant data(const QModelIndex &index, int role) const;
     void search(const QString searchString);
     void getActorTags(const QString actorId);
+    Q_INVOKABLE void getActorTagsForTagger(const QString actorId);
+    Q_INVOKABLE void getSceneTagsForTagger(const QString sceneId);
+
+//    Q_INVOKABLE bool addTag(QString tagToAddId, QString tagToAddName, QString tagOfType, QString tagOfId);
+//    Q_INVOKABLE bool removeTag(QString tagToRemoveId, QString tagOfType, QString tagOfId , bool removeFromDb);
+
     void getWebsiteTags(const QString websiteId);
     QHash<int, QByteArray> roleNames() const;
 
@@ -102,10 +108,17 @@ private:
     QString ACTOR_SEARCH_SELECT = "SELECT * ";
     QString ACTOR_SEARCH_FROM = "FROM Tag JOIN Actor_Tag ON Tag.id = Actor_Tag.tag_id ";
     QString ACTOR_SEARCH_WHERE = "WHERE Actor_Tag.actor_id = %1";
+    QString ACTOR_ORDER_BY = " ORDER BY Tag.name";
 
     QString WEBSITE_SEARCH_SELECT = "SELECT * ";
     QString WEBSITE_SEARCH_FROM = "FROM Tag JOIN Website_Tag ON Tag.id = Website_Tag.tag_id ";
     QString WEBSITE_SEARCH_WHERE = "WHERE Website_Tag.website_id = %1";
+
+
+    QString SCENE_SEARCH_SELECT = "SELECT * ";
+    QString SCENE_SEARCH_FROM = "FROM Tag JOIN Scene_Tag ON Tag.id = Scene_Tag.tag_id ";
+    QString SCENE_SEARCH_WHERE = "WHERE Scene_Tag.scene_id = %1";
+    QString SCENE_ORDER_BY = " ORDER BY Tag.name";
 
 
 };

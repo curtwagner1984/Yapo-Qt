@@ -290,8 +290,7 @@ Item {
 //                sceneViewLoader.sourceComponent = actorDetailSceneViewComponenet
             }
 
-            text: qsTr("Scenes" + " (" + detailObject.getDetailObjectAttrib(
-                           "NumberOfScenes") + ")")
+            text: qsTr("Scenes" + " (" + sceneModel.getCount() + ")")
 
 
 
@@ -301,16 +300,14 @@ Item {
                 console.log("Clicked Pictures Tab")
                 pictureViewLoader.sourceComponent = actorDetailPictureViewComponenet
             }
-            text: qsTr("Pictures" + " (" + detailObject.getDetailObjectAttrib(
-                           "NumberOfPictures") + ")")
+            text: qsTr("Pictures" + " (" + pictureModel.getCount() + ")")
         }
         TabButton {
             onClicked: {
                 console.log("Clicked Tags Tab")
                 tagViewLoader.sourceComponent = actorDetailtagViewComponenet
             }
-            text: qsTr("Tags" + " (" + detailObject.getDetailObjectAttrib(
-                           "NumberOfTags") + ")")
+            text: qsTr("Tags" + " (" + tagModel.getCount() + ")")
         }
 
     }
@@ -360,7 +357,7 @@ Item {
         id:actorDetailSceneViewComponenet
         SceneView {
             width:  mainItem.width
-            height: mainItem.height
+            height: mainItem.height - mainViewTabBar.height
         }
     }
 
@@ -368,7 +365,7 @@ Item {
         id:actorDetailPictureViewComponenet
         PictureView {
             width:  mainItem.width
-            height: mainItem.height
+            height: mainItem.height - mainViewTabBar.height
         }
     }
 

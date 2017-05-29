@@ -13,16 +13,14 @@ Item {
         selectedOut(selectedItemType,selectedItemName,selectedItemId,selectedItemAliasOfId,selectedItemIndex)
     }
 
-    function openContextMenu(mouseX,mouseY,selectedIndex)
-    {
+//    function openContextMenu(mouseX,mouseY,selectedIndex)
+//    {
 
-        var myCords = thumbGridView.currentItem.mapToItem(actorView,0,0)
-//        console.log("mousex: " + mouseX + " mouseY: " + mouseY + " Selected index is " + selectedIndex + " myCords " + myCords.x + " myCords.y " + myCords.y)
-        contextMenu.x = mouseX;
-        contextMenu.y = mouseY;
-        contextMenu.selectedIndex = selectedIndex
-        contextMenu.open();
-    }
+//        contextMenu.x = mouseX;
+//        contextMenu.y = mouseY;
+//        contextMenu.selectedIndex = selectedIndex
+//        contextMenu.open();
+//    }
 
 //    Connections{
 //        target: singleActorThumbDelegate
@@ -49,6 +47,7 @@ Item {
             imageSource: "file:///" + thumb_320
             gender: gender
             actorId: id
+            actorAge: age
 
         }
 
@@ -58,19 +57,19 @@ Item {
 
     }
 
-    Menu {
-            id: contextMenu
-            property int selectedIndex: -6
-//            y: fileButton.height
+//    Menu {
+//            id: contextMenu
+//            property int selectedIndex
 
-            MenuItem {
-                text: "Tag..."
-                onTriggered: {
-                    console.log("Will open tagging popup for actor " + actorModel.directData("name",contextMenu.selectedIndex))
-                }
-            }
+//            MenuItem {
+//                text: "Tag..."
+//                onTriggered: {
+//                    console.log("Will open tagging popup for actor " + actorModel.directData("name",contextMenu.selectedIndex))
+//                    mainAppPage.openTaggerPopup(actorModel.directData("thumb",contextMenu.selectedIndex),"Actor",actorModel.directData("id",contextMenu.selectedIndex),contextMenu.selectedIndex)
+//                }
+//            }
 
-        }
+//        }
 
 
 }

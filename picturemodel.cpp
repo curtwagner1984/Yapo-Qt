@@ -95,3 +95,8 @@ QHash<int, QByteArray> PictureModel::roleNames() const
             roles[NameRole] = "name";
             return roles;
 }
+
+void PictureModel::setOrder(QString orderBy, QString orderDirection)
+{
+    BasicListModel::setOrder(orderBy,orderDirection);
+}

@@ -16,7 +16,10 @@ public:
     void getTagActor (const QString tagId);
     QHash<int, QByteArray> roleNames() const;
 
-    Q_INVOKABLE QVariant directData(QString roleName, int index);
+    Q_INVOKABLE void getSceneActorsForTagger(const QString sceneId);
+
+//    Q_INVOKABLE QVariant directData(QString roleName, int index);
+    Q_INVOKABLE void setOrder(QString orderBy, QString orderDirection);
 
 
     enum ActorRoles {
@@ -27,7 +30,9 @@ public:
             NumberOfScenesRole = Qt::UserRole + 5,
             NumberOfPicturesRole = Qt::UserRole + 6,
             NameRole = Qt::UserRole + 7,
-            GenderRole = Qt::UserRole + 8
+            GenderRole = Qt::UserRole + 8,
+            DobRole = Qt::UserRole + 9,
+            AgeRole = Qt::UserRole + 10
 
         };
 private:
@@ -45,6 +50,12 @@ private:
     QString TAG_SEARCH_FROM = "FROM ACTOR "
             "JOIN Actor_Tag ON Actor.id = Actor_Tag.actor_id "
             "WHERE Actor_Tag.tag_id = %1";
+
+
+    QString SCENE_SEARCH_SELECT = "SELECT * ";
+    QString SCENE_SEARCH_FROM = "FROM Actor JOIN Scene_Actor ON Actor.id = Scene_Actor.actor_id ";
+    QString SCENE_SEARCH_WHERE = "WHERE Scene_Actor.scene_id = %1";
+    QString SCENE_ORDER_BY = " ORDER BY Actor.name";
 
 
 

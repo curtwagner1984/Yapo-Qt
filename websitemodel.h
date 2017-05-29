@@ -15,6 +15,8 @@ public:
     void getTagWebsites(const QString tagId);
     QHash<int, QByteArray> roleNames() const;
 
+    Q_INVOKABLE void getSceneWebsitesForTagger(const QString sceneId);
+
 
     enum TagRoles {
             IdRole = Qt::UserRole + 1,
@@ -46,6 +48,12 @@ private:
                               "WHERE Website_Tag.tag_id = %1 ";
 
     QString TAG_SEARCH_WHERE = "";
+
+
+    QString SCENE_SEARCH_SELECT = "SELECT * ";
+    QString SCENE_SEARCH_FROM = "FROM Website JOIN Scene_Website ON Website.id = Scene_Website.website_id ";
+    QString SCENE_SEARCH_WHERE = "WHERE Scene_Website.scene_id = %1";
+    QString SCENE_ORDER_BY = " ORDER BY Website.name";
 
 
 };

@@ -14,6 +14,7 @@ import "qrc:/tagView"
 import "qrc:/websiteView"
 import "qrc:/autoComplete"
 import "qrc:/treeFolderView"
+import "qrc:/taggerPopup"
 
 ApplicationWindow {
     width: 1280
@@ -30,6 +31,13 @@ ApplicationWindow {
         mainStack.push(homepagePlaceholder, {
                            objectName: "Home View"
                        })
+    }
+
+    Shortcut {
+        sequence: "Ctrl+E"
+        onActivated: {
+            console.log("Sortcut Ctrl+E was pressed!")
+        }
     }
 
     function changeView(viewToChangeTo) {
@@ -63,8 +71,8 @@ ApplicationWindow {
             anchors.top: parent.top
             anchors.left: mainItem.left
             anchors.right: mainItem.right
-            Timer{
-                id:searchTimer
+            Timer {
+                id: searchTimer
                 interval: 250
                 onTriggered: {
                     if (mainStack.currentItem.objectName === "Actor View") {
@@ -128,14 +136,20 @@ ApplicationWindow {
 
                 Keys.forwardTo: [autocomplete.listview.currentItem, autocomplete.listview]
             }
+
+            OrderByComboBox {
+                id: orderbyComboBox
+                Layout.minimumWidth: 200
+            }
+
             Button {
                 id: actorScreen
                 text: "Actors"
                 onClicked: {
                     actorViewComponenetLoader.source = "/actorView/ActorView.qml"
-//                    actorViewComponenetLoader.sourceComponent = actorViewComponenet
-//                    actorViewComponenetLoader.width = mainStack.width
-//                    actorViewComponenetLoader.height = mainStack.height
+                    //                    actorViewComponenetLoader.sourceComponent = actorViewComponenet
+                    //                    actorViewComponenetLoader.width = mainStack.width
+                    //                    actorViewComponenetLoader.height = mainStack.height
                     qmlComm.actorSearch("")
                     mainStack.push(actorViewComponenetLoader, {
                                        objectName: "Actor View"
@@ -224,7 +238,6 @@ ApplicationWindow {
                         mainView.width = mainItem.width * (3 / 4)
                         mainView.anchors.left = sideView.right
                         mainView.anchors.right = mainItem.right
-
                     } else {
                         sideView.visible = false
                         mainView.width = mainItem.width
@@ -277,6 +290,22 @@ ApplicationWindow {
                 //            anchors.top: searchBarRow.bottom
                 //            anchors.bottom: mainAppPage.bottom
                 anchors.fill: parent
+                onCurrentItemChanged: {
+                    console.log("Stackview current item changed.. Current item is: "
+                                + mainStack.currentItem.objectName)
+                    if (mainStack.currentItem.objectName === "Actor View") {
+                        orderbyComboBox.state = "actorOrder"
+                        orderbyComboBox.visible = true
+                    } else if (mainStack.currentItem.objectName === "Picture View") {
+                        orderbyComboBox.state = "pictureOrder"
+                        orderbyComboBox.visible = true
+                    } else if (mainStack.currentItem.objectName === "Scene View") {
+                        orderbyComboBox.state = "sceneOrder"
+                        orderbyComboBox.visible = true
+                    } else {
+                        orderbyComboBox.visible = false
+                    }
+                }
             }
         }
 
@@ -306,42 +335,67 @@ ApplicationWindow {
 
             Text {
                 id: moreSidebarText
-//                text: actorModel.directData("name",1)
+                //                text: actorModel.directData("name",1)
                 font.pixelSize: 28
                 color: Material.color(Material.Pink)
                 anchors.top: sidebarText.bottom
                 anchors.horizontalCenter: parent.horizontalCenter
             }
 
-            Item{
+            Item {
                 anchors.top: moreSidebarText.bottom
                 anchors.left: parent.left
                 anchors.right: parent.right
                 anchors.bottom: parent.bottom
 
-                ListView{
-                    id:sideviewListView
+                ListView {
+                    id: sideviewListView
                     anchors.fill: parent
                     model: tagModel
-                    delegate:
-                        Text{
-                            text:name
-//                        }
+                    delegate: Text {
+                        text: name
+                        //                        }
                     }
-
                 }
             }
 
-            Connections{
+            Connections {
                 target: actorViewComponenetLoader.item
-                onSelectedOut : {
-                    console.log("main.qml:Sidbare:connections: Selected signal triggered, itemType: " + selectedItemType + " ItemName " + selectedItemName + " index: " + selectedItemIndex)
-                    moreSidebarText.text = actorModel.directData("name",selectedItemIndex) + " Scenes: "  + actorModel.directData("numberOfScenes",selectedItemIndex)
-                    qmlComm.getTagsOfItem(selectedItemId,"Actor")
-
+                onSelectedOut: {
+                    console.log("main.qml:Sidbare:connections: Selected signal triggered, itemType: "
+                                + selectedItemType + " ItemName " + selectedItemName
+                                + " index: " + selectedItemIndex)
+                    moreSidebarText.text = actorModel.directData(
+                                "name",
+                                selectedItemIndex) + " Scenes: " + actorModel.directData(
+                                "numberOfScenes", selectedItemIndex)
+                    qmlComm.getTagsOfItem(selectedItemId, "Actor")
                 }
             }
+        }
 
+
+        Menu {
+            id: contextMenu
+            property int selectedIndex
+            property string selectedItemType
+
+            MenuItem {
+                text: "Tag..."
+                onTriggered: {
+                    //                        console.log("Will open tagging popup for actor " + actorModel.directData("name",contextMenu.selectedIndex))
+//                    mainAppPage.openTaggerPopup(
+//                                actorModel.directData("thumb",
+//                                                      contextMenu.selectedIndex),
+//                                "Actor",
+//                                actorModel.directData("id",
+//                                                      contextMenu.selectedIndex),
+//                                contextMenu.selectedIndex)
+                    tpopup.currentItemIndex = contextMenu.selectedIndex
+                    tpopup.itemToTagType = contextMenu.selectedItemType
+                    tpopup.open()
+                }
+            }
         }
     }
 
@@ -381,26 +435,25 @@ ApplicationWindow {
 
     Loader {
         id: actorViewComponenetLoader
-        width:mainStack.width
-        height:mainStack.height
+        width: mainStack.width
+        height: mainStack.height
         asynchronous: true
         visible: status == Loader.Ready
-//        width: mainView.width
-//        height: mainView.height
+        //        width: mainView.width
+        //        height: mainView.height
         onProgressChanged: {
             console.log("Actor loader proggres changed to " + progress)
         }
     }
 
-//    Component {
-//        id: actorViewComponenet
-//        ActorView {
-//            id: actorView
-//            width: mainView.width
-//            height: mainView.height
-//        }
-//    }
-
+    //    Component {
+    //        id: actorViewComponenet
+    //        ActorView {
+    //            id: actorView
+    //            width: mainView.width
+    //            height: mainView.height
+    //        }
+    //    }
     Loader {
         id: sceneViewComponenetLoader
     }
@@ -408,8 +461,9 @@ ApplicationWindow {
     Component {
         id: sceneViewComponenet
         SceneView {
-            width: mainView.width
-            height: mainView.height
+
+            width: mainItem.width
+            height: mainItem.height
         }
     }
 
@@ -422,8 +476,8 @@ ApplicationWindow {
     Component {
         id: pictureViewComponenet
         PictureView {
-            width: mainView.width
-            height: mainView.height
+            width: mainItem.width
+            height: mainItem.height
         }
     }
 
@@ -434,8 +488,8 @@ ApplicationWindow {
     Component {
         id: tagViewComponenet
         TagView {
-            width: mainView.width
-            height: mainView.height
+            width: mainItem.width
+            height: mainItem.height
         }
     }
 
@@ -450,8 +504,8 @@ ApplicationWindow {
     Component {
         id: websiteViewComponenet
         WebsiteView {
-            width: mainView.width
-            height: mainView.height
+            width: mainItem.width
+            height: mainItem.height
         }
     }
 
@@ -462,8 +516,8 @@ ApplicationWindow {
     Component {
         id: actorDetailViewComponenet
         ActorDetailView {
-            width: mainView.width
-            height: mainView.height
+            width: mainItem.width
+            height: mainItem.height
         }
     }
 
@@ -474,8 +528,8 @@ ApplicationWindow {
     Component {
         id: tagDetailViewComponenet
         TagDetailView {
-            width: mainView.width
-            height: mainView.height
+            width: mainItem.width
+            height: mainItem.height
         }
     }
 
@@ -486,16 +540,16 @@ ApplicationWindow {
     Component {
         id: websiteDetailViewComponenet
         WebsiteDetailView {
-            width: mainView.width
-            height: mainView.height
+            width: mainItem.width
+            height: mainItem.height
         }
     }
 
     Component {
         id: treeFolderViewComponenet
         TreeFolderView {
-            width: mainView.width
-            height: mainView.height
+            width: mainItem.width
+            height: mainItem.height
         }
     }
 
@@ -504,7 +558,7 @@ ApplicationWindow {
         x: searchBar.x
         y: searchBar.y + searchBar.height
         height: mainItem.height / 2
-        width: mainItem.width
+        width: searchBar.width
         searchedText: searchBar.text
     }
 
@@ -623,9 +677,12 @@ ApplicationWindow {
 
         function setupVideo(source) {
             sceneViewPopup.open()
+//            console.log("Source:" + source.replace(/\{/g,'\\{').replace(/\}/g,'\\}'))
             console.log("Source:" + source)
-            popupVideo.source = source
-            //            popupVideo.play();
+//            popupVideo.source = source
+//            popupVideo.source = source.replace(/\{/g,'\\{').replace(/\}/g,'\\}');
+            popupVideo.source = source ;
+
         }
 
         contentItem: Item {
@@ -666,8 +723,11 @@ ApplicationWindow {
                 width: sceneViewPopup.width
                 height: sceneViewPopup.height
                 fillMode: VideoOutput.PreserveAspectFit
+//                playbackRate: 2
+
                 onStatusChanged: {
                     console.log("Status changed triggered in popupVideo, Status is " + status)
+                    console.log("onStatusChanged:BufferProgress " + bufferProgress)
                     if (status === MediaPlayer.Loaded
                             && sceneViewPopup.visible) {
 
@@ -683,6 +743,10 @@ ApplicationWindow {
                         popupVideo.play()
                     }
                 }
+                onBufferProgressChanged: {
+                    console.log("onBufferProgressChanged:BufferProgress " + bufferProgress)
+                }
+
                 onStopped: {
                     console.log("Playback has stopped")
                     if (sceneViewPopup.visible) {
@@ -746,9 +810,161 @@ ApplicationWindow {
 
         closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
         onClosed: {
-            console.log("On Closed Evene triggered ...")
+            console.log("On Closed Event triggered ...")
             popupContentItemTimer.stop()
             popupVideo.stop()
         }
     }
+
+    function openTaggerPopup(thumbSrc, itemToTagType, itemToTagId, selectedIndex) {
+        //        taggerPopupComponentLoader.thumbSrc = 'file:///' + thumbSrc
+        //        if (itemToTagType === "Actor") {
+        //            tagModel.getActorTagsForTagger(itemToTagId)
+        //            taggerPopup.itemToTagId = itemToTagId
+        //        }
+
+        //        taggerPopup.open()
+        tpopup.thumbSrc = 'file:///' + thumbSrc
+        tpopup.currentItemIndex = selectedIndex
+        tpopup.itemToTagId = itemToTagId
+        tpopup.itemToTagType = itemToTagType
+        tpopup.open()
+    }
+
+    TaggerPopup {
+        id: tpopup
+
+        width: mainItem.width * 0.75
+        height: mainItem.height * 0.75
+        x: mainItem.width * 0.12
+        y: mainItem.height * 0.12
+    }
+
+    Popup {
+        id: taggerPopup
+        property string itemToTagId
+
+        width: mainItem.width / 2
+        height: mainItem.height / 2
+        x: mainItem.width / 4
+        y: mainItem.height / 4
+
+        modal: true
+
+        contentItem: Loader {
+
+            id: taggerPopupComponentLoader
+            property string thumbSrc: "-1"
+            sourceComponent: taggerContentComponent
+        }
+
+        Component {
+            id: taggerContentComponent
+            Item {
+                id: taggerContentComponentItem
+                anchors.fill: parent
+
+                Item {
+                    id: taggerPopupThumbItem
+                    width: parent.width / 3
+                    height: parent.height * 0.75
+                    anchors.left: parent.left
+                    anchors.top: parent.top
+
+                    Image {
+                        id: taggerPopupThumb
+                        source: taggerPopupComponentLoader.thumbSrc
+                        anchors.fill: parent
+                        fillMode: Image.PreserveAspectCrop
+                    }
+                }
+
+                Item {
+                    id: taggerTagSpace
+                    anchors.left: taggerPopupThumbItem.right
+                    anchors.right: parent.right
+                    anchors.bottom: parent.bottom
+                    anchors.top: parent.top
+
+                    TextField {
+                        id: taggerSearchBar
+                        anchors.left: parent.left
+                        width: parent.width * 0.75
+                        onTextChanged: {
+                            qmlComm.autoCompleteSearch(taggerSearchBar.text,
+                                                       "Tag")
+                            taggerAutocomplete.open()
+                        }
+
+                        Keys.forwardTo: [taggerAutocomplete.listview, taggerAutocomplete.listview.currentItem]
+                    }
+
+                    AutoCompletePopup {
+                        id: taggerAutocomplete
+                        x: 0
+                        y: taggerSearchBar.height
+                        height: taggerContentComponentItem.height * 0.85
+                        width: taggerSearchBar.width
+                        searchedText: taggerSearchBar.text
+                        z: 10
+                    }
+
+                    ListView {
+                        id: taggerListview
+                        signal removeClicked(string selectedItemType, string selectedItemName, string selectedItemId, string selectedItemAliasOfId)
+                        anchors.top: taggerSearchBar.bottom
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        anchors.bottom: parent.bottom
+                        model: tagModel
+                        delegate: Item {
+                            id: tagListViewDelegate
+                            height: 50
+                            width: taggerListview.width
+                            Text {
+                                text: (index + 1) + ". " + name
+                                font.pixelSize: taggerListview.width / 22
+                                anchors.verticalCenter: tagListViewDelegate.verticalCenter
+                            }
+
+                            RoundButton {
+                                id: removeButton
+                                width: 35
+                                height: 35
+                                text: "X"
+                                anchors.right: tagListViewDelegate.right
+                                anchors.verticalCenter: tagListViewDelegate.verticalCenter
+                                onClicked: {
+                                    console.log("Remove Clicked in delegate on " + id + " " + name)
+                                    taggerListview.removeClicked("Tag",
+                                                                 name, id, "")
+                                }
+                            }
+                        }
+                    }
+
+                    Connections {
+                        target: taggerAutocomplete
+                        onSelected: {
+                            console.log("Selected tagger autocomplete " + selectedItemName)
+                            tagModel.addTag(selectedItemId, selectedItemName,
+                                            "Actor", taggerPopup.itemToTagId)
+                        }
+                    }
+                    Connections {
+                        target: taggerListview
+                        onRemoveClicked: {
+                            console.log("Remove clicked on " + selectedItemId
+                                        + " " + selectedItemName)
+                            tagModel.removeTag(selectedItemId, "Actor",
+                                               taggerPopup.itemToTagId, false)
+                        }
+                    }
+                }
+            }
+        }
+        closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
+    }
+
+
 }

@@ -2,6 +2,7 @@
 #include <qdebug.h>
 #include <QFileInfo>
 #include <QModelIndex>
+#include <QDate>
 
 
 
@@ -54,6 +55,17 @@ QVariant ActorModel::data(const QModelIndex &index, int role) const
             return currentItem["NumberOfPictures"];
         }else if (role == NameRole){
             return currentItem["name"];
+        }else if (role == DobRole){
+            return currentItem["date_of_birth"];
+        }else if (role == AgeRole){
+            QString dob = currentItem["date_of_birth"].toString();
+            QDate dateDOB = QDate::fromString(dob, "yyyy-MM-dd");
+            QDate dateNow = QDate::currentDate();
+            qint64 days = dateDOB.daysTo(dateNow);
+//            QDate dateAge = QDate::fromJulianDay(days);
+//            dateAge.addDays(days);
+            QVariant ageString = days / 365;
+            return ageString;
         }else{
             return QVariant();
         }
@@ -102,18 +114,48 @@ QHash<int, QByteArray> ActorModel::roleNames() const
             roles[NumberOfPicturesRole] = "numberOfPictures";
             roles[NameRole] = "name";
             roles[GenderRole] = "gender";
+            roles[DobRole] = "DOB";
+            roles[AgeRole] = "age";
             return roles;
 
 }
 
-QVariant ActorModel::directData(QString roleName, int index)
+void ActorModel::getSceneActorsForTagger(const QString sceneId)
 {
-    QByteArray temp = roleName.toLatin1();
-    QHash<int, QByteArray> roles = roleNames();
-    int currentRole = roles.key(temp);
-    QModelIndex ix = this->index(index);
-    QVariant ans = this->data(ix,currentRole);
-    return ans;
+    this->baseSqlSelect = SCENE_SEARCH_SELECT;
+    this->baseSqlWhere = SCENE_SEARCH_WHERE.arg(sceneId);
+    this->baseSqlFrom = SCENE_SEARCH_FROM;
+    this->baseSqlOrder = SCENE_ORDER_BY;
+    this->baseSearch();
+
+}
+
+//QVariant ActorModel::directData(QString roleName, int index)
+//{
+//    QByteArray temp = roleName.toLatin1();
+//    QHash<int, QByteArray> roles = roleNames();
+//    int currentRole = roles.key(temp);
+//    QModelIndex ix = this->index(index);
+//    QVariant ans = this->data(ix,currentRole);
+//    return ans;
+
+
+//}
+
+void ActorModel::setOrder(QString orderBy, QString orderDirection)
+{
+//    QString orderByStmt = "AND %1 IS NOT NULL ORDER BY %1 %2";
+//    orderByStmt = orderByStmt.arg(orderBy,orderDirection);
+
+//    if (this->baseSqlOrder != orderByStmt){
+//        this->baseSqlOrder = orderByStmt;
+//        this->beginResetModel();
+//        this->baseSearch();
+//        this->endResetModel();
+//    }
+    BasicListModel::setOrder(orderBy,orderDirection);
+
+
 
 
 }

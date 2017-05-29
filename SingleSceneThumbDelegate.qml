@@ -2,7 +2,7 @@ import QtQuick 2.0
 import QtQuick.Layouts 1.1
 import QtQuick.Controls 2.1
 import QtGraphicalEffects 1.0
-
+import "AuxFunctions.js" as AuxFunc
 
 
 Item{
@@ -38,16 +38,21 @@ Item{
     MouseArea{
         id: thumbMouseArea
         anchors.fill: thumb
+        acceptedButtons: Qt.LeftButton | Qt.RightButton
+
         onClicked: {
-//            pictureView.popTestImgSource = imageSource
-//            sceneView.popup.video.source = singleThumbDelegate.scenePath
-            mainAppPage.showVideo.setupVideo(singleThumbDelegate.scenePath)
-//            sceneView.popup.setupVideo(singleThumbDelegate.scenePath)
-//            sceneView.popup.open()
-//            sceneView.popup.video.source =
-//            sceneView.popup.video.play()
+            if(mouse.button & Qt.RightButton)
+            {
+                  AuxFunc.ctxMenu("Scene",mouseX,mouseY,index);
+
+            }else{
+                mainAppPage.showVideo.setupVideo(singleThumbDelegate.scenePath)
+
+            }
+
 
         }
+
 
 
     }

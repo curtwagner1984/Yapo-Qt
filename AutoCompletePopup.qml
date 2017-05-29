@@ -22,7 +22,7 @@ Popup {
         id: highlightBar
         Rectangle {
             width: autoCompleteListView.width
-            height: 60
+            height: autoCompletePopup.width / 8
             color: Material.color(Material.Pink)
             opacity: 0.2
             y: autoCompleteListView.currentItem.y
@@ -43,11 +43,11 @@ Popup {
             model: autoCompleteModel
             delegate: Item {
                 id: autoCompleteDelegate
-                height: 60
+                height: autoCompletePopup.width / 8
                 Rectangle {
                     id: autoCompleteDelegateBackground
                     width: autoCompleteListView.width
-                    height: 60
+                    height: autoCompleteDelegate.height
                     focus: true
                     color: "transparent"
 
@@ -55,7 +55,7 @@ Popup {
                         id: autoCompleteThumb
                         asynchronous: true
                         source: 'file:///' + thumb_64
-                        height: 60
+                        height: parent.height
                         fillMode: Image.PreserveAspectFit
                         anchors.left: autoCompleteDelegateBackground.left
                         onStatusChanged: {
@@ -99,7 +99,7 @@ Popup {
                         }
 
                         font.capitalization: Font.Capitalize
-                        font.pixelSize: autoCompleteDelegateBackground.height / 3
+                        font.pixelSize: parent.height / 3
                         anchors.left: autoCompleteThumb.right
                         anchors.leftMargin: 10
                         anchors.verticalCenter: autoCompleteDelegateBackground.verticalCenter
@@ -128,7 +128,7 @@ Popup {
                 }
                 Keys.onReturnPressed: {
                     var newName = name.replace(/(.*?)( |\.|$)/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()})
-                    autoCompletePopup.selected(tableName,newName,id,aliasOfId)
+                    autoCompletePopup.selected(tableName,newName,id,aliasOfId)                    
                     autoCompletePopup.close()
                 }
 

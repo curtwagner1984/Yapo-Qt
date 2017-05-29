@@ -2,6 +2,7 @@
     <qresource prefix="/">
         <file>main.qml</file>
         <file>qtquickcontrols2.conf</file>
+        <file>OrderByComboBox.qml</file>
     </qresource>
     <qresource prefix="/settings">
         <file>SettingsView.qml</file>
@@ -17,6 +18,7 @@
         <file>SinglePictureThumbDelegate.qml</file>
         <file>SingleTagThumbDelegate.qml</file>
         <file>SingleWebsiteThumbDelegate.qml</file>
+        <file>AuxFunctions.js</file>
     </qresource>
     <qresource prefix="/actorView">
         <file>ActorView.qml</file>
@@ -41,5 +43,12 @@
     </qresource>
     <qresource prefix="/treeFolderView">
         <file>TreeFolderView.qml</file>
+    </qresource>
+    <qresource prefix="/taggerPopup">
+        <file>TaggerPopup.qml</file>
+        <file>TaggerLayout.qml</file>
+        <file>TaggerActor.qml</file>
+        <file>TaggerList.qml</file>
+        <file>TaggerScene.qml</file>
     </qresource>
 </RCC>
