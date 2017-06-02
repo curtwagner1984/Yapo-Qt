@@ -271,20 +271,20 @@ Item {
         anchors.left: sideBar.right
         currentIndex: mainViewTabBar.currentIndex
 
-        SceneView {
-            width: mainview.width
-            height: mainview.height - mainViewTabBar.height
-        }
+//        SceneView {
+//            width: mainview.width
+//            height: mainview.height - mainViewTabBar.height
+//        }
 
-        PictureView {
-            width: mainview.width
-            height: mainview.height - mainViewTabBar.height
-        }
+//        PictureView {
+//            width: mainview.width
+//            height: mainview.height - mainViewTabBar.height
+//        }
 
-        ActorView {
-            width: mainview.width
-            height: mainview.height - mainViewTabBar.height
-        }
+//        ActorView {
+//            width: mainview.width
+//            height: mainview.height - mainViewTabBar.height
+//        }
 
         Item {
             id: tagViewTab
@@ -341,14 +341,14 @@ Item {
                 Keys.forwardTo: [autocomplete.listview.currentItem,autocomplete.listview]
             }
 
-            TagView {
-                anchors.top: background.bottom
-                anchors.left: parent.left
-                anchors.right: parent.right
-                anchors.bottom: parent.bottom
-                //              width: mainview.width
-                //              height: mainview.height - mainViewTabBar.height
-            }
+//            TagView {
+//                anchors.top: background.bottom
+//                anchors.left: parent.left
+//                anchors.right: parent.right
+//                anchors.bottom: parent.bottom
+//                //              width: mainview.width
+//                //              height: mainview.height - mainViewTabBar.height
+//            }
 
             AutoCompletePopup {
                 id: autocomplete

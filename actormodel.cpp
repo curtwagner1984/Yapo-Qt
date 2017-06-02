@@ -66,6 +66,8 @@ QVariant ActorModel::data(const QModelIndex &index, int role) const
 //            dateAge.addDays(days);
             QVariant ageString = days / 365;
             return ageString;
+        }else if (role == RatingRole){
+            return currentItem["rating"];
         }else{
             return QVariant();
         }
@@ -116,6 +118,7 @@ QHash<int, QByteArray> ActorModel::roleNames() const
             roles[GenderRole] = "gender";
             roles[DobRole] = "DOB";
             roles[AgeRole] = "age";
+            roles[RatingRole] = "rating";
             return roles;
 
 }

@@ -8,7 +8,7 @@ Item {
     GridView{
         id:thumbGridView
         width: parent.width
-        height: parent.height
+        height: parent.height        
         cellWidth: {
             if (thumbGridView.width <= 1850 ){
                 return thumbGridView.width / 4

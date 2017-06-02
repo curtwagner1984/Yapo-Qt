@@ -1,61 +1,123 @@
-import QtQuick 2.0
-import QtQuick.Layouts 1.1
+import QtQuick 2.8
+import QtQuick.Controls 2.1
 
 Item {
     id: thumbView
-    property string thumbViewType: ""
-    property alias thumbViewModel: thumbGridView.model
-    width: parent.width
-    height: parent.height
+    property int portraitCellWidth: {
+        if (thumbView.width >= 1900){
+            return thumbView.width / 6
+        }else if (thumbView.width < 1900 &&  thumbView.width >= 1000){
+            return thumbView.width / 5
+        }else if (thumbView.width < 1000 &&  thumbView.width >= 500){
+            return thumbView.width / 3
+        }else if (thumbView.width < 500 &&  thumbView.width >= 0){
+            return thumbView.width / 2
+        }
+    }
 
-    GridView{
-        id:thumbGridView
-        width: parent.width
-        height: parent.height
-        cellWidth: thumbGridView.width / 6
-        cellHeight: cellWidth * 1.5
-        delegate: SingleActorThumbDelegate{
-            id:singleActorThumbDelegate
-            width: thumbGridView.cellWidth
-            height: thumbGridView.cellHeight
-            actorName: name
-            number_of_pictures: numberOfPictures
-            number_of_scenes: numberOfScenes
-            imageSource: "file:///" + thumb_320
-            gender: gender
+    anchors.fill: parent
 
+
+
+
+    GridView {
+        id: thumbGridView
+        property alias ratingPopup: ratingPopup
+
+        anchors.fill: parent
+
+        property string delegateSource
+        delegate: Component {
+            id: delegateComponent
+            Loader {
+                id: delegateLoader
+
+                width: thumbGridView.cellWidth
+                height: thumbGridView.cellHeight
+//                asynchronous: true
+
+                source: thumbGridView.delegateSource
+
+            }
         }
 
         clip: true
+        ScrollBar.vertical: ScrollBar {
+        }
+
+        RatingPopup{
+            id:ratingPopup
+            iconPath: "file:///D:/YAPOC++/resource/icons/ic_favorite_black_24px.svg"
+
+        }
+
+
 
     }
 
 
-//    states:[
-//        State {
-//            name: "PORTRAIT"
-//            PropertyChanges {
-//                target: thumbGridView ; cellWidth: thumbGridView.width / 6 ; cellHeight: cellWidth * 1.5
+    states: [
+        State {
+            name: "Actor"
+            PropertyChanges {
+                target: thumbGridView
+                delegateSource: "SingleActorThumbDelegate.qml"
+//                cellWidth: thumbGridView.width / 6
+                cellWidth: portraitCellWidth
+                cellHeight: cellWidth * 1.8
+                model: actorModel
+            }
 
-//            }
+        },
 
-//            PropertyChanges {
-//                target: singleThumbDelegate ; lableText: singleThumbDelegate.model.name; countInfoText: numberOfScens + numberOfPictures
+        State {
+            name: "Scene"
+            PropertyChanges {
+                target: thumbGridView
+                delegateSource: "SingleSceneThumbDelegate.qml"
+                cellWidth: thumbGridView.width / 4
+                cellHeight: cellWidth * 0.56
+                model: sceneModel
+            }
 
-//            }
+        },
 
+        State {
+            name: "Picture"
+            PropertyChanges {
+                target: thumbGridView
+                delegateSource: "SinglePictureThumbDelegate.qml"
+                cellWidth: portraitCellWidth
+                cellHeight: cellWidth * 1.8
+                model: pictureModel
+            }
 
-//        },
+        },
 
-//            State {
-//                name: "LANDSCAPE"
-//                PropertyChanges {
-//                    target: thumbGridView ; cellWidth: thumbGridView.width / 4 ; cellHeight: cellWidth * 0.5625
+        State {
+            name: "Tag"
+            PropertyChanges {
+                target: thumbGridView
+                delegateSource: "SingleTagThumbDelegate.qml"
+                cellWidth: thumbGridView.width / 4
+                cellHeight: cellWidth * 0.56
+                model: tagModel
+            }
 
-//                }
+        },
 
+        State {
+            name: "Website"
+            PropertyChanges {
+                target: thumbGridView
+                delegateSource: "SingleWebsiteThumbDelegate.qml"
+                cellWidth: thumbGridView.width / 4
+                cellHeight: cellWidth * 0.56
+                model: websiteModel
+            }
 
-//            }
-//        ]
+        }
+    ]
+
 
 }

@@ -13,63 +13,35 @@ Item {
         selectedOut(selectedItemType,selectedItemName,selectedItemId,selectedItemAliasOfId,selectedItemIndex)
     }
 
-//    function openContextMenu(mouseX,mouseY,selectedIndex)
-//    {
 
-//        contextMenu.x = mouseX;
-//        contextMenu.y = mouseY;
-//        contextMenu.selectedIndex = selectedIndex
-//        contextMenu.open();
-//    }
-
-//    Connections{
-//        target: singleActorThumbDelegate
-//        onSelected: {
-//            console.log("Got selected signal from singleActorThumbDelegate")
-//            selected2(selectedItemType,selectedItemName,selectedItemId,selectedItemAliasOfId,selectedItemIndex)
-//        }
-//    }
-
-    GridView{
-        id:thumbGridView
-        width: parent.width
-        height: parent.height
-        cellWidth: thumbGridView.width / 6
-        cellHeight: cellWidth * 1.5
-        model: actorModel
-        delegate: SingleActorThumbDelegate{
-            id:singleActorThumbDelegate
-            width: thumbGridView.cellWidth
-            height: thumbGridView.cellHeight
-            actorName: name
-            number_of_pictures: numberOfPictures
-            number_of_scenes: numberOfScenes
-            imageSource: "file:///" + thumb_320
-            gender: gender
-            actorId: id
-            actorAge: age
-
-        }
-
-        ScrollBar.vertical: ScrollBar {}
-
-        clip: true
-
-    }
-
-//    Menu {
-//            id: contextMenu
-//            property int selectedIndex
-
-//            MenuItem {
-//                text: "Tag..."
-//                onTriggered: {
-//                    console.log("Will open tagging popup for actor " + actorModel.directData("name",contextMenu.selectedIndex))
-//                    mainAppPage.openTaggerPopup(actorModel.directData("thumb",contextMenu.selectedIndex),"Actor",actorModel.directData("id",contextMenu.selectedIndex),contextMenu.selectedIndex)
-//                }
-//            }
+//    GridView{
+//        id:thumbGridView
+//        width: parent.width
+//        height: parent.height
+//        cellWidth: thumbGridView.width / 6
+//        cellHeight: cellWidth * 1.5
+//        model: actorModel
+//        delegate: SingleActorThumbDelegate{
+//            id:singleActorThumbDelegate
+//            width: thumbGridView.cellWidth
+//            height: thumbGridView.cellHeight
+//            actorName: name
+//            number_of_pictures: numberOfPictures
+//            number_of_scenes: numberOfScenes
+//            imageSource: "file:///" + thumb_320
+//            gender: gender
+//            actorId: id
+//            actorAge: age
 
 //        }
+
+//        ScrollBar.vertical: ScrollBar {}
+
+//        clip: true
+
+//    }
+
+
 
 
 }

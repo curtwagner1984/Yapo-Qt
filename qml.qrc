@@ -19,6 +19,8 @@
         <file>SingleTagThumbDelegate.qml</file>
         <file>SingleWebsiteThumbDelegate.qml</file>
         <file>AuxFunctions.js</file>
+        <file>ThumbDelegateButton.qml</file>
+        <file>RatingPopup.qml</file>
     </qresource>
     <qresource prefix="/actorView">
         <file>ActorView.qml</file>

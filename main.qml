@@ -5,6 +5,7 @@ import QtQuick.Controls.Material 2.1
 import QtQuick.Dialogs 1.2
 import QtQuick.Window 2.0
 import QtMultimedia 5.8
+
 import "qrc:/settings"
 import "qrc:/thumbview"
 import "qrc:/actorView"
@@ -22,7 +23,7 @@ ApplicationWindow {
     visible: true
     id: mainAppPage
 
-    property alias sceneViewComp: sceneViewComponenet
+//    property alias sceneViewComp: sceneViewComponenet
     property alias searchBarAlias: searchBar
     property alias showImage: showImagePopup
     property alias showVideo: sceneViewPopup
@@ -157,7 +158,15 @@ ApplicationWindow {
                 id: actorScreen
                 text: "Actors"
                 onClicked: {
-                    actorViewComponenetLoader.source = "/actorView/ActorView.qml"
+
+//                    console.log("Actors clicked")
+                    actorViewComponenetLoader.source = "/thumbview/ThumbView.qml"
+//                    console.log("setting loader source")
+//                    actorViewComponenetLoader.state = "Actor"
+
+
+
+//                    actorViewComponenetLoader.state = "Actor"
                     //                    actorViewComponenetLoader.sourceComponent = actorViewComponenet
                     //                    actorViewComponenetLoader.width = mainStack.width
                     //                    actorViewComponenetLoader.height = mainStack.height
@@ -171,7 +180,10 @@ ApplicationWindow {
                 id: sceneScreen
                 text: "Scenes"
                 onClicked: {
-                    sceneViewComponenetLoader.sourceComponent = sceneViewComponenet
+                    sceneViewComponenetLoader.source = "/thumbview/ThumbView.qml"
+
+//                    sceneViewComponenetLoader.state = "Scene"
+
                     qmlComm.sceneSearch("")
                     mainStack.push(sceneViewComponenetLoader, {
                                        objectName: "Scene View"
@@ -183,7 +195,8 @@ ApplicationWindow {
                 id: pictureScreen
                 text: "Pictures"
                 onClicked: {
-                    pictureViewComponenetLoader.sourceComponent = pictureViewComponenet
+                    pictureViewComponenetLoader.source = "/thumbview/ThumbView.qml"
+//                    pictureViewComponenetLoader.sourceComponent = pictureViewComponenet
                     qmlComm.pictureSearch("")
                     mainStack.push(pictureViewComponenetLoader, {
                                        objectName: "Picture View"
@@ -195,7 +208,7 @@ ApplicationWindow {
                 id: tagScreen
                 text: "Tags"
                 onClicked: {
-                    tagViewComponenetLoader.sourceComponent = tagViewComponenet
+                    tagViewComponenetLoader.source = "/thumbview/ThumbView.qml"
                     qmlComm.tagSearch("")
                     mainStack.push(tagViewComponenetLoader, {
                                        objectName: "Tag View"
@@ -208,7 +221,7 @@ ApplicationWindow {
                 text: "Websites"
                 onClicked: {
                     qmlComm.websiteSearch("")
-                    websiteViewComponenetLoader.sourceComponent = websiteViewComponenet
+                    websiteViewComponenetLoader.source = "/thumbview/ThumbView.qml"
 
                     mainStack.push(websiteViewComponenetLoader, {
                                        objectName: "Website View"
@@ -448,121 +461,143 @@ ApplicationWindow {
         id: actorViewComponenetLoader
         width: mainStack.width
         height: mainStack.height
-        asynchronous: true
         visible: status == Loader.Ready
-        //        width: mainView.width
-        //        height: mainView.height
+
         onProgressChanged: {
-            console.log("Actor loader proggres changed to " + progress)
+            if (actorViewComponenetLoader.status === Loader.Ready){
+                console.log("Actor loader loaded")
+                actorViewComponenetLoader.item.state = "Actor"
+
+            }
         }
     }
 
-    //    Component {
-    //        id: actorViewComponenet
-    //        ActorView {
-    //            id: actorView
-    //            width: mainView.width
-    //            height: mainView.height
-    //        }
-    //    }
     Loader {
         id: sceneViewComponenetLoader
-    }
+        width: mainStack.width
+        height: mainStack.height
+        visible: status == Loader.Ready
 
-    Component {
-        id: sceneViewComponenet
-        SceneView {
+        onProgressChanged: {
+            if (sceneViewComponenetLoader.status === Loader.Ready){
+                console.log("Scene loader loaded")
+                sceneViewComponenetLoader.item.state = "Scene"
 
-            width: mainItem.width
-            height: mainItem.height
+            }
         }
     }
+
 
     Loader {
         id: pictureViewComponenetLoader
-        asynchronous: true
+        width: mainStack.width
+        height: mainStack.height
         visible: status == Loader.Ready
-    }
 
-    Component {
-        id: pictureViewComponenet
-        PictureView {
-            width: mainItem.width
-            height: mainItem.height
+        onProgressChanged: {
+            if (pictureViewComponenetLoader.status === Loader.Ready){
+                console.log("Picture loader loaded")
+                pictureViewComponenetLoader.item.state = "Picture"
+
+            }
         }
     }
 
-    Loader {
+
+    Loader {        
         id: tagViewComponenetLoader
-    }
+        width: mainStack.width
+        height: mainStack.height
+        visible: status == Loader.Ready
 
-    Component {
-        id: tagViewComponenet
-        TagView {
-            width: mainItem.width
-            height: mainItem.height
+        onProgressChanged: {
+            if (tagViewComponenetLoader.status === Loader.Ready){
+                console.log("Tag loader loaded")
+                tagViewComponenetLoader.item.state = "Tag"
+
+            }
         }
     }
+
+//    Component {
+//        id: tagViewComponenet
+//        TagView {
+//            width: mainItem.width
+//            height: mainItem.height
+//        }
+//    }
 
     Loader {
         id: websiteViewComponenetLoader
-    }
 
-    Loader {
-        id: treeFolderViewComponenetLoader
-    }
+        width: mainStack.width
+        height: mainStack.height
+        visible: status == Loader.Ready
 
-    Component {
-        id: websiteViewComponenet
-        WebsiteView {
-            width: mainItem.width
-            height: mainItem.height
+        onProgressChanged: {
+            if (websiteViewComponenetLoader.status === Loader.Ready){
+                console.log("Website loader loaded")
+                websiteViewComponenetLoader.item.state = "Website"
+
+            }
         }
     }
 
-    Loader {
-        id: actorDetailViewComponenetLoader
-    }
+//    Loader {
+//        id: treeFolderViewComponenetLoader
+//    }
 
-    Component {
-        id: actorDetailViewComponenet
-        ActorDetailView {
-            width: mainItem.width
-            height: mainItem.height
-        }
-    }
+//    Component {
+//        id: websiteViewComponenet
+//        WebsiteView {
+//            width: mainItem.width
+//            height: mainItem.height
+//        }
+//    }
 
-    Loader {
-        id: tagDetailViewComponenetLoader
-    }
+//    Loader {
+//        id: actorDetailViewComponenetLoader
+//    }
 
-    Component {
-        id: tagDetailViewComponenet
-        TagDetailView {
-            width: mainItem.width
-            height: mainItem.height
-        }
-    }
+//    Component {
+//        id: actorDetailViewComponenet
+//        ActorDetailView {
+//            width: mainItem.width
+//            height: mainItem.height
+//        }
+//    }
 
-    Loader {
-        id: websiteDetailViewComponenetLoader
-    }
+//    Loader {
+//        id: tagDetailViewComponenetLoader
+//    }
 
-    Component {
-        id: websiteDetailViewComponenet
-        WebsiteDetailView {
-            width: mainItem.width
-            height: mainItem.height
-        }
-    }
+//    Component {
+//        id: tagDetailViewComponenet
+//        TagDetailView {
+//            width: mainItem.width
+//            height: mainItem.height
+//        }
+//    }
 
-    Component {
-        id: treeFolderViewComponenet
-        TreeFolderView {
-            width: mainItem.width
-            height: mainItem.height
-        }
-    }
+//    Loader {
+//        id: websiteDetailViewComponenetLoader
+//    }
+
+//    Component {
+//        id: websiteDetailViewComponenet
+//        WebsiteDetailView {
+//            width: mainItem.width
+//            height: mainItem.height
+//        }
+//    }
+
+//    Component {
+//        id: treeFolderViewComponenet
+//        TreeFolderView {
+//            width: mainItem.width
+//            height: mainItem.height
+//        }
+//    }
 
 //    AutoCompletePopup {
 //        id: autocomplete
@@ -754,7 +789,7 @@ ApplicationWindow {
                     if (status === MediaPlayer.Loaded
                             && sceneViewPopup.visible) {
 
-                        sceneViewPopup.seekValue = popupVideo.duration / 20
+                        sceneViewPopup.seekValue = popupVideo.duration / 60
                         sceneViewPopup.seekSum = sceneViewPopup.seekValue
                         console.log("Seek value is: " + sceneViewPopup.seekValue
                                     + " duration is " + popupVideo.duration)

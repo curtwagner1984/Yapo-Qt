@@ -353,21 +353,21 @@ Item {
 
     }
 
-    Component{
-        id:actorDetailSceneViewComponenet
-        SceneView {
-            width:  mainItem.width
-            height: mainItem.height - mainViewTabBar.height
-        }
-    }
+//    Component{
+//        id:actorDetailSceneViewComponenet
+//        SceneView {
+//            width:  mainItem.width
+//            height: mainItem.height - mainViewTabBar.height
+//        }
+//    }
 
-    Component{
-        id:actorDetailPictureViewComponenet
-        PictureView {
-            width:  mainItem.width
-            height: mainItem.height - mainViewTabBar.height
-        }
-    }
+//    Component{
+//        id:actorDetailPictureViewComponenet
+//        PictureView {
+//            width:  mainItem.width
+//            height: mainItem.height - mainViewTabBar.height
+//        }
+//    }
 
     Component{
         id: actorDetailtagViewComponenet
@@ -426,14 +426,14 @@ Item {
                 Keys.forwardTo: [autocomplete.listview.currentItem,autocomplete.listview]
             }
 
-            TagView {
-                anchors.top: background.bottom
-                anchors.left: parent.left
-                anchors.right: parent.right
-                anchors.bottom: parent.bottom
-                //              width: mainview.width
-                //              height: mainview.height - mainViewTabBar.height
-            }
+//            TagView {
+//                anchors.top: background.bottom
+//                anchors.left: parent.left
+//                anchors.right: parent.right
+//                anchors.bottom: parent.bottom
+//                //              width: mainview.width
+//                //              height: mainview.height - mainViewTabBar.height
+//            }
 
             AutoCompletePopup {
                 id: autocomplete

@@ -32,7 +32,8 @@ public:
             NameRole = Qt::UserRole + 7,
             GenderRole = Qt::UserRole + 8,
             DobRole = Qt::UserRole + 9,
-            AgeRole = Qt::UserRole + 10
+            AgeRole = Qt::UserRole + 10,
+            RatingRole = Qt::UserRole + 11
 
         };
 private:
