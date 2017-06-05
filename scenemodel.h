@@ -27,9 +27,9 @@
 class SceneModel : public BasicListModel {
   Q_OBJECT
  public:
-  SceneModel(DbManager* dbManager);
+  SceneModel();
   QVariant data(const QModelIndex& index, int role) const;
-  void search(const QString searchString);
+  Q_INVOKABLE void search(const QString searchString);
   void getActorScenes(const QString actorId);
   void getTagScenes(const QString tagId);
   void getWebsiteScenes(const QString websiteId);

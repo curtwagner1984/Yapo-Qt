@@ -6,8 +6,8 @@
 
 
 
-SceneModel::SceneModel(DbManager *dbManager)
-           : BasicListModel(dbManager)
+SceneModel::SceneModel()
+           : BasicListModel()
 {
     qDebug() << "Making test scene search ...";
     this->MODEL_TYPE = "SceneModel";

@@ -2,8 +2,8 @@
 #include <QSqlRecord>
 #include <QDebug>
 
-MediafolderModel::MediafolderModel(DbManager *dbManager)
-                :BasicListModel(dbManager)
+MediafolderModel::MediafolderModel()
+                :BasicListModel()
 {
     qDebug() << "initiating MediafolderModel  ...";
     this->MODEL_TYPE = "MediafolderModel";
@@ -11,7 +11,7 @@ MediafolderModel::MediafolderModel(DbManager *dbManager)
     this->baseSqlFrom = "FROM MediaFolder";
     this->generateSqlLimit();
     qDebug() << "MediaFolder Model initialized ...";
-    this->search("");
+//    this->search("");
 }
 
 //int MediafolderModel::rowCount(const QModelIndex &parent) const

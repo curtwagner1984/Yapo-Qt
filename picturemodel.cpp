@@ -5,8 +5,8 @@
 
 
 
-PictureModel::PictureModel(DbManager *dbManager)
-             : BasicListModel(dbManager)
+PictureModel::PictureModel()
+             : BasicListModel()
 {
     qDebug() << "Making test picture search ...";
 

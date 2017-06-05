@@ -8,9 +8,9 @@ class PictureModel : public BasicListModel
 {
     Q_OBJECT
 public:
-    PictureModel(DbManager* dbManager);
+    PictureModel();
     QVariant data(const QModelIndex &index, int role) const;
-    void search(const QString searchString);
+    Q_INVOKABLE void search(const QString searchString);
     void getActorPictures(const QString actorId);
     void getTagPictures(const QString tagId);
     void getWebsitePictures(const QString websiteId);

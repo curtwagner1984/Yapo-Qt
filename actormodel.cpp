@@ -6,8 +6,8 @@
 
 
 
-ActorModel::ActorModel(DbManager *dbManager)
-    : BasicListModel(dbManager)
+ActorModel::ActorModel()
+    : BasicListModel()
 {
 
     this->MODEL_TYPE = "Actor";

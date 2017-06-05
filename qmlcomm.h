@@ -31,7 +31,7 @@ class QmlComm : public QObject
 {
     Q_OBJECT
 public:
-    explicit QmlComm(QQmlApplicationEngine &view, QObject *parent = 0);
+    explicit QmlComm(QQmlApplicationEngine &view,DbManager* dbManager, QObject *parent = 0);
     Q_INVOKABLE QDateTime getCurrentDateTime() const {
         return QDateTime::currentDateTime();
     }

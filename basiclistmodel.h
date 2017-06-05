@@ -7,7 +7,11 @@
 class BasicListModel : public QAbstractListModel {
   Q_OBJECT
  public:
-  BasicListModel(DbManager *dbManager);
+  BasicListModel();
+
+  Q_INVOKABLE void init(DbManager *dbManager);
+
+
   int rowCount(const QModelIndex &parent) const;
   bool canFetchMore(const QModelIndex &parent) const;
   void fetchMore(const QModelIndex &parent);

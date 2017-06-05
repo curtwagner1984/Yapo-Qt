@@ -2,7 +2,7 @@
 #include <QDebug>
 #include <QFileInfo>
 
-TagModel::TagModel(DbManager *dbManager) : BasicListModel(dbManager) {
+TagModel::TagModel() : BasicListModel() {
   qDebug() << "Making test tag search ...";
 
   this->MODEL_TYPE = "TagModel";

@@ -9,7 +9,7 @@ class DetailObject : public QObject
 {
     Q_OBJECT
 public:
-    explicit DetailObject(DbManager* dbManager, QObject *parent = 0);
+    explicit DetailObject(QObject *parent = 0);
     Q_INVOKABLE void setDetailObject (QString objectId, QString objectType);
     Q_INVOKABLE QString getDetailObjectAttrib(QString attribName);
     Q_INVOKABLE bool setDetailObjectAttrib(QString attribName, QString attribValue);

@@ -1,7 +1,7 @@
 #include "generalalias.h"
 #include <QDebug>
 
-GeneralAlias::GeneralAlias(DbManager *dbManager) : BasicListModel(dbManager)
+GeneralAlias::GeneralAlias() : BasicListModel()
 {
     this->MODEL_TYPE = "GeneralAlias";
     qDebug() << "General Alias Model initialized ...";

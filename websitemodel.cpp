@@ -4,8 +4,8 @@
 
 
 
-WebsiteModel::WebsiteModel(DbManager *dbManager)
-             :BasicListModel(dbManager)
+WebsiteModel::WebsiteModel()
+             :BasicListModel()
 {
     qDebug() << "Making test website search ...";
 

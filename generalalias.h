@@ -10,7 +10,7 @@ class GeneralAlias : public BasicListModel
 {
     Q_OBJECT
 public:
-    GeneralAlias(DbManager* dbManager);
+    GeneralAlias();
 
     QVariant data(const QModelIndex &index, int role) const;
     bool setData(const QModelIndex &index, const QVariant &value, int role);

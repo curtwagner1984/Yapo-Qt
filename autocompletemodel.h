@@ -8,7 +8,7 @@
 class AutoCompleteModel : public BasicListModel {
   Q_OBJECT
  public:
-  AutoCompleteModel(DbManager* dbManager);
+  AutoCompleteModel();
   QVariant data(const QModelIndex& index, int role) const;
   Q_INVOKABLE void search(const QString searchString, QString searchType);
   void tagSearch(const QString searchString);

@@ -2,9 +2,9 @@
 #include <actormodel.h>
 #include <QDebug>
 
-DetailObject::DetailObject(DbManager *dbManager, QObject *parent)
+DetailObject::DetailObject( QObject *parent)
     : QObject(parent) {
-  this->dbManager = dbManager;
+//  this->dbManager = dbManager;
 }
 
 void DetailObject::setDetailObject(QString objectId, QString objectType) {

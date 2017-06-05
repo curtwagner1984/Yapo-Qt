@@ -3,9 +3,14 @@
 #include <QHash>
 #include <QModelIndex>
 
-BasicListModel::BasicListModel(DbManager *dbManager) {
-  this->dbManager = dbManager;
-  this->items = QList<QMap<QString, QVariant>>();
+BasicListModel::BasicListModel() {
+
+    this->items = QList<QMap<QString, QVariant>>();
+}
+
+void BasicListModel::init(DbManager *dbManager)
+{
+    this->dbManager = dbManager;
 }
 
 int BasicListModel::rowCount(const QModelIndex &parent) const {

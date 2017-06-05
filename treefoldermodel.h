@@ -42,7 +42,7 @@ class TreeFolderModel : public QAbstractItemModel {
 
  public:
 
-  explicit TreeFolderModel(DbManager* dbManager, QObject *parent = 0);
+  explicit TreeFolderModel(QObject *parent = 0);
   ~TreeFolderModel();
 
   QVariant data(const QModelIndex &index, int role) const override;

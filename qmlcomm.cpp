@@ -8,33 +8,34 @@
 #include <QQmlContext>
 #include <QQuickView>
 
-QmlComm::QmlComm(QQmlApplicationEngine &view, QObject *parent) : QObject(parent) {
-  this->dbManager = new DbManager("");
+QmlComm::QmlComm(QQmlApplicationEngine &view,DbManager* dbManager,  QObject *parent) : QObject(parent) {
+  this->dbManager = dbManager;
+
   this->fileImporterMutex = new QMutex;
   this->fileImporter =
-      new FileImporter(this->dbManager, this->fileImporterMutex);
+  new FileImporter(this->dbManager, this->fileImporterMutex);
   this->scraper = new TmdbScraper(this->dbManager);
   this->tagger = new Tagger(this->dbManager);
 
   //    models
-  this->mediaFolderModel = new MediafolderModel(this->dbManager);
-  this->actorModel = new ActorModel(this->dbManager);
-  this->sceneModel = new SceneModel(this->dbManager);
-  this->pictureModel = new PictureModel(this->dbManager);
-  this->tagModel = new TagModel(this->dbManager);
-  this->websiteModel = new WebsiteModel(this->dbManager);
+  this->mediaFolderModel = new MediafolderModel();
+//  this->actorModel = new ActorModel(this->dbManager);
+  this->sceneModel = new SceneModel();
+  this->pictureModel = new PictureModel();
+  this->tagModel = new TagModel();
+  this->websiteModel = new WebsiteModel();
 
-  this->generalAlias = new GeneralAlias(this->dbManager);
-  this->autoCompleteModel = new AutoCompleteModel(this->dbManager);
+  this->generalAlias = new GeneralAlias();
+  this->autoCompleteModel = new AutoCompleteModel();
 
-  this->detailObject = new DetailObject(this->dbManager);
+  this->detailObject = new DetailObject();
 
-  this->treeFolderModel = new TreeFolderModel(this->dbManager);
+  this->treeFolderModel = new TreeFolderModel();
 
   view.rootContext()->setContextProperty("dbManager", this->dbManager);
   view.rootContext()->setContextProperty("mediaFolderModel",
                                          this->mediaFolderModel);
-  view.rootContext()->setContextProperty("actorModel", this->actorModel);
+//  view.rootContext()->setContextProperty("actorModel", this->actorModel);
   view.rootContext()->setContextProperty("sceneModel", this->sceneModel);
   view.rootContext()->setContextProperty("pictureModel", this->pictureModel);
   view.rootContext()->setContextProperty("tagModel", this->tagModel);

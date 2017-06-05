@@ -21,7 +21,7 @@ public:
             IsPictureRole = Qt::UserRole + 4
         };
 
-    MediafolderModel(DbManager* dbManager);
+    MediafolderModel();
     QVariant data(const QModelIndex &index, int role) const;
     Q_INVOKABLE void search(const QString searchString);
     QHash<int, QByteArray> roleNames() const;

@@ -9,17 +9,20 @@
 class ActorModel : public BasicListModel
 {
     Q_OBJECT
-public:
-    ActorModel(DbManager* dbManager);
-    Q_INVOKABLE QVariant data(const QModelIndex &index, int role) const;
-    void search (const QString searchString);
-    void getTagActor (const QString tagId);
-    QHash<int, QByteArray> roleNames() const;
 
-    Q_INVOKABLE void getSceneActorsForTagger(const QString sceneId);
+public:
+    ActorModel();
+
+     QVariant data(const QModelIndex &index, int role) const;
+     Q_INVOKABLE void search (const QString searchString);
+     QHash<int, QByteArray> roleNames() const;
+
+
+     void getTagActor (const QString tagId);
+     void getSceneActorsForTagger(const QString sceneId);
 
 //    Q_INVOKABLE QVariant directData(QString roleName, int index);
-    Q_INVOKABLE void setOrder(QString orderBy, QString orderDirection);
+     void setOrder(QString orderBy, QString orderDirection);
 
 
     enum ActorRoles {

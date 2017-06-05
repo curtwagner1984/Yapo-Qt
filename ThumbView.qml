@@ -1,8 +1,20 @@
 import QtQuick 2.8
 import QtQuick.Controls 2.1
 
+import com.me.qmlcomponents 1.0
+
 Item {
     id: thumbView
+
+    property var currentModel
+    property string searchText
+
+    onSearchTextChanged: {
+        console.log("THUMBVIEW: searchTextChanged triggered")
+        actorModel.search(searchText)
+    }
+
+
     property int portraitCellWidth: {
         if (thumbView.width >= 1900){
             return thumbView.width / 6
@@ -56,6 +68,8 @@ Item {
     }
 
 
+
+
     states: [
         State {
             name: "Actor"
@@ -65,7 +79,7 @@ Item {
 //                cellWidth: thumbGridView.width / 6
                 cellWidth: portraitCellWidth
                 cellHeight: cellWidth * 1.8
-                model: actorModel
+                model:currentModel
             }
 
         },
@@ -77,7 +91,7 @@ Item {
                 delegateSource: "SingleSceneThumbDelegate.qml"
                 cellWidth: thumbGridView.width / 4
                 cellHeight: cellWidth * 0.56
-                model: sceneModel
+                model: currentModel
             }
 
         },
@@ -89,7 +103,7 @@ Item {
                 delegateSource: "SinglePictureThumbDelegate.qml"
                 cellWidth: portraitCellWidth
                 cellHeight: cellWidth * 1.8
-                model: pictureModel
+                model: currentModel
             }
 
         },
@@ -101,7 +115,7 @@ Item {
                 delegateSource: "SingleTagThumbDelegate.qml"
                 cellWidth: thumbGridView.width / 4
                 cellHeight: cellWidth * 0.56
-                model: tagModel
+                model: currentModel
             }
 
         },
@@ -113,7 +127,7 @@ Item {
                 delegateSource: "SingleWebsiteThumbDelegate.qml"
                 cellWidth: thumbGridView.width / 4
                 cellHeight: cellWidth * 0.56
-                model: websiteModel
+                model: currentModel
             }
 
         }

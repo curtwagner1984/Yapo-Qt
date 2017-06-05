@@ -7,13 +7,13 @@
 #include <QStringList>
 #include <QObject>
 
-#include "db_models.h"
 
 class DbManager: public QObject
 {
     Q_OBJECT
 
 public:
+    DbManager(QObject *parent = 0);
     DbManager(const QString& path, QObject *parent = 0);
     void createTables();
 

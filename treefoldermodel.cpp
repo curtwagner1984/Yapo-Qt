@@ -10,7 +10,7 @@
 
 #include <QStringList>
 
-TreeFolderModel::TreeFolderModel(DbManager* dbManager, QObject *parent)
+TreeFolderModel::TreeFolderModel(QObject *parent)
     : QAbstractItemModel(parent)
 {
   this->dbManager = dbManager;

@@ -9,9 +9,9 @@ class WebsiteModel: public BasicListModel
 {
     Q_OBJECT
 public:
-    WebsiteModel(DbManager* dbManager);
+    WebsiteModel();
     QVariant data(const QModelIndex &index, int role) const;
-    void search(const QString searchString);
+    Q_INVOKABLE void search(const QString searchString);
     void getTagWebsites(const QString tagId);
     QHash<int, QByteArray> roleNames() const;
 

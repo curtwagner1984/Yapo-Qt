@@ -7,8 +7,8 @@
 
 
 
-AutoCompleteModel::AutoCompleteModel(DbManager *dbManager)
-    :BasicListModel(dbManager)
+AutoCompleteModel::AutoCompleteModel()
+    :BasicListModel()
 {
     qDebug() << "Making test autocomplete search ...";
     this->isAutoComplete = true;
