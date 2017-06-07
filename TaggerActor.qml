@@ -5,6 +5,7 @@ import QtQuick.Controls.Material 2.1
 Item {
     id: contentPlaceHolder
 
+
     Text {
         id: tagLable
         text: "Tags"
@@ -52,7 +53,7 @@ Item {
         anchors.left: parent.horizontalCenter
         anchors.top: aliasLable.bottom
         anchors.bottom: parent.bottom
-        model: generalAlias
+        model: taggerPopup.aliasModel
     }
 
     Connections {

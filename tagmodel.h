@@ -13,14 +13,18 @@ public:
     TagModel();
     QVariant data(const QModelIndex &index, int role) const;
     Q_INVOKABLE void search(const QString searchString);
-    void getActorTags(const QString actorId);
+    Q_INVOKABLE void searchById(const QString tagId);
+
+
+    Q_INVOKABLE void getActorTags(const QString actorId);
     Q_INVOKABLE void getActorTagsForTagger(const QString actorId);
+
     Q_INVOKABLE void getSceneTagsForTagger(const QString sceneId);
 
 //    Q_INVOKABLE bool addTag(QString tagToAddId, QString tagToAddName, QString tagOfType, QString tagOfId);
 //    Q_INVOKABLE bool removeTag(QString tagToRemoveId, QString tagOfType, QString tagOfId , bool removeFromDb);
 
-    void getWebsiteTags(const QString websiteId);
+    Q_INVOKABLE void getWebsiteTags(const QString websiteId);
     QHash<int, QByteArray> roleNames() const;
 
 
@@ -32,7 +36,8 @@ public:
             NameRole = Qt::UserRole + 5,
             NumberOfScenesRole = Qt::UserRole + 6,
             NumberOfPicturesRole = Qt::UserRole + 7,
-            NumberOfActorsRole = Qt::UserRole + 8
+            NumberOfActorsRole = Qt::UserRole + 8,
+            NumberOfWebsitesRole = Qt::UserRole + 9
 
 
         };
@@ -102,6 +107,7 @@ private:
 
     QString SEARCH_FROM = "FROM Tag";
     QString SEARCH_WHERE = "WHERE Tag.name LIKE '%%1%'";
+    QString SEARCH_BY_ID_WHERE = "WHERE Tag.id = %1";
 
 
 

@@ -112,8 +112,8 @@ Item {
                 if (mouse.button & Qt.RightButton) {
 
                 } else {
-                    qmlComm.prepareDetailView(id, "Scene")
-                    mainAppPage.changeView("Scene Detail View")
+//                    qmlComm.prepareDetailView(id, "Actor")
+                    mainAppPage.changeView("Tag Detail View",thumbView.currentModel,index)
                 }
             }
 

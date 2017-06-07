@@ -43,6 +43,8 @@ QVariant TagModel::data(const QModelIndex &index, int role) const {
     return currentItem["NumberOfPictures"];
   } else if (role == NumberOfActorsRole) {
     return currentItem["NumberOfActors"];
+  } else if (role == NumberOfWebsitesRole) {
+      return currentItem["NumberOfWebsites"];
   } else if (role == NameRole) {
     return currentItem["name"];
   } else {
@@ -58,6 +60,17 @@ void TagModel::search(const QString searchString) {
 
   //  Resets count and gets number of items and executes search
   this->baseSearch();
+}
+
+void TagModel::searchById(const QString tagId)
+{
+    QString escapedSearchString = this->escaleSqlChars(tagId);
+    this->baseSqlWhere = SEARCH_BY_ID_WHERE.arg(escapedSearchString);
+    this->baseSqlSelect = SEARCH_SELECT;
+    this->baseSqlFrom = SEARCH_FROM;
+
+    //  Resets count and gets number of items and executes search
+    this->baseSearch();
 }
 
 void TagModel::getActorTags(const QString actorId) {
@@ -77,7 +90,7 @@ void TagModel::getActorTagsForTagger(const QString actorId) {
 
 void TagModel::getSceneTagsForTagger(const QString sceneId)
 {
-    this->baseSqlSelect = SCENE_SEARCH_SELECT;
+    this->baseSqlSelect = SEARCH_SELECT;
     this->baseSqlWhere = SCENE_SEARCH_WHERE.arg(sceneId);
     this->baseSqlFrom = SCENE_SEARCH_FROM;
     this->baseSqlOrder = SCENE_ORDER_BY;
@@ -175,6 +188,8 @@ QHash<int, QByteArray> TagModel::roleNames() const {
   roles[NumberOfScenesRole] = "numberOfScenes";
   roles[NumberOfPicturesRole] = "numberOfPictures";
   roles[NumberOfActorsRole] = "numberOfActors";
+  roles[NumberOfWebsitesRole] = "numberOfWebsites";
   roles[NameRole] = "name";
+
   return roles;
 }

@@ -69,11 +69,11 @@ Item {
     }
 
 
-    Keys.onReturnPressed: {
-        console.log("Return pressed in delegate")
-        autoCompletePopupTwo.selected(tableName, name, id, aliasOfId);
-        autoCompletePopupTwo.close()
-    }
+//    Keys.onReturnPressed: {
+//        console.log("Return pressed in delegate")
+//        autoCompletePopupTwo.selected(tableName, name, id, aliasOfId);
+//        autoCompletePopupTwo.close()
+//    }
 
 
 

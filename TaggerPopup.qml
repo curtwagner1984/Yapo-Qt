@@ -10,6 +10,11 @@ Popup {
     property string itemToTagLable
 
     property var currentModel
+    property var tagModel
+    property var websiteModel
+    property var actorModel
+    property var aliasModel
+
 
     modal: true
     focus: true
@@ -22,7 +27,7 @@ Popup {
 
         if (itemToTagType === "Actor"){
             tagModel.getActorTagsForTagger(itemToTagId)
-            generalAlias.search(itemToTagId, "Actor")
+            aliasModel.search(itemToTagId, "Actor")
         } else if (itemToTagType === "Scene"){
             actorModel.getSceneActorsForTagger(itemToTagId)
             tagModel.getSceneTagsForTagger(itemToTagId)
@@ -44,21 +49,32 @@ Popup {
     }
 
     onOpened: {
-        if (itemToTagType === "Actor"){
-            currentModel = actorModel;
-            switchPage();
-        }else if (itemToTagType === "Scene"){
-            currentModel = sceneModel;
-            switchPage();
-        }
+//        if (itemToTagType === "Actor"){
+////            currentModel = mainAppPage.createModel("Actor");
+//            currentModel = mainAppPage.mainStack.currentItem.currentModel
+//            switchPage();
+//        }else if (itemToTagType === "Scene"){
+//            currentModel = mainAppPage.createModel("Scene");
+//            switchPage();
+//        }
+
+        tagModel = mainAppPage.createModel("Tag");
+        websiteModel = mainAppPage.createModel("Website")
+        actorModel = mainAppPage.createModel("Actor")
+        aliasModel = mainAppPage.createModel("Alias")
+        switchPage();
         contentLoader.source = "TaggerLayout.qml"
         contentLoader.item.state = itemToTagType
 
     }
 
     onClosed: {
-        tagModel.clear()
-        generalAlias.clear()
+//        currentModel.destroy()
+        tagModel.destroy()
+        websiteModel.destroy()
+        actorModel.destroy()
+        aliasModel.destroy()
+
         thumbSrc = ""
     }
 

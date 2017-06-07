@@ -18,6 +18,7 @@
 #include "scenemodel.h"
 #include "tagmodel.h"
 #include "websitemodel.h"
+#include "generalalias.h"
 
 int main(int argc, char *argv[])
 {
@@ -49,6 +50,7 @@ int main(int argc, char *argv[])
 
     qmlRegisterType<SceneModel>("com.me.qmlcomponents", 1, 0, "SceneModel");
     qmlRegisterType<PictureModel>("com.me.qmlcomponents", 1, 0, "PictureModel");
+    qmlRegisterType<GeneralAlias>("com.me.qmlcomponents", 1, 0, "GeneralAlias");
 
 
     DbManager* dbManager = new DbManager("");

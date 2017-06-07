@@ -159,14 +159,14 @@ Item {
                 if (mouse.button & Qt.RightButton) {
 
                 } else {
-                    qmlComm.prepareDetailView(id, "Actor")
-                    mainAppPage.changeView("Actor Detail View")
+//                    qmlComm.prepareDetailView(id, "Actor")
+                    mainAppPage.changeView("Actor Detail View",thumbView.currentModel,index)
                 }
             }
 
             onClicked: {
                 if (mouse.button & Qt.RightButton) {
-                    AuxFunc.ctxMenu("Actor", mouseX, mouseY, index)
+                    AuxFunc.ctxMenu("Actor", mouseX, mouseY, index,thumbView.currentModel)
                 } else {
                     console.log("Single Clicked on " + name)
                 }

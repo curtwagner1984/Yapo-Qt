@@ -48,6 +48,36 @@ Item {
             anchors.right: parent.right
             anchors.bottom: parent.bottom
 
+
+            ThumbDelegateButton {
+                id: playButton
+                height: buttonBarBackground.height
+                width: height
+
+                anchors.left: buttonBarBackground.left
+                anchors.verticalCenter: buttonBarBackground.verticalCenter
+
+                iconPath: "file:///D:/YAPOC++/resource/icons/ic_play_arrow_black_24px.svg"
+                iconText: ""
+                backgroundColor: "transparent"
+                backgroundHighlight: "white"
+                buttonName: "playButton"
+                overlayColor: Material.color(Material.Green)
+
+            }
+
+            Connections {
+                id: playButtonConnection
+                target: playButton
+
+                onButtonClicked: {
+                    console.log("Clicked on " + buttonName)
+                    mainAppPage.showVideo.setupVideo(path)
+                }
+            }
+
+
+
             ThumbDelegateButton {
                 id: ratingButton
                 height: buttonBarBackground.height
@@ -133,19 +163,17 @@ Item {
 
             onDoubleClicked: {
                 if (mouse.button & Qt.RightButton) {
-
                 } else {
-                    qmlComm.prepareDetailView(id, "Scene")
-                    mainAppPage.changeView("Scene Detail View")
+                    mainAppPage.changeView("Scene Detail View",thumbView.currentModel,index)
                 }
             }
 
             onClicked: {
                 if (mouse.button & Qt.RightButton) {
-                    AuxFunc.ctxMenu("Scene", mouseX, mouseY, index)
+                    AuxFunc.ctxMenu("Scene", mouseX, mouseY, index, thumbView.currentModel)
                 } else {
                     console.log("Single Clicked on " + name)
-                    mainAppPage.showVideo.setupVideo(path)
+//                    mainAppPage.showVideo.setupVideo(path)
                 }
             }
         }

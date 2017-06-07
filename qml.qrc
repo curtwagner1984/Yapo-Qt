@@ -57,4 +57,9 @@
         <file>TaggerList.qml</file>
         <file>TaggerScene.qml</file>
     </qresource>
+    <qresource prefix="/detailView">
+        <file>DetailView.qml</file>
+        <file>DetailViewSideBarContent.qml</file>
+        <file>DetailViewMainContent.qml</file>
+    </qresource>
 </RCC>

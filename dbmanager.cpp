@@ -37,6 +37,7 @@ DbManager::DbManager(QObject *parent):QObject(parent)
 DbManager::DbManager(const QString& path, QObject *parent):QObject(parent)
 {
   //    ignoring path just for testing
+  this->echo = false;
   this->m_db = QSqlDatabase::addDatabase("QSQLITE");
   //       this->m_db.setDatabaseName(path);
   this->m_db.setDatabaseName("test.db");
@@ -363,13 +364,19 @@ QList<QMap<QString, QVariant> > DbManager::getTaggingElements()
 
 QList<QMap<QString, QVariant> > DbManager::executeArbitrarySqlWithReturnValue(const QString sqlStatment)
 {
-    qDebug() << "DbManager: Executing: " << sqlStatment;
+    if (this->echo){
+       qDebug() << "DbManager: Executing: " << sqlStatment;
+    }
+
     return this->executeFetchQueryWrapper(sqlStatment,sqlStatment);
 }
 
 bool DbManager::executeArbitrarySqlWithoutReturnValue(const QString sqlStatment)
 {
-    qDebug() << "DbManager: Executing: " << sqlStatment;
+    if (this->echo){
+        qDebug() << "DbManager: Executing: " << sqlStatment;
+    }
+
     return this->executeQuery(sqlStatment,"executeArbitrarySqlWithoutReturnValue");
 
 }
@@ -377,7 +384,10 @@ bool DbManager::executeArbitrarySqlWithoutReturnValue(const QString sqlStatment)
 bool DbManager::executeArbitrarySqlWithoutReturnValueForTransaction(QSqlQuery query)
 {
 
-    qDebug() << "DbManager: Executing: " << query.lastQuery();
+    if (echo){
+        qDebug() << "DbManager: Executing: " << query.lastQuery();
+    }
+
 
 //    QMapIterator<QString, QVariant> i(query.boundValues());
 //          while (i.hasNext()) {
@@ -392,7 +402,10 @@ bool DbManager::executeArbitrarySqlWithoutReturnValueForTransaction(QSqlQuery qu
 
     bool ans = query.exec();
     if (ans){
-        qDebug() << "Success";
+        if (echo){
+                    qDebug() << "Success";
+                }
+
     }else{
         qDebug() << "Sql error: " << query.lastError();
     }
@@ -885,7 +898,10 @@ bool DbManager::executeQuery(QString sqlStmt, QString sendingFunction)
 //    this->m_db.commit()
     if (query.exec()){
         success = true;
-        qDebug() << "Succesfully executed query for "<< sendingFunction <<" in " << timer.elapsed() << " ms";
+        if (echo){
+            qDebug() << "Succesfully executed query for "<< sendingFunction <<" in " << timer.elapsed() << " ms";
+        }
+
 //        qDebug() << "Last query error" << this->m_db.lastError();
 //        qDebug() << "Last query" << query.lastQuery();
     }else{
@@ -908,7 +924,9 @@ bool DbManager::executeQueryForTransaction(QString sqlStmt, QString sendingFunct
     QElapsedTimer timer;
     if (query.exec()){
         success = true;
-        qDebug() << "Succesfully executed query for "<< sendingFunction <<" in " << timer.elapsed() << " ms";
+        if (echo){
+            qDebug() << "Succesfully executed query for "<< sendingFunction <<" in " << timer.elapsed() << " ms";
+        }
 //        qDebug() << "Last query error" << this->m_db.lastError();
 //        qDebug() << "Last query" << query.lastQuery();
     }else{
@@ -926,7 +944,9 @@ bool DbManager::executeQuery(QSqlQuery query, QString sendingFunction)
     bool success = false;
     if (query.exec()){
         success = true;
-        qDebug() << "Succesfully executed query for "<< sendingFunction;
+        if (echo){
+            qDebug() << "Succesfully executed query for "<< sendingFunction;
+        }
     }else{
         qDebug() << "SQL error in " << sendingFunction  << query.lastError();
         qDebug() << "Executed Query: " << query.executedQuery();

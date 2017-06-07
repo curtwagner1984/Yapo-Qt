@@ -39,7 +39,7 @@ Popup {
         ListView {
             id: autoCompleteListView
             anchors.fill: parent
-            currentIndex: 0
+            currentIndex: 0            
             model: autoCompleteModel
             delegate: Item {
                 id: autoCompleteDelegate

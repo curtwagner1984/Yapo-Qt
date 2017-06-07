@@ -49,7 +49,17 @@ class AutoCompleteModel : public BasicListModel {
       "SELECT ActorAlias.id as id, ActorAlias.name as name, 'ActorAlias' as "
       "TableName, Actor.name as alias_of, Actor.id as alias_of_id, "
       "Actor.thumbnail as thumbnail FROM ActorAlias "
-      "JOIN Actor on Actor.id = ActorAlias.actor_id)";
+      "JOIN Actor on Actor.id = ActorAlias.actor_id "
+      "UNION ALL "
+      "SELECT TagAlias.id as id, TagAlias.name as name, 'TagAlias' as "
+      "TableName, Tag.name as alias_of, Tag.id as alias_of_id, "
+      "Tag.thumbnail as thumbnail FROM TagAlias "
+      "JOIN Tag on Tag.id = TagAlias.tag_id "
+      "UNION ALL "
+      "SELECT WebsiteAlias.id as id, WebsiteAlias.name as name, 'WebsiteAlias' as "
+      "TableName, Website.name as alias_of, Website.id as alias_of_id, "
+      "Website.thumbnail as thumbnail FROM WebsiteAlias "
+      "JOIN Website on Website.id = WebsiteAlias.website_id) ";
 
   QString SEARCH_LIMIT = "LIMIT 15";
 

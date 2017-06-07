@@ -15,6 +15,7 @@ Item {
     }
 
 
+
     property int portraitCellWidth: {
         if (thumbView.width >= 1900){
             return thumbView.width / 6
@@ -27,7 +28,7 @@ Item {
         }
     }
 
-    anchors.fill: parent
+//    anchors.fill: parent
 
 
 

@@ -15,14 +15,16 @@ public:
 
      QVariant data(const QModelIndex &index, int role) const;
      Q_INVOKABLE void search (const QString searchString);
+     Q_INVOKABLE void searchById (const QString actorId);
      QHash<int, QByteArray> roleNames() const;
 
 
-     void getTagActor (const QString tagId);
-     void getSceneActorsForTagger(const QString sceneId);
+     Q_INVOKABLE void getTagActors (const QString tagId);
+
+     Q_INVOKABLE void getSceneActorsForTagger(const QString sceneId);
 
 //    Q_INVOKABLE QVariant directData(QString roleName, int index);
-     void setOrder(QString orderBy, QString orderDirection);
+     Q_INVOKABLE void setOrder(QString orderBy, QString orderDirection);
 
 
     enum ActorRoles {
@@ -36,7 +38,8 @@ public:
             GenderRole = Qt::UserRole + 8,
             DobRole = Qt::UserRole + 9,
             AgeRole = Qt::UserRole + 10,
-            RatingRole = Qt::UserRole + 11
+            RatingRole = Qt::UserRole + 11,
+            NumberOfTags = Qt::UserRole + 13
 
         };
 private:
@@ -46,9 +49,12 @@ private:
                             "(SELECT COUNT(*) FROM Picture_Actor WHERE Picture_Actor.actor_id = Actor.id) as NumberOfPictures, "
                             "(SELECT COUNT(*) FROM Actor_tag WHERE Actor_tag.actor_id = Actor.id) as NumberOfTags ";
 
+
     QString SEARCH_FROM = "FROM Actor";
 
     QString SEARCH_WHERE = "WHERE Actor.name LIKE '%%1%'";
+
+    QString SEARCH_BY_ID_WHERE = "WHERE Actor.id = %1";
 
 
     QString TAG_SEARCH_FROM = "FROM ACTOR "

@@ -17,6 +17,8 @@ import "qrc:/autoComplete"
 import "qrc:/treeFolderView"
 import "qrc:/taggerPopup"
 
+import "qrc:/detailView"
+
 import com.me.qmlcomponents 1.0
 
 ApplicationWindow {
@@ -25,10 +27,10 @@ ApplicationWindow {
     visible: true
     id: mainAppPage
 
-    //    property alias sceneViewComp: sceneViewComponenet
     property alias searchBarAlias: searchBar
     property alias showImage: showImagePopup
     property alias showVideo: sceneViewPopup
+    property alias mainStack: mainStack
 
     Component.onCompleted: {
         mainStack.push(homepagePlaceholder, {
@@ -43,28 +45,48 @@ ApplicationWindow {
         }
     }
 
-    function changeView(viewToChangeTo) {
-        if (viewToChangeTo === "Scene View") {
-            mainStack.push(sceneViewComponenet, {
-                               objectName: "Scene View"
-                           })
-        } else if (viewToChangeTo === "Actor Detail View") {
-            mainStack.push(actorDetailViewComponenet, {
+    function changeView(viewToChangeTo,currentModel,currentIndex) {
+        if (viewToChangeTo === "Actor Detail View") {
+            var x = detailViewComponent.createObject();
+            x.init(currentModel,currentIndex,"Actor")
+            mainStack.push(x, {
                                objectName: "Actor Detail View"
                            })
-        } else if (viewToChangeTo === "Tag Detail View") {
-            mainStack.push(tagDetailViewComponenet, {
+        }else if (viewToChangeTo === "Tag Detail View") {
+            var x = detailViewComponent.createObject();
+            x.init(currentModel,currentIndex,"Tag")
+            mainStack.push(x, {
                                objectName: "Tag Detail View"
                            })
-        } else if (viewToChangeTo === "Website Detail View") {
-            mainStack.push(websiteDetailViewComponenet, {
+        }else if (viewToChangeTo === "Website Detail View") {
+            var x = detailViewComponent.createObject();
+            x.init(currentModel,currentIndex,"Website")
+            mainStack.push(x, {
                                objectName: "Website Detail View"
                            })
+        }else if (viewToChangeTo === "Scene Detail View") {
+            var x = detailViewComponent.createObject();
+            x.init(currentModel,currentIndex,"Scene")
+            mainStack.push(x, {
+                               objectName: "Scene Detail View"
+                           })
         }
+//        } else if (viewToChangeTo === "Actor Detail View") {
+//            mainStack.push(detailViewComponent, {
+//                               objectName: "Actor Detail View"
+//                           })
+//        } else if (viewToChangeTo === "Tag Detail View") {
+//            mainStack.push(tagDetailViewComponenet, {
+//                               objectName: "Tag Detail View"
+//                           })
+//        } else if (viewToChangeTo === "Website Detail View") {
+//            mainStack.push(websiteDetailViewComponenet, {
+//                               objectName: "Website Detail View"
+//                           })
+//        }
     }
 
-    //    Material.theme: Material.Dark
-    //    Material.accent: Material.Purple
+
     Item {
         id: mainItem
         anchors.fill: parent
@@ -85,8 +107,6 @@ ApplicationWindow {
                         mainStack.currentItem.currentModel.search(
                                     searchBar.text)
                     }else {
-                        //                        autoCompleteComponenetLoader.sourceComponent = autoCompleteComponenet
-                        //                        qmlComm.autoCompleteSearch(searchBar.text, "")
                         autocomplete.searchedText = searchBar.text
                         autocomplete.searchType = ""
                         if (!autocomplete.isOpened) {
@@ -119,25 +139,37 @@ ApplicationWindow {
                                     + " Type:" + selectedItemType)
 
                         if (selectedItemType === "Actor") {
-                            qmlComm.prepareDetailView(selectedItemId, "Actor")
-                            mainAppPage.changeView("Actor Detail View")
+                              var actModel = createModel("Actor")
+                              actModel.searchById(selectedItemId)
+                              mainAppPage.changeView("Actor Detail View",actModel,0)
                         } else if (selectedItemType === "ActorAlias") {
-                            qmlComm.prepareDetailView(selectedItemAliasOfId,
-                                                      "Actor")
-                            mainAppPage.changeView("Actor Detail View")
+                            var actModel = createModel("Actor")
+                            actModel.searchById(selectedItemAliasOfId)
+                            mainAppPage.changeView("Actor Detail View",actModel,0)
                         } else if (selectedItemType === "Tag") {
-                            qmlComm.prepareDetailView(selectedItemId, "Tag")
-                            mainAppPage.changeView("Tag Detail View")
+                            var tagModel = createModel("Tag")
+                            tagModel.searchById(selectedItemId)
+                            mainAppPage.changeView("Tag Detail View",tagModel,0)
+                        } else if (selectedItemType === "TagAlias") {
+                            var tagModel = createModel("Tag")
+                            tagModel.searchById(selectedItemAliasOfId)
+                            mainAppPage.changeView("Tag Detail View",tagModel,0)
+                        }else if (selectedItemType === "Website") {
+                            var websiteModel = createModel("Website")
+                            websiteModel.searchById(selectedItemId)
+                            mainAppPage.changeView("Website Detail View",websiteModel,0)
+                        }else if (selectedItemType === "WebsiteAlias") {
+                            var websiteModel = createModel("Website")
+                            websiteModel.searchById(selectedItemAliasOfId)
+                            mainAppPage.changeView("Website Detail View",websiteModel,0)
                         }
                     }
                 }
 
-                //                  Keys.forwardTo: [autocomplete.contentLoader.item,
-                //                      autocomplete.contentLoader.item.autoCompleteContnetItemListView,
-                //                      autocomplete.contentLoader.item.autoCompleteContnetItemListView.currentItem,
-                //                  autocomplete.contentLoader.item.autoCompleteContnetItemListView.currentItem.item]
-                Keys.forwardTo: [autocomplete.contentLoader.item.autoCompleteContnetItemListView, autocomplete.contentLoader.item.autoCompleteContnetItemListView.currentItem.item]
-                //                Keys.forwardTo: [autocomplete.listview.currentItem, autocomplete.listview]
+//                Keys.forwardTo: [autocomplete.contentLoader.item.autoCompleteContnetItemListView, autocomplete.contentLoader.item.autoCompleteContnetItemListView.currentItem.item]
+//                Keys.forwardTo: [autocomplete.contentLoader.item.autoCompleteContnetItemListView]
+                  Keys.forwardTo: [autocomplete.contentLoader.item]
+
             }
 
             OrderByComboBox {
@@ -145,63 +177,32 @@ ApplicationWindow {
                 Layout.minimumWidth: 200
             }
 
+            Connections{
+                target:orderbyComboBox
+                onSelected:{
+                    console.log("Selected order" + orderBy + " "  + orderDirection)
+                    mainStack.currentItem.currentModel.setOrder(orderBy,orderDirection)
+                }
+            }
+
             Button {
                 id: actorScreen
                 text: "Actors"
                 onClicked: {
 
-
-                    //                    var modelOfView = myFunc();
-                    //                    modelOfView.search("isis")
-                    //                    var thumbView = myFunc2(modelOfView);
-
-                    //                    var actModelVar = myTestComponent.createObject();
-                    //                    var actViewVar = thumbViewComp.createObject(mainStack);
-                    //                    actViewVar.currentModel = actModelVar;
-                    //                    actModelVar.search("");
-                    //                    actViewVar.state = "Actor"
                     var view = createThumbView("Actor")
                     view.currentModel.search("")
 
-                    //                    console.log("Actors clicked")
-                    //                    if (!actorViewComponenetLoader.active)
-                    //                    {
-                    //                         console.log("Button:Actors actorViewComponenetLoader is not active, setting active to 'true'")
-                    //                         actorViewComponenetLoader.active = true
-                    //                    }
-
-                    //                    if (actorViewComponenetLoader.status === Loader.Ready)
-                    //                    {
-                    //                        console.log("Button:Actors actorViewComponenetLoader.status === Loader.Ready")
-                    //                        actorViewComponenetLoader.item.actorModel = myTestLoader.item
-                    //                        actorViewComponenetLoader.item.state = "Actor"
-                    //                    }
-
-                    //                    console.log("setting loader source")
-                    //                    actorViewComponenetLoader.state = "Actor"
-
-                    //                    actorViewComponenetLoader.state = "Actor"
-                    //                    actorViewComponenetLoader.sourceComponent = actorViewComponenet
-                    //                    actorViewComponenetLoader.width = mainStack.width
-                    //                    actorViewComponenetLoader.height = mainStack.height
-                    //                    qmlComm.actorSearch("")
                     mainStack.push(view, {
                                        objectName: "Main Actor View"
                                    })
-                    //                    mainStack.push(actorViewComponenetLoader, {
-                    //                                       objectName: "Actor View"
-                    //                                   })
+
                 }
             }
             Button {
                 id: sceneScreen
                 text: "Scenes"
                 onClicked: {
-
-                    //                    sceneViewComponenetLoader.source = "/thumbview/ThumbView.qml"
-
-                    //                    //                    sceneViewComponenetLoader.state = "Scene"
-                    //                    qmlComm.sceneSearch("")
                     var view = createThumbView("Scene")
                     view.currentModel.search("")
 
@@ -215,10 +216,6 @@ ApplicationWindow {
                 id: pictureScreen
                 text: "Pictures"
                 onClicked: {
-
-                    //                    pictureViewComponenetLoader.source = "/thumbview/ThumbView.qml"
-                    //                    //                    pictureViewComponenetLoader.sourceComponent = pictureViewComponenet
-                    //                    qmlComm.pictureSearch("")
                     var view = createThumbView("Picture")
                     view.currentModel.search("")
 
@@ -335,20 +332,17 @@ ApplicationWindow {
 
             StackView {
                 id: mainStack
-                //            width: parent.width
-                //            anchors.top: searchBarRow.bottom
-                //            anchors.bottom: mainAppPage.bottom
                 anchors.fill: parent
                 onCurrentItemChanged: {
                     console.log("Stackview current item changed.. Current item is: "
                                 + mainStack.currentItem.objectName)
-                    if (mainStack.currentItem.objectName === "Actor View") {
+                    if (mainStack.currentItem.objectName === "Main Actor View") {
                         orderbyComboBox.state = "actorOrder"
                         orderbyComboBox.visible = true
-                    } else if (mainStack.currentItem.objectName === "Picture View") {
+                    } else if (mainStack.currentItem.objectName === "Main Picture View") {
                         orderbyComboBox.state = "pictureOrder"
                         orderbyComboBox.visible = true
-                    } else if (mainStack.currentItem.objectName === "Scene View") {
+                    } else if (mainStack.currentItem.objectName === "Main Scene View") {
                         orderbyComboBox.state = "sceneOrder"
                         orderbyComboBox.visible = true
                     } else {
@@ -358,80 +352,18 @@ ApplicationWindow {
             }
         }
 
-        //        Item {
-
-        //            id: sideView
-        //            width: parent.width / 4
-        //            anchors.top: searchBarRow.bottom
-        //            anchors.bottom: parent.bottom
-        //            visible: false
-        //            property alias sideText: moreSidebarText.text
-
-        //            Text {
-        //                id: sidebarText
-        //                text: {
-        //                    if (mainStack.currentItem.objectName == "Actor View") {
-        //                        return "Actor View"
-        //                    } else {
-        //                        return "Sidebar"
-        //                    }
-        //                }
-        //                font.pixelSize: 28
-        //                color: Material.color(Material.Pink)
-        //                anchors.verticalCenter: parent.verticalCenter
-        //                anchors.horizontalCenter: parent.horizontalCenter
-        //            }
-
-        //            Text {
-        //                id: moreSidebarText
-        //                //                text: actorModel.directData("name",1)
-        //                font.pixelSize: 28
-        //                color: Material.color(Material.Pink)
-        //                anchors.top: sidebarText.bottom
-        //                anchors.horizontalCenter: parent.horizontalCenter
-        //            }
-
-        //            Item {
-        //                anchors.top: moreSidebarText.bottom
-        //                anchors.left: parent.left
-        //                anchors.right: parent.right
-        //                anchors.bottom: parent.bottom
-
-        //                ListView {
-        //                    id: sideviewListView
-        //                    anchors.fill: parent
-        //                    model: tagModel
-        //                    delegate: Text {
-        //                        text: name
-        //                        //                        }
-        //                    }
-        //                }
-        //            }
-
-        //            Connections {
-        //                target: actorViewComponenetLoader.item
-        //                onSelectedOut: {
-        //                    console.log("main.qml:Sidbare:connections: Selected signal triggered, itemType: "
-        //                                + selectedItemType + " ItemName " + selectedItemName
-        //                                + " index: " + selectedItemIndex)
-        //                    moreSidebarText.text = actorModel.directData(
-        //                                "name",
-        //                                selectedItemIndex) + " Scenes: " + actorModel.directData(
-        //                                "numberOfScenes", selectedItemIndex)
-        //                    qmlComm.getTagsOfItem(selectedItemId, "Actor")
-        //                }
-        //            }
-        //        }
         Menu {
             id: contextMenu
             property int selectedIndex
             property string selectedItemType
+            property var currentModel
 
             MenuItem {
                 text: "Tag..."
                 onTriggered: {
                     tpopup.currentItemIndex = contextMenu.selectedIndex
                     tpopup.itemToTagType = contextMenu.selectedItemType
+                    tpopup.currentModel = contextMenu.currentModel
                     tpopup.open()
                 }
             }
@@ -461,6 +393,14 @@ ApplicationWindow {
         }
     }
 
+    Component{
+        id:detailViewComponent
+        DetailView{
+//            height: mainItem.height
+//            width: mainItem.width
+        }
+    }
+
     Loader {
         id: settingsViewComponenetLoader
     }
@@ -472,28 +412,49 @@ ApplicationWindow {
         }
     }
 
-    function createThumbView(thumbViewType) {
-        var modelToInsert
-        var thumbView = thumbViewComp.createObject()
+    function createThumbView(modelType) {
 
-        if (thumbViewType === "Actor") {
+        var thumbView = thumbViewComp.createObject();
+        var modelToInsert = createModel(modelType);
+
+
+        thumbView.currentModel = modelToInsert
+        thumbView.state = modelType
+
+        return thumbView
+    }
+
+    function createModel(modelType){
+        var modelToInsert;
+
+        if (modelType === "Actor") {
             modelToInsert = actorModelComponent.createObject()
-        } else if (thumbViewType === "Tag") {
+        } else if (modelType === "Tag") {
             modelToInsert = tagModelComponent.createObject()
-        } else if (thumbViewType === "Website") {
+        } else if (modelType === "Website") {
             modelToInsert = websiteModelComponent.createObject()
-        } else if (thumbViewType === "Scene") {
+        } else if (modelType === "Scene") {
             modelToInsert = sceneModelComponent.createObject()
-        } else if (thumbViewType === "Picture") {
+        } else if (modelType === "Picture") {
             modelToInsert = pictureModelComponent.createObject()
+        }else if (modelType === "Alias") {
+            modelToInsert = aliasModelComponent.createObject()
         } else {
             return null
         }
 
-        thumbView.currentModel = modelToInsert
-        thumbView.state = thumbViewType
+        return modelToInsert;
+    }
 
-        return thumbView
+
+    Component {
+        id: aliasModelComponent
+        GeneralAlias {
+            Component.onCompleted: {
+                console.log("GeneralAliasModel:ON COMPLETE TRIGGERED")
+                init(dbManager)
+            }
+        }
     }
 
     Component {
@@ -554,145 +515,7 @@ ApplicationWindow {
         }
     }
 
-    //    Loader {
-    //        id: actorViewComponenetLoader
-    //        width: mainStack.width
-    //        height: mainStack.height
-    //        visible: status == Loader.Ready
-    //        source: "/thumbview/ThumbView.qml"
-    //        active: false
 
-    //        onProgressChanged: {
-    //            if (actorViewComponenetLoader.status === Loader.Ready) {
-    //                console.log("Actor loader loaded")
-
-    //                actorViewComponenetLoader.item.actorModel = myTestLoader.item
-    //                actorViewComponenetLoader.item.state = "Actor"
-    //            }
-    //        }
-    //    }
-
-    //    Loader {
-    //        id: sceneViewComponenetLoader
-    //        width: mainStack.width
-    //        height: mainStack.height
-    //        visible: status == Loader.Ready
-
-    //        onProgressChanged: {
-    //            if (sceneViewComponenetLoader.status === Loader.Ready) {
-    //                console.log("Scene loader loaded")
-    //                sceneViewComponenetLoader.item.state = "Scene"
-    //            }
-    //        }
-    //    }
-
-    //    Loader {
-    //        id: pictureViewComponenetLoader
-    //        width: mainStack.width
-    //        height: mainStack.height
-    //        visible: status == Loader.Ready
-
-    //        onProgressChanged: {
-    //            if (pictureViewComponenetLoader.status === Loader.Ready) {
-    //                console.log("Picture loader loaded")
-    //                pictureViewComponenetLoader.item.state = "Picture"
-    //            }
-    //        }
-    //    }
-
-    //    Loader {
-    //        id: tagViewComponenetLoader
-    //        width: mainStack.width
-    //        height: mainStack.height
-    //        visible: status == Loader.Ready
-
-    //        onProgressChanged: {
-    //            if (tagViewComponenetLoader.status === Loader.Ready) {
-    //                console.log("Tag loader loaded")
-    //                tagViewComponenetLoader.item.state = "Tag"
-    //            }
-    //        }
-    //    }
-
-    //    Loader {
-    //        id: websiteViewComponenetLoader
-
-    //        width: mainStack.width
-    //        height: mainStack.height
-    //        visible: status == Loader.Ready
-
-    //        onProgressChanged: {
-    //            if (websiteViewComponenetLoader.status === Loader.Ready) {
-    //                console.log("Website loader loaded")
-    //                websiteViewComponenetLoader.item.state = "Website"
-    //            }
-    //        }
-    //    }
-
-    //    Loader {
-    //        id: treeFolderViewComponenetLoader
-    //    }
-
-    //    Component {
-    //        id: websiteViewComponenet
-    //        WebsiteView {
-    //            width: mainItem.width
-    //            height: mainItem.height
-    //        }
-    //    }
-
-    //    Loader {
-    //        id: actorDetailViewComponenetLoader
-    //    }
-
-    //    Component {
-    //        id: actorDetailViewComponenet
-    //        ActorDetailView {
-    //            width: mainItem.width
-    //            height: mainItem.height
-    //        }
-    //    }
-
-    //    Loader {
-    //        id: tagDetailViewComponenetLoader
-    //    }
-
-    //    Component {
-    //        id: tagDetailViewComponenet
-    //        TagDetailView {
-    //            width: mainItem.width
-    //            height: mainItem.height
-    //        }
-    //    }
-
-    //    Loader {
-    //        id: websiteDetailViewComponenetLoader
-    //    }
-
-    //    Component {
-    //        id: websiteDetailViewComponenet
-    //        WebsiteDetailView {
-    //            width: mainItem.width
-    //            height: mainItem.height
-    //        }
-    //    }
-
-    //    Component {
-    //        id: treeFolderViewComponenet
-    //        TreeFolderView {
-    //            width: mainItem.width
-    //            height: mainItem.height
-    //        }
-    //    }
-
-    //    AutoCompletePopup {
-    //        id: autocomplete
-    //        x: searchBar.x
-    //        y: searchBar.y + searchBar.height
-    //        height: mainItem.height / 2
-    //        width: searchBar.width
-    //        searchedText: searchBar.text
-    //    }
     AutoCompletePopupTwo {
         id: autocomplete
         x: searchBar.x
@@ -716,14 +539,9 @@ ApplicationWindow {
                     = showImagePopupContentItemComponenet
         }
 
-        //        activeFocus: true
         focus: true
         closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
 
-        //        Keys.forwardTo: [showImagePopupListView]
-        //        Keys.onPressed: {
-        //            console.log("Some Key pressed " + event.key)
-        //        }
         Component {
             id: showImagePopupContentItemComponenet
 
@@ -817,10 +635,7 @@ ApplicationWindow {
 
         function setupVideo(source) {
             sceneViewPopup.open()
-            //            console.log("Source:" + source.replace(/\{/g,'\\{').replace(/\}/g,'\\}'))
             console.log("Source:" + source)
-            //            popupVideo.source = source
-            //            popupVideo.source = source.replace(/\{/g,'\\{').replace(/\}/g,'\\}');
             popupVideo.source = source
         }
 
@@ -955,15 +770,8 @@ ApplicationWindow {
         }
     }
 
-    function openTaggerPopup(thumbSrc, itemToTagType, itemToTagId, selectedIndex) {
-        //        taggerPopupComponentLoader.thumbSrc = 'file:///' + thumbSrc
-        //        if (itemToTagType === "Actor") {
-        //            tagModel.getActorTagsForTagger(itemToTagId)
-        //            taggerPopup.itemToTagId = itemToTagId
-        //        }
-
-        //        taggerPopup.open()
-        tpopup.thumbSrc = 'file:///' + thumbSrc
+    function openTaggerPopup(thumbSrc, itemToTagType, itemToTagId, selectedIndex) {        
+//        tpopup.thumbSrc = 'file:///' + thumbSrc
         tpopup.currentItemIndex = selectedIndex
         tpopup.itemToTagId = itemToTagId
         tpopup.itemToTagType = itemToTagType
@@ -979,129 +787,129 @@ ApplicationWindow {
         y: mainItem.height * 0.12
     }
 
-    Popup {
-        id: taggerPopup
-        property string itemToTagId
+//    Popup {
+//        id: taggerPopup
+//        property string itemToTagId
 
-        width: mainItem.width / 2
-        height: mainItem.height / 2
-        x: mainItem.width / 4
-        y: mainItem.height / 4
+//        width: mainItem.width / 2
+//        height: mainItem.height / 2
+//        x: mainItem.width / 4
+//        y: mainItem.height / 4
 
-        modal: true
+//        modal: true
 
-        contentItem: Loader {
+//        contentItem: Loader {
 
-            id: taggerPopupComponentLoader
-            property string thumbSrc: "-1"
-            sourceComponent: taggerContentComponent
-        }
+//            id: taggerPopupComponentLoader
+//            property string thumbSrc: "-1"
+//            sourceComponent: taggerContentComponent
+//        }
 
-        Component {
-            id: taggerContentComponent
-            Item {
-                id: taggerContentComponentItem
-                anchors.fill: parent
+//        Component {
+//            id: taggerContentComponent
+//            Item {
+//                id: taggerContentComponentItem
+//                anchors.fill: parent
 
-                Item {
-                    id: taggerPopupThumbItem
-                    width: parent.width / 3
-                    height: parent.height * 0.75
-                    anchors.left: parent.left
-                    anchors.top: parent.top
+//                Item {
+//                    id: taggerPopupThumbItem
+//                    width: parent.width / 3
+//                    height: parent.height * 0.75
+//                    anchors.left: parent.left
+//                    anchors.top: parent.top
 
-                    Image {
-                        id: taggerPopupThumb
-                        source: taggerPopupComponentLoader.thumbSrc
-                        anchors.fill: parent
-                        fillMode: Image.PreserveAspectCrop
-                    }
-                }
+//                    Image {
+//                        id: taggerPopupThumb
+//                        source: taggerPopupComponentLoader.thumbSrc
+//                        anchors.fill: parent
+//                        fillMode: Image.PreserveAspectCrop
+//                    }
+//                }
 
-                Item {
-                    id: taggerTagSpace
-                    anchors.left: taggerPopupThumbItem.right
-                    anchors.right: parent.right
-                    anchors.bottom: parent.bottom
-                    anchors.top: parent.top
+//                Item {
+//                    id: taggerTagSpace
+//                    anchors.left: taggerPopupThumbItem.right
+//                    anchors.right: parent.right
+//                    anchors.bottom: parent.bottom
+//                    anchors.top: parent.top
 
-                    TextField {
-                        id: taggerSearchBar
-                        anchors.left: parent.left
-                        width: parent.width * 0.75
-                        onTextChanged: {
-                            qmlComm.autoCompleteSearch(taggerSearchBar.text,
-                                                       "Tag")
-                            taggerAutocomplete.open()
-                        }
+//                    TextField {
+//                        id: taggerSearchBar
+//                        anchors.left: parent.left
+//                        width: parent.width * 0.75
+//                        onTextChanged: {
+//                            qmlComm.autoCompleteSearch(taggerSearchBar.text,
+//                                                       "Tag")
+//                            taggerAutocomplete.open()
+//                        }
 
-                        Keys.forwardTo: [taggerAutocomplete.listview, taggerAutocomplete.listview.currentItem]
-                    }
+//                        Keys.forwardTo: [taggerAutocomplete.listview, taggerAutocomplete.listview.currentItem]
+//                    }
 
-                    AutoCompletePopup {
-                        id: taggerAutocomplete
-                        x: 0
-                        y: taggerSearchBar.height
-                        height: taggerContentComponentItem.height * 0.85
-                        width: taggerSearchBar.width
-                        searchedText: taggerSearchBar.text
-                        z: 10
-                    }
+//                    AutoCompletePopup {
+//                        id: taggerAutocomplete
+//                        x: 0
+//                        y: taggerSearchBar.height
+//                        height: taggerContentComponentItem.height * 0.85
+//                        width: taggerSearchBar.width
+//                        searchedText: taggerSearchBar.text
+//                        z: 10
+//                    }
 
-                    ListView {
-                        id: taggerListview
-                        signal removeClicked(string selectedItemType, string selectedItemName, string selectedItemId, string selectedItemAliasOfId)
-                        anchors.top: taggerSearchBar.bottom
-                        anchors.left: parent.left
-                        anchors.right: parent.right
-                        anchors.bottom: parent.bottom
-                        model: tagModel
-                        delegate: Item {
-                            id: tagListViewDelegate
-                            height: 50
-                            width: taggerListview.width
-                            Text {
-                                text: (index + 1) + ". " + name
-                                font.pixelSize: taggerListview.width / 22
-                                anchors.verticalCenter: tagListViewDelegate.verticalCenter
-                            }
+//                    ListView {
+//                        id: taggerListview
+//                        signal removeClicked(string selectedItemType, string selectedItemName, string selectedItemId, string selectedItemAliasOfId)
+//                        anchors.top: taggerSearchBar.bottom
+//                        anchors.left: parent.left
+//                        anchors.right: parent.right
+//                        anchors.bottom: parent.bottom
+//                        model: tagModel
+//                        delegate: Item {
+//                            id: tagListViewDelegate
+//                            height: 50
+//                            width: taggerListview.width
+//                            Text {
+//                                text: (index + 1) + ". " + name
+//                                font.pixelSize: taggerListview.width / 22
+//                                anchors.verticalCenter: tagListViewDelegate.verticalCenter
+//                            }
 
-                            RoundButton {
-                                id: removeButton
-                                width: 35
-                                height: 35
-                                text: "X"
-                                anchors.right: tagListViewDelegate.right
-                                anchors.verticalCenter: tagListViewDelegate.verticalCenter
-                                onClicked: {
-                                    console.log("Remove Clicked in delegate on " + id + " " + name)
-                                    taggerListview.removeClicked("Tag",
-                                                                 name, id, "")
-                                }
-                            }
-                        }
-                    }
+//                            RoundButton {
+//                                id: removeButton
+//                                width: 35
+//                                height: 35
+//                                text: "X"
+//                                anchors.right: tagListViewDelegate.right
+//                                anchors.verticalCenter: tagListViewDelegate.verticalCenter
+//                                onClicked: {
+//                                    console.log("Remove Clicked in delegate on " + id + " " + name)
+//                                    taggerListview.removeClicked("Tag",
+//                                                                 name, id, "")
+//                                }
+//                            }
+//                        }
+//                    }
 
-                    Connections {
-                        target: taggerAutocomplete
-                        onSelected: {
-                            console.log("Selected tagger autocomplete " + selectedItemName)
-                            tagModel.addTag(selectedItemId, selectedItemName,
-                                            "Actor", taggerPopup.itemToTagId)
-                        }
-                    }
-                    Connections {
-                        target: taggerListview
-                        onRemoveClicked: {
-                            console.log("Remove clicked on " + selectedItemId
-                                        + " " + selectedItemName)
-                            tagModel.removeTag(selectedItemId, "Actor",
-                                               taggerPopup.itemToTagId, false)
-                        }
-                    }
-                }
-            }
-        }
-        closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
-    }
+//                    Connections {
+//                        target: taggerAutocomplete
+//                        onSelected: {
+//                            console.log("Selected tagger autocomplete " + selectedItemName)
+//                            tagModel.addTag(selectedItemId, selectedItemName,
+//                                            "Actor", taggerPopup.itemToTagId)
+//                        }
+//                    }
+//                    Connections {
+//                        target: taggerListview
+//                        onRemoveClicked: {
+//                            console.log("Remove clicked on " + selectedItemId
+//                                        + " " + selectedItemName)
+//                            tagModel.removeTag(selectedItemId, "Actor",
+//                                               taggerPopup.itemToTagId, false)
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//        closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
+//    }
 }

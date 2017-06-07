@@ -77,6 +77,7 @@ public:
 
 private:
     QSqlDatabase m_db;
+    bool echo;
     QString generateBulkInsertQueryString(QList<QStringList> bulkInsertArgumentList);
 
     QString generateUpdateQueryString(QMap<QString, QVariant> updatedObject);

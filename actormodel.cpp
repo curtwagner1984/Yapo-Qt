@@ -27,6 +27,7 @@ ActorModel::ActorModel()
 QVariant ActorModel::data(const QModelIndex &index, int role) const
 {
 
+
     if (!index.isValid()){
             return QVariant();
         }
@@ -53,6 +54,8 @@ QVariant ActorModel::data(const QModelIndex &index, int role) const
             return currentItem["NumberOfScenes"];
         }else if (role == NumberOfPicturesRole){
             return currentItem["NumberOfPictures"];
+        }else if (role == NumberOfTags){
+            return currentItem["NumberOfTags"];
         }else if (role == NameRole){
             return currentItem["name"];
         }else if (role == DobRole){
@@ -92,7 +95,21 @@ void ActorModel::search(const QString searchString)
 
 }
 
-void ActorModel::getTagActor(const QString tagId)
+void ActorModel::searchById(const QString actorId)
+{
+
+    QString escapedSearchString = this->escaleSqlChars(actorId);
+    this->baseSqlSelect =  SEARCH_SELECT;
+    this->baseSqlFrom = SEARCH_FROM ;
+    this->baseSqlWhere = SEARCH_BY_ID_WHERE.arg(escapedSearchString);
+
+//  Resets count and gets number of items and executes search
+    this->baseSearch();
+
+
+}
+
+void ActorModel::getTagActors(const QString tagId)
 {
 
 
@@ -114,6 +131,7 @@ QHash<int, QByteArray> ActorModel::roleNames() const
             roles[ThumbRole320] = "thumb_320";
             roles[NumberOfScenesRole] = "numberOfScenes";
             roles[NumberOfPicturesRole] = "numberOfPictures";
+            roles[NumberOfTags] = "numberOfTags";
             roles[NameRole] = "name";
             roles[GenderRole] = "gender";
             roles[DobRole] = "DOB";
@@ -125,7 +143,7 @@ QHash<int, QByteArray> ActorModel::roleNames() const
 
 void ActorModel::getSceneActorsForTagger(const QString sceneId)
 {
-    this->baseSqlSelect = SCENE_SEARCH_SELECT;
+    this->baseSqlSelect = SEARCH_SELECT;
     this->baseSqlWhere = SCENE_SEARCH_WHERE.arg(sceneId);
     this->baseSqlFrom = SCENE_SEARCH_FROM;
     this->baseSqlOrder = SCENE_ORDER_BY;

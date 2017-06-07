@@ -11,9 +11,9 @@ public:
     PictureModel();
     QVariant data(const QModelIndex &index, int role) const;
     Q_INVOKABLE void search(const QString searchString);
-    void getActorPictures(const QString actorId);
-    void getTagPictures(const QString tagId);
-    void getWebsitePictures(const QString websiteId);
+    Q_INVOKABLE void getActorPictures(const QString actorId);
+    Q_INVOKABLE void getTagPictures(const QString tagId);
+    Q_INVOKABLE void getWebsitePictures(const QString websiteId);
     QHash<int, QByteArray> roleNames() const;
 
     Q_INVOKABLE void setOrder(QString orderBy, QString orderDirection);

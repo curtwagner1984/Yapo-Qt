@@ -55,7 +55,7 @@ Item {
         //                }
         //            }
         //        }
-        Keys.forwardTo: [autocomplete.contentLoader.item.autoCompleteContnetItemListView, autocomplete.contentLoader.item.autoCompleteContnetItemListView.currentItem.item]
+        Keys.forwardTo: [autocomplete.contentLoader.item]
     }
 
 

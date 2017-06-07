@@ -20,30 +20,31 @@ QmlComm::QmlComm(QQmlApplicationEngine &view,DbManager* dbManager,  QObject *par
   //    models
   this->mediaFolderModel = new MediafolderModel();
 //  this->actorModel = new ActorModel(this->dbManager);
-  this->sceneModel = new SceneModel();
-  this->pictureModel = new PictureModel();
-  this->tagModel = new TagModel();
-  this->websiteModel = new WebsiteModel();
+//  this->sceneModel = new SceneModel();
+//  this->pictureModel = new PictureModel();
+//  this->tagModel = new TagModel();
+//  this->websiteModel = new WebsiteModel();
 
-  this->generalAlias = new GeneralAlias();
+//  this->generalAlias = new GeneralAlias();
   this->autoCompleteModel = new AutoCompleteModel();
+  this->autoCompleteModel->init(this->dbManager);
 
-  this->detailObject = new DetailObject();
+//  this->detailObject = new DetailObject();
 
-  this->treeFolderModel = new TreeFolderModel();
+//  this->treeFolderModel = new TreeFolderModel();
 
   view.rootContext()->setContextProperty("dbManager", this->dbManager);
   view.rootContext()->setContextProperty("mediaFolderModel",
                                          this->mediaFolderModel);
 //  view.rootContext()->setContextProperty("actorModel", this->actorModel);
-  view.rootContext()->setContextProperty("sceneModel", this->sceneModel);
-  view.rootContext()->setContextProperty("pictureModel", this->pictureModel);
-  view.rootContext()->setContextProperty("tagModel", this->tagModel);
-  view.rootContext()->setContextProperty("websiteModel", this->websiteModel);
+//  view.rootContext()->setContextProperty("sceneModel", this->sceneModel);
+//  view.rootContext()->setContextProperty("pictureModel", this->pictureModel);
+//  view.rootContext()->setContextProperty("tagModel", this->tagModel);
+//  view.rootContext()->setContextProperty("websiteModel", this->websiteModel);
 
-  view.rootContext()->setContextProperty("generalAlias", this->generalAlias);
+//  view.rootContext()->setContextProperty("generalAlias", this->generalAlias);
 
-  view.rootContext()->setContextProperty("detailObject", this->detailObject);
+//  view.rootContext()->setContextProperty("detailObject", this->detailObject);
   view.rootContext()->setContextProperty("autoCompleteModel",
                                          this->autoCompleteModel);
 
@@ -180,34 +181,34 @@ void QmlComm::playScene(QString scenePath) {
   //    myProcess->deleteLater();
 }
 
-void QmlComm::prepareDetailView(QString detailObjectId,
-                                QString detailObjectType) {
-  if (detailObjectType == "Actor") {
-    this->getActorScenes(detailObjectId);
-    this->getActorPictures(detailObjectId);
-    this->tagModel->getActorTags(detailObjectId);
-    this->aliasSearch(detailObjectId, "Actor");
-    this->detailObject->setDetailObject(detailObjectId, detailObjectType);
+//void QmlComm::prepareDetailView(QString detailObjectId,
+//                                QString detailObjectType) {
+//  if (detailObjectType == "Actor") {
+//    this->getActorScenes(detailObjectId);
+//    this->getActorPictures(detailObjectId);
+//    this->tagModel->getActorTags(detailObjectId);
+//    this->aliasSearch(detailObjectId, "Actor");
+//    this->detailObject->setDetailObject(detailObjectId, detailObjectType);
 
-  } else if (detailObjectType == "Tag") {
-    this->actorModel->getTagActor(detailObjectId);
-    this->pictureModel->getTagPictures(detailObjectId);
-    this->sceneModel->getTagScenes(detailObjectId);
-    this->websiteModel->getTagWebsites(detailObjectId);
-    this->generalAlias->search(detailObjectId, detailObjectType);
-    this->detailObject->setDetailObject(detailObjectId, detailObjectType);
+//  } else if (detailObjectType == "Tag") {
+//    this->actorModel->getTagActor(detailObjectId);
+//    this->pictureModel->getTagPictures(detailObjectId);
+//    this->sceneModel->getTagScenes(detailObjectId);
+//    this->websiteModel->getTagWebsites(detailObjectId);
+//    this->generalAlias->search(detailObjectId, detailObjectType);
+//    this->detailObject->setDetailObject(detailObjectId, detailObjectType);
 
-  } else if (detailObjectType == "Website") {
+//  } else if (detailObjectType == "Website") {
 
-    this->pictureModel->getWebsitePictures (detailObjectId);
-    this->sceneModel->getWebsiteScenes(detailObjectId);
+//    this->pictureModel->getWebsitePictures (detailObjectId);
+//    this->sceneModel->getWebsiteScenes(detailObjectId);
 
-    this->tagModel->getWebsiteTags(detailObjectId);
+//    this->tagModel->getWebsiteTags(detailObjectId);
 
-    this->generalAlias->search(detailObjectId, detailObjectType);
-    this->detailObject->setDetailObject(detailObjectId, detailObjectType);
-  }
-}
+//    this->generalAlias->search(detailObjectId, detailObjectType);
+//    this->detailObject->setDetailObject(detailObjectId, detailObjectType);
+//  }
+//}
 
 void QmlComm::addAlias(QString aliasName, QString aliasType,
                        QString aliasOfId) {

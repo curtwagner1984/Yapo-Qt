@@ -30,9 +30,9 @@ class SceneModel : public BasicListModel {
   SceneModel();
   QVariant data(const QModelIndex& index, int role) const;
   Q_INVOKABLE void search(const QString searchString);
-  void getActorScenes(const QString actorId);
-  void getTagScenes(const QString tagId);
-  void getWebsiteScenes(const QString websiteId);
+  Q_INVOKABLE void getActorScenes(const QString actorId);
+  Q_INVOKABLE void getTagScenes(const QString tagId);
+  Q_INVOKABLE void getWebsiteScenes(const QString websiteId);
   QHash<int, QByteArray> roleNames() const;
   Q_INVOKABLE void setOrder(QString orderBy, QString orderDirection);
 

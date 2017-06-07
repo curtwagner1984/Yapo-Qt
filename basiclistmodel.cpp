@@ -3,7 +3,7 @@
 #include <QHash>
 #include <QModelIndex>
 
-BasicListModel::BasicListModel() {
+BasicListModel::BasicListModel():QAbstractListModel() {
 
     this->items = QList<QMap<QString, QVariant>>();
 }

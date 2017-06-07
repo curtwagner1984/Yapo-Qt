@@ -84,6 +84,7 @@ Item {
         anchors.right: parent.right
         anchors.bottom: parent.bottom
 
+
         AutoCompleteWithTextBox
         {
             id:autoCompleteWithTextBox
@@ -93,8 +94,12 @@ Item {
             anchors.top: parent.top
             anchors.left: parent.left
             anchors.right: parent.right
-            anchors.margins: 5
+            anchors.margins: 5                       
 //            z:2
+
+
+
+
 
         }
 

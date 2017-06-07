@@ -48,6 +48,8 @@ QVariant WebsiteModel::data(const QModelIndex &index, int role) const
             return currentItem["NumberOfScenes"];
         }else if (role == NumberOfPicturesRole){
             return currentItem["NumberOfPictures"];
+        }else if (role == NumberOfTagsRole){
+            return currentItem["NumberOfTags"];
         }else if (role == NameRole){
             return currentItem["name"];
         }else{
@@ -65,6 +67,17 @@ void WebsiteModel::search(const QString searchString)
 //  Resets count and gets number of items and executes search
     this->baseSearch();
 
+}
+
+void WebsiteModel::searchById(const QString websiteId)
+{
+    QString escapedSearchString = this->escaleSqlChars(websiteId);
+    this->baseSqlWhere = SEARCH_BY_ID_WHERE.arg(escapedSearchString);
+    this->baseSqlSelect = SEARCH_SELECT;
+    this->baseSqlFrom = SEARCH_FROM;
+
+//  Resets count and gets number of items and executes search
+    this->baseSearch();
 }
 
 void WebsiteModel::getTagWebsites(const QString tagId)
@@ -86,6 +99,7 @@ QHash<int, QByteArray> WebsiteModel::roleNames() const
             roles[ThumbRole320] = "thumb_320";
             roles[NumberOfScenesRole] = "numberOfScenes";
             roles[NumberOfPicturesRole] = "numberOfPictures";
+            roles[NumberOfTagsRole] = "numberOfTags";
             roles[NameRole] = "name";
             return roles;
 
@@ -93,7 +107,7 @@ QHash<int, QByteArray> WebsiteModel::roleNames() const
 
 void WebsiteModel::getSceneWebsitesForTagger(const QString sceneId)
 {
-    this->baseSqlSelect = SCENE_SEARCH_SELECT;
+    this->baseSqlSelect = SEARCH_SELECT;
     this->baseSqlWhere = SCENE_SEARCH_WHERE.arg(sceneId);
     this->baseSqlFrom = SCENE_SEARCH_FROM;
     this->baseSqlOrder = SCENE_ORDER_BY;

@@ -30,6 +30,11 @@ Popup {
     }
 
 
+//    Keys.onPressed: {
+//            console.log("autoCompletePopupTwo key pressed: " + event.key);
+//        }
+
+
     contentItem: Loader {
         id: contentLoader
         anchors.fill: parent
@@ -41,12 +46,20 @@ Popup {
     onOpened:
     {
       search();
-      isOpened = true;
+
+    }
+
+    onAboutToShow: {
+       isOpened = true;
+    }
+
+    onAboutToHide: {
+        isOpened = false;
     }
 
     onClosed:
     {
-        isOpened = false;
+
     }
 
 

@@ -1,10 +1,11 @@
-function ctxMenu(selectedItemType,mouseX,mouseY,index) {
+function ctxMenu(selectedItemType,mouseX,mouseY,index,currentModel) {
     var cords = thumbDelegate.mapToItem(mainItem,0,0);
     console.log(selectedItemType + ": Cordsx: " + cords.x + " Cordsy:" + cords.y);
     contextMenu.x = cords.x + mouseX;
     contextMenu.y = cords.y + mouseY;
     contextMenu.selectedIndex = index;
     contextMenu.selectedItemType = selectedItemType;
+    contextMenu.currentModel = currentModel;
     contextMenu.open()
 }
 

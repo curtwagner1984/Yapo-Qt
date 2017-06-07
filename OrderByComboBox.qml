@@ -7,6 +7,8 @@ ComboBox {
     property string pageType: ""
     width: 300
 
+    signal selected (string orderBy, string orderDirection);
+
     ListModel {
         id: actorOrderByModel
         ListElement {
@@ -55,7 +57,7 @@ ComboBox {
         }
 
         ListElement {
-            key: "Number Of Scenes DESC"
+            key: "Number Of Pictures DESC"
             value: "NumberOfPictures"
         }
 
@@ -239,15 +241,17 @@ ComboBox {
         if (orderBy.pageType === "Actor") {
             currentModel = actorOrderByModel;
             values = getValues(currentModel,index)
-            actorModel.setOrder(values[0], values[1])
+//            actorModel.setOrder(values[0], values[1])
         } else if (orderBy.pageType === "Picture") {
             currentModel = pictureOrderByModel;
             values = getValues(currentModel,index)
-            pictureModel.setOrder(values[0], values[1])
+//            pictureModel.setOrder(values[0], values[1])
         } else if (orderBy.pageType === "Scene") {
             currentModel = sceneOrderByModel;
             values = getValues(currentModel,index)
-            sceneModel.setOrder(values[0], values[1])
+//            sceneModel.setOrder(values[0], values[1])
         }
+
+        selected(values[0], values[1])
     }
 }

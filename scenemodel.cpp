@@ -9,7 +9,7 @@
 SceneModel::SceneModel()
            : BasicListModel()
 {
-    qDebug() << "Making test scene search ...";
+//    qDebug() << "Making test scene search ...";
     this->MODEL_TYPE = "SceneModel";
 
     this->baseSqlSelect =  SEARCH_SELECT;
