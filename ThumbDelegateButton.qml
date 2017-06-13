@@ -10,6 +10,7 @@ Item {
     property string backgroundHighlight
     property string buttonName
     property string iconText
+    property string toolTipText
     property var overlayColor
 
     signal buttonClicked (string buttonName);
@@ -28,21 +29,32 @@ Item {
             id:iconBackgroundMouseArea
             anchors.fill: parent
             hoverEnabled: true
+            property bool hovered: false
+
 
             onEntered: {
                 animateColorOut.stop();
                 animateColorIn.start();
+                hovered = true;
             }
 
             onExited: {
                 animateColorIn.stop()
                 animateColorOut.start();
+                hovered = false;
             }
 
             onClicked: {
                 buttonContainer.buttonClicked(buttonContainer.buttonName)
             }
+
+            ToolTip.delay: 500
+            ToolTip.timeout: 5000
+            ToolTip.visible: hovered
+            ToolTip.text: toolTipText
         }
+
+
 
     }
 

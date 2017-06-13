@@ -22,6 +22,7 @@ public:
      Q_INVOKABLE void getTagActors (const QString tagId);
 
      Q_INVOKABLE void getSceneActorsForTagger(const QString sceneId);
+     Q_INVOKABLE void getPictureActorsForTagger(const QString pictureId);
 
 //    Q_INVOKABLE QVariant directData(QString roleName, int index);
      Q_INVOKABLE void setOrder(QString orderBy, QString orderDirection);
@@ -66,6 +67,11 @@ private:
     QString SCENE_SEARCH_FROM = "FROM Actor JOIN Scene_Actor ON Actor.id = Scene_Actor.actor_id ";
     QString SCENE_SEARCH_WHERE = "WHERE Scene_Actor.scene_id = %1";
     QString SCENE_ORDER_BY = " ORDER BY Actor.name";
+
+    QString PICTURE_SEARCH_SELECT = "SELECT * ";
+    QString PICTURE_SEARCH_FROM = "FROM Actor JOIN Picture_Actor ON Actor.id = Picture_Actor.actor_id ";
+    QString PICTURE_SEARCH_WHERE = "WHERE Picture_Actor.picture_id = %1";
+    QString PICTURE_ORDER_BY = " ORDER BY Actor.name";
 
 
 

@@ -52,6 +52,8 @@ QVariant WebsiteModel::data(const QModelIndex &index, int role) const
             return currentItem["NumberOfTags"];
         }else if (role == NameRole){
             return currentItem["name"];
+        }else if (role == RatingRole){
+            return currentItem["rating"];
         }else{
             return QVariant();
         }
@@ -101,6 +103,7 @@ QHash<int, QByteArray> WebsiteModel::roleNames() const
             roles[NumberOfPicturesRole] = "numberOfPictures";
             roles[NumberOfTagsRole] = "numberOfTags";
             roles[NameRole] = "name";
+            roles[RatingRole] = "rating";
             return roles;
 
 }
@@ -113,4 +116,13 @@ void WebsiteModel::getSceneWebsitesForTagger(const QString sceneId)
     this->baseSqlOrder = SCENE_ORDER_BY;
     this->baseSearch();
 
+}
+
+void WebsiteModel::getPictureWebsitesForTagger(const QString pictureId)
+{
+    this->baseSqlSelect = PICTURE_SEARCH_SELECT;
+    this->baseSqlWhere = PICTURE_SEARCH_WHERE.arg(pictureId);
+    this->baseSqlFrom = PICTURE_SEARCH_FROM;
+    this->baseSqlOrder = PICTURE_ORDER_BY;
+    this->baseSearch();
 }

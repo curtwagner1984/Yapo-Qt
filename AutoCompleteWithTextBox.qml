@@ -3,7 +3,7 @@ import QtQuick.Controls 2.1
 import QtQuick.Controls.Material 2.1
 
 Item {
-    property string searchType: ""
+    property string searchType
     property int popupHeight
 
     signal selected(string selectedItemType, string selectedItemName, string selectedItemId, string selectedItemAliasOfId)
@@ -27,6 +27,7 @@ Item {
     TextField {
         id: searchBar
         anchors.fill: parent
+        height: parent.height
         placeholderText: "Search..."
         focus: true
         property string searched_text: searchBar.text
@@ -34,27 +35,6 @@ Item {
             searchTimer.restart()
         }
 
-
-        //        Connections {
-        //            target: autocomplete
-        //            onSelected: {
-
-        //                console.log("Autocomplete selected " + selectedItemName
-        //                            + " Type:" + selectedItemType)
-
-        //                if (selectedItemType === "Actor") {
-        //                    qmlComm.prepareDetailView(selectedItemId, "Actor")
-        //                    mainAppPage.changeView("Actor Detail View")
-        //                } else if (selectedItemType === "ActorAlias") {
-        //                    qmlComm.prepareDetailView(selectedItemAliasOfId,
-        //                                              "Actor")
-        //                    mainAppPage.changeView("Actor Detail View")
-        //                } else if (selectedItemType === "Tag") {
-        //                    qmlComm.prepareDetailView(selectedItemId, "Tag")
-        //                    mainAppPage.changeView("Tag Detail View")
-        //                }
-        //            }
-        //        }
         Keys.forwardTo: [autocomplete.contentLoader.item]
     }
 
@@ -74,7 +54,6 @@ Item {
         height: popupHeight
         width: searchBar.width
         searchedText: searchBar.text
-//        visible: false
 
     }
 }

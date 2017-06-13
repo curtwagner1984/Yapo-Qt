@@ -19,6 +19,8 @@ import "qrc:/taggerPopup"
 
 import "qrc:/detailView"
 
+import "MainAuxFunc.js" as MainAux
+
 import com.me.qmlcomponents 1.0
 
 ApplicationWindow {
@@ -39,9 +41,11 @@ ApplicationWindow {
     }
 
     Shortcut {
-        sequence: "Ctrl+E"
+        sequence: "Ctrl+G"
         onActivated: {
-            console.log("Sortcut Ctrl+E was pressed!")
+            console.log("Sortcut Ctrl+G was pressed!")
+            globalSearch.open();
+            globalSearch.focus = true;
         }
     }
 
@@ -135,39 +139,39 @@ ApplicationWindow {
                     target: autocomplete
                     onSelected: {
 
-                        console.log("Autocomplete selected " + selectedItemName
-                                    + " Type:" + selectedItemType)
+                          MainAux.autoCompleteSelected(selectedItemType,selectedItemName, selectedItemId, selectedItemAliasOfId)
 
-                        if (selectedItemType === "Actor") {
-                              var actModel = createModel("Actor")
-                              actModel.searchById(selectedItemId)
-                              mainAppPage.changeView("Actor Detail View",actModel,0)
-                        } else if (selectedItemType === "ActorAlias") {
-                            var actModel = createModel("Actor")
-                            actModel.searchById(selectedItemAliasOfId)
-                            mainAppPage.changeView("Actor Detail View",actModel,0)
-                        } else if (selectedItemType === "Tag") {
-                            var tagModel = createModel("Tag")
-                            tagModel.searchById(selectedItemId)
-                            mainAppPage.changeView("Tag Detail View",tagModel,0)
-                        } else if (selectedItemType === "TagAlias") {
-                            var tagModel = createModel("Tag")
-                            tagModel.searchById(selectedItemAliasOfId)
-                            mainAppPage.changeView("Tag Detail View",tagModel,0)
-                        }else if (selectedItemType === "Website") {
-                            var websiteModel = createModel("Website")
-                            websiteModel.searchById(selectedItemId)
-                            mainAppPage.changeView("Website Detail View",websiteModel,0)
-                        }else if (selectedItemType === "WebsiteAlias") {
-                            var websiteModel = createModel("Website")
-                            websiteModel.searchById(selectedItemAliasOfId)
-                            mainAppPage.changeView("Website Detail View",websiteModel,0)
-                        }
+//                        console.log("Autocomplete selected " + selectedItemName
+//                                    + " Type:" + selectedItemType)
+
+//                        if (selectedItemType === "Actor") {
+//                              var actModel = createModel("Actor")
+//                              actModel.searchById(selectedItemId)
+//                              mainAppPage.changeView("Actor Detail View",actModel,0)
+//                        } else if (selectedItemType === "ActorAlias") {
+//                            var actModel = createModel("Actor")
+//                            actModel.searchById(selectedItemAliasOfId)
+//                            mainAppPage.changeView("Actor Detail View",actModel,0)
+//                        } else if (selectedItemType === "Tag") {
+//                            var tagModel = createModel("Tag")
+//                            tagModel.searchById(selectedItemId)
+//                            mainAppPage.changeView("Tag Detail View",tagModel,0)
+//                        } else if (selectedItemType === "TagAlias") {
+//                            var tagModel = createModel("Tag")
+//                            tagModel.searchById(selectedItemAliasOfId)
+//                            mainAppPage.changeView("Tag Detail View",tagModel,0)
+//                        }else if (selectedItemType === "Website") {
+//                            var websiteModel = createModel("Website")
+//                            websiteModel.searchById(selectedItemId)
+//                            mainAppPage.changeView("Website Detail View",websiteModel,0)
+//                        }else if (selectedItemType === "WebsiteAlias") {
+//                            var websiteModel = createModel("Website")
+//                            websiteModel.searchById(selectedItemAliasOfId)
+//                            mainAppPage.changeView("Website Detail View",websiteModel,0)
+//                        }
                     }
                 }
 
-//                Keys.forwardTo: [autocomplete.contentLoader.item.autoCompleteContnetItemListView, autocomplete.contentLoader.item.autoCompleteContnetItemListView.currentItem.item]
-//                Keys.forwardTo: [autocomplete.contentLoader.item.autoCompleteContnetItemListView]
                   Keys.forwardTo: [autocomplete.contentLoader.item]
 
             }
@@ -277,9 +281,8 @@ ApplicationWindow {
             Button {
                 id: sideBarButton
                 text: "Sidbar"
-                onClicked: {
-                    myFunc()
-                }
+                onClicked:
+                    globalSearch.open()
             }
 
             Button {
@@ -785,6 +788,16 @@ ApplicationWindow {
         height: mainItem.height * 0.75
         x: mainItem.width * 0.12
         y: mainItem.height * 0.12
+    }
+
+    GlobalSearchPopup{
+        id:globalSearch
+
+        width: mainItem.width * 0.75
+        height: mainItem.height * 0.05
+        x: mainItem.width * 0.12
+        y: mainItem.height * 0.12
+
     }
 
 //    Popup {

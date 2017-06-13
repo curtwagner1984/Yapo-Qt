@@ -328,7 +328,7 @@ QList<QMap<QString, QVariant> > Tagger::prepareTaggingElements(QList<QMap<QStrin
 QString Tagger::prepareForComparison(QString stringToPrepare)
 {
     QString source = stringToPrepare;
-    QString temp = stringToPrepare.toLower();
+    QString temp = source.toLower();
 //    QString stringNormalized = temp.normalized (QString::NormalizationForm_KD);
     QString badChars = ":!@#$%^&*()_+ ,/\\.-";
 

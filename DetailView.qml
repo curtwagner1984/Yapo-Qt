@@ -9,6 +9,32 @@ Item {
     property string mainContentState
 
 
+    function next(){
+        currentIndex = currentIndex + 1;
+        clearDetailView();
+        sideBarContentLoader.sourceComponent = sidebarContent;
+        mainContentLoader.sourceComponent = mainContent;
+    }
+
+    function prev(){
+        currentIndex = currentIndex - 1;
+        clearDetailView();
+        sideBarContentLoader.sourceComponent = sidebarContent;
+        mainContentLoader.sourceComponent = mainContent;
+    }
+
+    function changeIndex(newIndex){
+        currentIndex = newIndex;
+        clearDetailView();
+        sideBarContentLoader.sourceComponent = sidebarContent;
+        mainContentLoader.sourceComponent = mainContent;
+    }
+
+    function clearDetailView (){
+        sideBarContentLoader.sourceComponent = undefined
+        mainContentLoader.sourceComponent = undefined
+    }
+
     function init(curModel, curIndex, contentState){
         currentModel = curModel
         currentIndex = curIndex
@@ -21,7 +47,7 @@ Item {
     Component{
         id:sidebarContent
         DetailViewSideBarContent{
-//            anchors.fill: parent
+            state: mainContentState
         }
     }
 

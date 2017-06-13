@@ -42,6 +42,8 @@ QVariant SceneModel::data(const QModelIndex &index, int role) const
             return currentItem["path_to_file"];
         }else if (role == NameRole){
             return currentItem["name"];
+        }else if (role == RatingRole){
+            return currentItem["rating"];
         }else if (role == DurationRole){
             int dur = currentItem["duration"].toInt();
             return QDateTime::fromTime_t(dur).toUTC().toString("hh:mm:ss");
@@ -103,6 +105,7 @@ QHash<int, QByteArray> SceneModel::roleNames() const
             roles[PathRole] = "path";
             roles[NameRole] = "name";
             roles[DurationRole] = "duration";
+            roles[RatingRole] = "rating";
             return roles;
 }
 

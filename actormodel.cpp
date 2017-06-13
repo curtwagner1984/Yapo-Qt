@@ -151,6 +151,15 @@ void ActorModel::getSceneActorsForTagger(const QString sceneId)
 
 }
 
+void ActorModel::getPictureActorsForTagger(const QString pictureId)
+{
+    this->baseSqlSelect = SEARCH_SELECT;
+    this->baseSqlWhere = PICTURE_SEARCH_WHERE .arg(pictureId);
+    this->baseSqlFrom = PICTURE_SEARCH_FROM;
+    this->baseSqlOrder = PICTURE_ORDER_BY;
+    this->baseSearch();
+}
+
 //QVariant ActorModel::directData(QString roleName, int index)
 //{
 //    QByteArray temp = roleName.toLatin1();

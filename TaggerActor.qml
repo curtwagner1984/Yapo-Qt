@@ -4,7 +4,7 @@ import QtQuick.Controls.Material 2.1
 
 Item {
     id: contentPlaceHolder
-
+    signal removeClicked(string selectedItemType, string selectedItemName, string selectedItemId, string selectedItemAliasOfId)
 
     Text {
         id: tagLable
@@ -24,6 +24,7 @@ Item {
 
     TaggerList {
         id: tagList
+        listType: "Tag"
         anchors.right: parent.horizontalCenter
         anchors.left: parent.left
         anchors.top: tagLable.bottom
@@ -49,6 +50,7 @@ Item {
 
     TaggerList {
         id: aliasList
+        listType: "ActorAlias"
         anchors.right: parent.right
         anchors.left: parent.horizontalCenter
         anchors.top: aliasLable.bottom
@@ -59,14 +61,16 @@ Item {
     Connections {
         target: tagList
         onRemoveClicked: {
-            console.log("Connections: Remove clicked on " + selectedItemId + " " + selectedItemName)
+            console.log("Remove Clicked selectedItemType " + selectedItemType + " selectedItemName " + selectedItemName + " selectedItemId " +selectedItemId+ " selectedItemAliasOfId" + selectedItemAliasOfId)
+            removeClicked(selectedItemType,selectedItemName,selectedItemId,selectedItemAliasOfId)
         }
     }
 
     Connections {
         target: aliasList
         onRemoveClicked: {
-            console.log("Connections: Remove clicked on " + selectedItemId + " " + selectedItemName)
+            console.log("Remove Clicked selectedItemType " + selectedItemType + " selectedItemName " + selectedItemName + " selectedItemId " +selectedItemId+ " selectedItemAliasOfId" + selectedItemAliasOfId)
+            removeClicked(selectedItemType,selectedItemName,selectedItemId,selectedItemAliasOfId)
         }
     }
 }

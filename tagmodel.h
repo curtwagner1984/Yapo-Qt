@@ -18,6 +18,7 @@ public:
 
     Q_INVOKABLE void getActorTags(const QString actorId);
     Q_INVOKABLE void getActorTagsForTagger(const QString actorId);
+    Q_INVOKABLE void getPictureTagsForTagger(const QString pictureId);
 
     Q_INVOKABLE void getSceneTagsForTagger(const QString sceneId);
 
@@ -37,7 +38,8 @@ public:
             NumberOfScenesRole = Qt::UserRole + 6,
             NumberOfPicturesRole = Qt::UserRole + 7,
             NumberOfActorsRole = Qt::UserRole + 8,
-            NumberOfWebsitesRole = Qt::UserRole + 9
+            NumberOfWebsitesRole = Qt::UserRole + 9,
+            RatingRole = Qt::UserRole + 10
 
 
         };
@@ -125,6 +127,11 @@ private:
     QString SCENE_SEARCH_FROM = "FROM Tag JOIN Scene_Tag ON Tag.id = Scene_Tag.tag_id ";
     QString SCENE_SEARCH_WHERE = "WHERE Scene_Tag.scene_id = %1";
     QString SCENE_ORDER_BY = " ORDER BY Tag.name";
+
+    QString PICTURE_SEARCH_SELECT = "SELECT * ";
+    QString PICTURE_SEARCH_FROM = "FROM Tag JOIN Picture_Tag ON Tag.id = Picture_Tag.tag_id ";
+    QString PICTURE_SEARCH_WHERE = "WHERE Picture_Tag.picture_id = %1";
+    QString PICTURE_ORDER_BY = " ORDER BY Tag.name";
 
 
 };

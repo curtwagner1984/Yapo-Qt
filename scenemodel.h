@@ -43,7 +43,8 @@ class SceneModel : public BasicListModel {
     ThumbRole360 = Qt::UserRole + 4,
     PathRole = Qt::UserRole + 5,
     NameRole = Qt::UserRole + 6,
-    DurationRole = Qt::UserRole + 7
+    DurationRole = Qt::UserRole + 7,
+    RatingRole = Qt::UserRole + 8
 
   };
 

@@ -1,8 +1,8 @@
 function ctxMenu(selectedItemType,mouseX,mouseY,index,currentModel) {
-    var cords = thumbDelegate.mapToItem(mainItem,0,0);
-    console.log(selectedItemType + ": Cordsx: " + cords.x + " Cordsy:" + cords.y);
-    contextMenu.x = cords.x + mouseX;
-    contextMenu.y = cords.y + mouseY;
+//    var cords = thumbDelegate.mapToItem(mainItem,0,0);
+    console.log(selectedItemType + ": Cordsx: " + mouseX + " Cordsy:" + mouseY);
+    contextMenu.x = mouseX;
+    contextMenu.y = mouseY;
     contextMenu.selectedIndex = index;
     contextMenu.selectedItemType = selectedItemType;
     contextMenu.currentModel = currentModel;
@@ -11,8 +11,8 @@ function ctxMenu(selectedItemType,mouseX,mouseY,index,currentModel) {
 
 
 function showRatingPopup(ratedItemType,ratedItemId,ratedItemRating,x,y,index) {
-    var cords = ratingButton.mapToItem(thumbGridView,0,0);
-    console.log(index + ": Cordsx: " + cords.x + " Cordsy:" + cords.y);
+//    var cords = ratingButton.mapToItem(thumbGridView,0,0);
+//    console.log(index + ": Cordsx: " + cords.x + " Cordsy:" + cords.y);
 
 
 

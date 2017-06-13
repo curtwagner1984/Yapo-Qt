@@ -48,7 +48,7 @@ QmlComm::QmlComm(QQmlApplicationEngine &view,DbManager* dbManager,  QObject *par
   view.rootContext()->setContextProperty("autoCompleteModel",
                                          this->autoCompleteModel);
 
-  view.rootContext()->setContextProperty("treeFolderModel", this->treeFolderModel);
+//  view.rootContext()->setContextProperty("treeFolderModel", this->treeFolderModel);
 }
 
 bool QmlComm::addMediaFolder(QString folderPath, bool isPicture, bool isVideo) {

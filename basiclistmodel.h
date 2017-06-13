@@ -19,6 +19,8 @@ class BasicListModel : public QAbstractListModel {
   virtual QHash<int, QByteArray> roleNames() const = 0;
   virtual QVariant data(const QModelIndex &index, int role) const = 0;
 
+  Q_INVOKABLE bool canFetchMore();
+  Q_INVOKABLE int rowCount();
   Q_INVOKABLE QVariant directData(QString roleName, int index);
 
   Q_INVOKABLE bool addItem(QString itemToAddId, QString itemToAddName,

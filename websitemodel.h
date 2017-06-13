@@ -17,6 +17,7 @@ public:
     QHash<int, QByteArray> roleNames() const;
 
     Q_INVOKABLE void getSceneWebsitesForTagger(const QString sceneId);
+    Q_INVOKABLE void getPictureWebsitesForTagger(const QString pictureId);
 
 
     enum TagRoles {
@@ -27,7 +28,8 @@ public:
             NameRole = Qt::UserRole + 5,
             NumberOfScenesRole = Qt::UserRole + 6,
             NumberOfPicturesRole = Qt::UserRole + 7,
-            NumberOfTagsRole = Qt::UserRole + 8
+            NumberOfTagsRole = Qt::UserRole + 8,
+            RatingRole = Qt::UserRole + 9
 
 
         };
@@ -59,6 +61,11 @@ private:
     QString SCENE_SEARCH_FROM = "FROM Website JOIN Scene_Website ON Website.id = Scene_Website.website_id ";
     QString SCENE_SEARCH_WHERE = "WHERE Scene_Website.scene_id = %1";
     QString SCENE_ORDER_BY = " ORDER BY Website.name";
+
+    QString PICTURE_SEARCH_SELECT = "SELECT * ";
+    QString PICTURE_SEARCH_FROM = "FROM Website JOIN Picture_Website ON Website.id = Picture_Website.website_id ";
+    QString PICTURE_SEARCH_WHERE = "WHERE Picture_Website.picture_id = %1";
+    QString PICTURE_ORDER_BY = " ORDER BY Website.name";
 
 
 };

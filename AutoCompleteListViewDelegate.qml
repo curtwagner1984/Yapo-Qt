@@ -19,21 +19,28 @@ Item {
         height: width * 1.5
         color: "black"
 
+        BusyIndicator {
+            anchors.centerIn: parent
+            running: thumbnail.status === Image.Loading
+        }
+
         Image {
-            id: thumb
+            id: thumbnail
             asynchronous: true
             anchors.fill: parent
             anchors.margins: 3
-            source: 'file:///' + thumb_64
+            source: 'file:///' + thumb
+            sourceSize.height: height
+            sourceSize.width: width
             fillMode: Image.PreserveAspectFit
             onStatusChanged: {
-                if (thumb.status === Image.Error)
+                if (thumbnail.status === Image.Error)
                     if (tableName === "Tag") {
-                        thumb.source = placeHolderTag
+                        thumbnail.source = placeHolderTag
                     } else if (tableName === "Website") {
-                        thumb.source = placeHolderSite
+                        thumbnail.source = placeHolderSite
                     }else{
-                        thumb.source = placeHolderSite
+                        thumbnail.source = placeHolderSite
                     }
             }
         }

@@ -24,7 +24,8 @@ public:
                 ThumbRole64 = Qt::UserRole + 3,
                 ThumbRole360 = Qt::UserRole + 4,
                 PathRole = Qt::UserRole + 5,
-                NameRole = Qt::UserRole + 6
+                NameRole = Qt::UserRole + 6,
+                RatingRole = Qt::UserRole + 7
 
             };
 private:

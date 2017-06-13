@@ -42,6 +42,8 @@ QVariant PictureModel::data(const QModelIndex &index, int role) const
             return currentItem["path_to_file"];
         }else if (role == NameRole){
             return currentItem["name"];
+        }else if (role == RatingRole){
+            return currentItem["rating"];
         }else{
             return QVariant();
         }
@@ -93,6 +95,7 @@ QHash<int, QByteArray> PictureModel::roleNames() const
             roles[ThumbRole360] = "thumb_360";
             roles[PathRole] = "path";
             roles[NameRole] = "name";
+            roles[RatingRole] = "rating";
             return roles;
 }
 

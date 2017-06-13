@@ -47,7 +47,9 @@ QVariant TagModel::data(const QModelIndex &index, int role) const {
       return currentItem["NumberOfWebsites"];
   } else if (role == NameRole) {
     return currentItem["name"];
-  } else {
+  } else if (role == RatingRole) {
+      return currentItem["rating"];
+    } else {
     return QVariant();
   }
 }
@@ -85,6 +87,15 @@ void TagModel::getActorTagsForTagger(const QString actorId) {
   this->baseSqlWhere = ACTOR_SEARCH_WHERE.arg(actorId);
   this->baseSqlFrom = ACTOR_SEARCH_FROM;
   this->baseSqlOrder = ACTOR_ORDER_BY;
+  this->baseSearch();
+}
+
+void TagModel::getPictureTagsForTagger(const QString pictureId)
+{
+    this->baseSqlSelect = PICTURE_SEARCH_SELECT;
+    this->baseSqlWhere = PICTURE_SEARCH_WHERE.arg(pictureId);
+    this->baseSqlFrom = PICTURE_SEARCH_FROM;
+    this->baseSqlOrder = PICTURE_ORDER_BY;
     this->baseSearch();
 }
 
@@ -190,6 +201,7 @@ QHash<int, QByteArray> TagModel::roleNames() const {
   roles[NumberOfActorsRole] = "numberOfActors";
   roles[NumberOfWebsitesRole] = "numberOfWebsites";
   roles[NameRole] = "name";
+  roles[RatingRole] = "rating";
 
   return roles;
 }

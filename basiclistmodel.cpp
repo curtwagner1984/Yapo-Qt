@@ -47,6 +47,23 @@ void BasicListModel::fetchMore(const QModelIndex &parent) {
   this->endInsertRows();
 }
 
+bool BasicListModel::canFetchMore()
+{
+    bool ans = false;
+    QModelIndex ix;
+    if (canFetchMore(ix)){
+        fetchMore(ix);
+        ans = true;
+    }
+    return ans;
+}
+
+int BasicListModel::rowCount()
+{
+    QModelIndex ix;
+    return rowCount(ix);
+}
+
 QVariant BasicListModel::directData(QString roleName, int index) {
   QByteArray temp = roleName.toLatin1();
   QHash<int, QByteArray> roles = roleNames();
@@ -99,41 +116,7 @@ bool BasicListModel::addItem(QString itemToAddId, QString itemToAddName,
 
   return ans;
 
-  //    bool ans = false;
-  //    if (tagToAddId == "") {
-  //      QString createStmt = "INSERT INTO Tag (name) VALUES ('%1')";
-  //      createStmt = createStmt.arg(tagToAddName);
-  //      if
-  //      (this->dbManager->executeArbitrarySqlWithoutReturnValue(createStmt)) {
-  //        QString lastInsertIdStmt = "SELECT LAST_INSERT_ROWID() as lastId";
-  //        QList<QMap<QString, QVariant>> b =
-  //            this->dbManager->executeArbitrarySqlWithReturnValue(lastInsertIdStmt);
-  //        tagToAddId = b.at(0)["lastId"].toString();
-  //      }
-  //    }
 
-  //    QString tableName = QString("%1_Tag").arg(tagOfType);
-  //    QString firstColumnName = QString("%1_id").arg(tagOfType).toLower();
-
-  //    QString insetRelationStmt = "INSERT INTO %1 (%2,%3) VALUES (%4,%5)";
-  //    insetRelationStmt = insetRelationStmt.arg(tableName, firstColumnName,
-  //    "tag_id",
-  //                                              tagOfId, tagToAddId);
-  //    if (this->dbManager->executeArbitrarySqlWithoutReturnValue(
-  //            insetRelationStmt)) {
-  //      QString selectStmt = "SELECT * FROM Tag WHERE Tag.id = %1";
-  //      selectStmt = selectStmt.arg(tagToAddId);
-  //      QList<QMap<QString, QVariant>> tagToAdd =
-  //          this->dbManager->executeArbitrarySqlWithReturnValue(selectStmt);
-
-  //      QModelIndex x = QModelIndex();
-  //      this->beginInsertRows(x, this->items.size(), this->items.size());
-  //      this->items.append(tagToAdd.at(0));
-  //      this->endInsertRows();
-  //      ans = true;
-  //    }
-
-  //    return ans;
 }
 
 bool BasicListModel::removeItem(QString itemToRemoveId,

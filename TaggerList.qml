@@ -4,14 +4,8 @@ import QtQuick.Controls.Material 2.1
 
 ListView {
     id: taggerListview
+    property string listType
     signal removeClicked(string selectedItemType, string selectedItemName, string selectedItemId, string selectedItemAliasOfId)
-
-
-//    anchors.top: taggerSearchBar.bottom
-//    anchors.left: parent.left
-//    anchors.right: parent.right
-//    anchors.bottom: parent.bottom
-//    model: tagModel
 
     Component{
         id:listViewDelegateComponent
@@ -43,7 +37,7 @@ ListView {
                 anchors.verticalCenter: parent.verticalCenter
                 onClicked: {
                     console.log("Remove Clicked inside delegate on " + id + " " + name)
-                    taggerListview.removeClicked("Tag",
+                    taggerListview.removeClicked(listType,
                                                  name, id, "")
                 }
             }
