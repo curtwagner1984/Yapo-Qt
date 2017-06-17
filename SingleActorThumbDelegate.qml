@@ -19,6 +19,7 @@ Item {
         numOfScenes: numberOfScenes
         numOfPics: numberOfPictures
         currentRating: rating
+        currentSelectedState: isSelected
     }
 
     Connections{
@@ -42,6 +43,12 @@ Item {
         {
             var cords = thumbDelegate.mapToItem(mainItem,0,0);
             AuxFunc.ctxMenu("Actor", cords.x + mouseX, cords.y + mouseY, index,thumbView.currentModel)
+        }
+
+        onCurrentItemChecked:
+        {
+            console.log("SingleActorThumbDelegate: onCurrentItemChecked triggered")
+            isSelected = checkedState;
         }
 
     }

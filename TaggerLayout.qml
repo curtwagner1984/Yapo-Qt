@@ -55,29 +55,7 @@ Item {
             onSelected:{
                 console.log("TaggerLayout: Selected :" + selectedItemName)
                 taggerPopup.addItem(selectedItemType,selectedItemName,selectedItemId,selectedItemAliasOfId)
-//                if (taggerPopup.itemToTagType === "Actor"){
-//                    if (selectedItemType === "Tag"){
-//                        tagModel.addItem(selectedItemId,selectedItemName,"Tag","Actor_Tag",taggerPopup.itemToTagId,"Tag","Actor")
-//                    }else if (selectedItemType === "New Tag"){
-//                        tagModel.addItem("",selectedItemName,"Tag","Actor_Tag",taggerPopup.itemToTagId,"Tag","Actor")
-//                    }
-//                }else if (taggerPopup.itemToTagType === "Scene"){
-//                    if (selectedItemType === "Tag"){
-//                        tagModel.addItem(selectedItemId,selectedItemName,"Tag","Scene_Tag",taggerPopup.itemToTagId,"Tag","Scene")
-//                    }else if (selectedItemType === "New Tag"){
-//                        tagModel.addItem("",selectedItemName,"Tag","Scene_Tag",taggerPopup.itemToTagId,"Tag","Scene")
-//                    }else if (selectedItemType === "Actor"){
-//                        actorModel.addItem(selectedItemId,selectedItemName,"Actor","Scene_Actor",taggerPopup.itemToTagId,"Actor","Scene")
-//                    }else if (selectedItemType === "ActorAlias"){
-//                        actorModel.addItem(selectedItemAliasOfId,selectedItemName,"Actor","Scene_Actor",taggerPopup.itemToTagId,"Actor","Scene")
-//                    }else if (selectedItemType === "New Actor"){
-//                        actorModel.addItem("",selectedItemName,"Actor","Scene_Actor",taggerPopup.itemToTagId,"Actor","Scene")
-//                    }else if (selectedItemType === "Website"){
-//                        websiteModel.addItem(selectedItemId,selectedItemName,"Website","Scene_Website",taggerPopup.itemToTagId,"Website","Scene")
-//                    }else if (selectedItemType === "New Website"){
-//                        websiteModel.addItem("",selectedItemName,"Website","Scene_Website",taggerPopup.itemToTagId,"Website","Scene")
-//                    }
-//                }
+
             }
         }
 

@@ -13,8 +13,11 @@ Rectangle {
     property string numOfActors
     property string pathToFile
     property string currentRating
+    property bool currentSelectedState
 
     property string currentPlaceHolder : "file:///D:/Webstorm/Yapo-Electron/app/media/unknown/unknown scene_360.jpg"
+
+    property bool isMultiSelectEnabled
 
 
 
@@ -22,10 +25,33 @@ Rectangle {
     signal thumbLeftDoubleClicked()
     signal thumbLeftClicked()
     signal thumbRightClicked(real mouseX, real mouseY)
+    signal currentItemChecked(bool checkedState)
     signal playClicked()
 
 
     color: "black"
+
+    Component.onCompleted: {
+        if (thumbnailSource === "file:///")
+        {
+            thumbnailSource =  "file:///D:/Webstorm/Yapo-Electron/app/media/unknown/unknown scene_360.jpg"
+        }
+    }
+
+    CheckBox{
+        id:multiSelectCheckbox
+        anchors.left: parent.left
+        anchors.top: parent.top
+        anchors.margins: 5
+        checked: currentSelectedState
+        z:5
+
+        onCheckedChanged: {
+            console.log("GeneralThumb: onCheckStateChanged triggered")
+            currentItemChecked(multiSelectCheckbox.checked)
+        }
+
+    }
 
 
     BusyIndicator {
@@ -45,11 +71,11 @@ Rectangle {
         sourceSize.height: thumbnail.height
         sourceSize.width: thumbnail.width
 
-        onStatusChanged: {
-            if (thumbnail.status == Image.Error) {
-                thumbnail.source = currentPlaceHolder
-            }
-        }
+//        onStatusChanged: {
+//            if (thumbnail.status == Image.Error) {
+//                thumbnail.source = currentPlaceHolder
+//            }
+//        }
     }
 
     Rectangle {

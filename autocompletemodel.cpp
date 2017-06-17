@@ -2,6 +2,7 @@
 #include <QDebug>
 #include <QFileInfo>
 #include <QModelIndex>
+#include <QRegularExpression>
 
 
 
@@ -51,6 +52,8 @@ QVariant AutoCompleteModel::data(const QModelIndex &index, int role) const
                 return currentItem["TableName"];
             }else if (role == AliasOfRole){
                 return currentItem["alias_of"];
+            }else if (role == SelectedRole){
+                return currentItem["isSelected"];
             }else if (role == AliasOfIdRole){
                 return currentItem["alias_of_id"];
             }else{
@@ -58,15 +61,55 @@ QVariant AutoCompleteModel::data(const QModelIndex &index, int role) const
             }
 }
 
+bool AutoCompleteModel::setData(const QModelIndex &index, const QVariant &value, int role)
+{
+    qDebug() << "Set data in ActorModel was called "
+             << "index" << index << "Value " << value << "Role " << role;
+    bool success = false;
+    if (!index.isValid()) {
+      return success;
+    }
+
+//    QMap<QString, QVariant>* currentItem = &(this->items[index.row()]);
+
+    if (role == SelectedRole) {
+      this->items[index.row()]["isSelected"] = value;
+      success = true;
+    }
+
+    if (success){
+        this->dataChanged(index,index);
+    }
+
+    return success;
+
+}
+
 void AutoCompleteModel::search(const QString searchString , QString searchType)
 {
    if (searchType == "Tag"){
        this->tagSearch(searchString);
+   }else if (searchType == "MultiSearch"){
+       this->generalMultiSearch(searchString);
    }else{
        this->generalSearch(searchString);
    }
 
 
+
+}
+
+QList<int> AutoCompleteModel::getSelectedIndices()
+{
+    QList<int> ans;
+    for(int i = 0 ; i < this->items.length(); i++){
+        if (this->items[i]["isSelected"].toBool())
+        {
+            ans.append(i);
+        }
+    }
+
+    return ans;
 
 }
 
@@ -104,28 +147,108 @@ void AutoCompleteModel::generalSearch(const QString searchString)
     this->baseSqlFrom = SEARCH_FROM;
 
 //  Resets count and gets number of items and executes search
-    this->currentSearchString = searchString;
+    this->currentSearchString = escapedSearchString;
     this->baseSearch();
 
     QModelIndex a = QModelIndex();
     this->beginInsertRows(a,this->items.size(), this->items.size() + 2 );
 
+    QString newName = this->currentSearchString.replace("%"," ");
+    newName = newName.replace("_",".");
+
     QMap<QString,QVariant> newActor;
-    newActor["name"] = this->currentSearchString;
+    newActor["name"] = newName;
     newActor["TableName"] = QString("New Actor");
     this->items.append(newActor);
 
     QMap<QString,QVariant> newTag;
-    newTag["name"] = this->currentSearchString;
+    newTag["name"] = newName;
     newTag["TableName"] = QString("New Tag");
     this->items.append(newTag);
 
     QMap<QString,QVariant> newWebsite;
-    newWebsite["name"] = this->currentSearchString;
+    newWebsite["name"] = newName;
     newWebsite["TableName"] = QString("New Website");
     this->items.append(newWebsite);
 
     this->endInsertRows();
+
+}
+
+void AutoCompleteModel::generalMultiSearch(const QString searchString)
+{
+    QStringList tempList = searchString.split(",");
+    QString generatedWhereTemplate = " name LIKE '%%1%' ";
+    QString generatedWhereHeader = " WHERE ";
+    QString generatedWhereStmt = "";
+    bool first = true;
+    for (int i = 0 ; i < tempList.length(); i ++)
+    {
+        QString tempString = tempList[i];
+        tempString = tempString.simplified();
+        QString escapedSearchString = this->escaleSqlChars(tempString);
+
+        if (first){
+            generatedWhereStmt = generatedWhereStmt + generatedWhereTemplate.arg(escapedSearchString);
+            first = false;
+        }else{
+            generatedWhereStmt = generatedWhereStmt + " OR " +  generatedWhereTemplate.arg(escapedSearchString);
+        }
+
+
+    }
+
+    generatedWhereStmt = generatedWhereHeader + generatedWhereStmt;
+
+    this->baseSqlWhere = generatedWhereStmt;
+    this->baseSqlOrder = SEARCH_ORDER;
+    this->baseSqlFrom = SEARCH_FROM;
+
+//  Resets count and gets number of items and executes search
+    this->currentSearchString = searchString;
+    this->baseSearch();
+
+
+
+    for (int i = 0 ; i < tempList.length() ; i++)
+    {
+        int singleItemIndex = getIndexOfSingleItemPerSearchTerm(tempList[i]);
+        if (singleItemIndex != -1)
+        {
+
+            QModelIndex ix = this->index(singleItemIndex);
+            this->setData(ix,true,SelectedRole);
+            qDebug() << "Selected : " << this->items[singleItemIndex]["name"].toString();
+        }
+    }
+
+
+
+
+}
+
+int AutoCompleteModel::getIndexOfSingleItemPerSearchTerm(QString searchTerm)
+{
+    int numberOfFound = 0;
+    int foundIndex = -1;
+    QString searchTermReg = ".*" + searchTerm.replace(" ",".*") + ".*";
+    QRegularExpression re(searchTermReg, QRegularExpression::CaseInsensitiveOption);
+
+    for (int i = 0 ; i < this->items.length() ; i++)
+    {
+        QRegularExpressionMatch match = re.match(items.at(i)["name"].toString());
+//        qDebug() << "getIndexOfSingleItemPerSearchTerm: looking at item name: " << items.at(i)["name"].toString();
+        if (match.hasMatch()){
+            numberOfFound++;
+            foundIndex = i;
+        }
+    }
+
+    if (!(numberOfFound == 1)){
+        foundIndex = -1;
+    }
+
+    return foundIndex;
 
 }
 
@@ -140,5 +263,6 @@ QHash<int, QByteArray> AutoCompleteModel::roleNames() const
             roles[TableNameRole] = "tableName";
             roles[AliasOfRole] = "aliasOf";
             roles[AliasOfIdRole] = "aliasOfId";
+            roles[SelectedRole] = "isSelected";
             return roles;
 }

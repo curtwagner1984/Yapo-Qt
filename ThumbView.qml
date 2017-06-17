@@ -32,11 +32,42 @@ Item {
 //    anchors.fill: parent
 
 
+    Item{
+        id:optionButtonContainer
+        width: parent.width / 10
+        height: parent.height / 10
+        anchors.right: parent.right
+        anchors.top: parent.top
 
+        property bool buttonVisiable: false
+        z:10
+
+        RoundButton{
+            id: optionsButton
+            text:"M"
+            anchors.centerIn: parent
+            visible: optionButtonContainer.buttonVisiable
+        }
+
+        MouseArea{
+            hoverEnabled: true
+            anchors.fill: parent
+
+            onEntered: {
+                console.log("Entered")
+                optionButtonContainer.buttonVisiable = true
+            }
+
+            onExited: {
+                optionButtonContainer.buttonVisiable = false
+            }
+        }
+    }
 
     GridView {
         id: thumbGridView
         property alias ratingPopup: ratingPopup
+        property bool multiSelect: false
 
         anchors.fill: parent
 
@@ -66,8 +97,11 @@ Item {
         }
 
 
-
     }
+
+
+
+
 
 
 

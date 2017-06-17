@@ -26,3 +26,11 @@ function showRatingPopup(ratedItemType,ratedItemId,ratedItemRating,x,y,index) {
 
     thumbGridView.ratingPopup.open()
 }
+
+
+function showImage(curModel,curIndex)
+{
+    imageViewer.currentModel = curModel;
+    imageViewer.currentIndex = curIndex;
+    imageViewer.open();
+}

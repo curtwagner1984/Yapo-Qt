@@ -183,6 +183,8 @@ QString BasicListModel::countSqlStmt() {
 QString BasicListModel::escaleSqlChars(QString unescapedString) {
   QString escapedString = unescapedString;
   escapedString.replace(QString("'"), QString("''"));
+  escapedString.replace(QString(" "), QString("%"));
+  escapedString.replace(QString("."), QString("_"));
   return escapedString;
 }
 

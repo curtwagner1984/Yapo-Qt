@@ -74,4 +74,8 @@
     <qresource prefix="/general">
         <file>ThumbNameAndNextPrevControlls.qml</file>
     </qresource>
+    <qresource prefix="/viewers">
+        <file>ImageViewer.qml</file>
+        <file>ImageViewerContentItem.qml</file>
+    </qresource>
 </RCC>

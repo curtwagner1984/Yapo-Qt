@@ -17,6 +17,8 @@ import "qrc:/autoComplete"
 import "qrc:/treeFolderView"
 import "qrc:/taggerPopup"
 
+import "qrc:/viewers"
+
 import "qrc:/detailView"
 
 import "MainAuxFunc.js" as MainAux
@@ -30,7 +32,7 @@ ApplicationWindow {
     id: mainAppPage
 
     property alias searchBarAlias: searchBar
-    property alias showImage: showImagePopup
+//    property alias showImage: showImagePopup
     property alias showVideo: sceneViewPopup
     property alias mainStack: mainStack
 
@@ -528,100 +530,106 @@ ApplicationWindow {
         searchedText: searchBar.text
     }
 
-    Popup {
-
-        id: showImagePopup
-        property int curIndex: -1
-        x: mainItem.x
-        y: mainItem.y
-        width: mainItem.width
-        height: mainItem.height
-        modal: true
-        onOpened: {
-            showImagePopupContentItemComponenetLoader.sourceComponent
-                    = showImagePopupContentItemComponenet
-        }
-
-        focus: true
-        closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
-
-        Component {
-            id: showImagePopupContentItemComponenet
-
-            Item {
-                id: showImagePopupContentItem
-                anchors.fill: parent
-
-                Component {
-                    id: showImagePopupListViewHighlight
-                    Rectangle {
-                        width: showImagePopupContentItem.width - 5
-                        height: showImagePopupContentItem.height - 5
-                        color: "transparent"
-                        radius: 5
-                        y: showImagePopupListView.currentItem.y
-                    }
-                }
-
-                ListView {
-                    id: showImagePopupListView
-                    currentIndex: showImagePopup.curIndex
-                    highlight: showImagePopupListViewHighlight
-                    anchors.fill: parent
-                    model: pictureModel
-                    clip: true
-                    delegate: Item {
-                        id: showImagePopupDelegate
-                        height: showImagePopupListView.height
-                        width: showImagePopupListView.width
-
-                        Rectangle {
-                            id: showImagePopupDelegateBackground
-                            anchors.fill: showImagePopupDelegate
-                            color: Material.color(Material.BlueGrey)
-                        }
-
-                        Image {
-                            id: showImagePopupDelegateImage
-                            asynchronous: true
-                            source: 'file:///' + thumb
-                            sourceSize.height: parent.height
-                            height: parent.height
-                            fillMode: Image.PreserveAspectFit
-                            anchors.centerIn: showImagePopupDelegateBackground
-                        }
-
-                        Text {
-                            text: name
-                            font.pixelSize: showImagePopupDelegate.height / 15
-                            anchors.bottom: showImagePopupDelegateBackground.bottom
-                            anchors.bottomMargin: 15
-                        }
-                    }
-                }
-
-                MouseArea {
-                    id: popupImageMouseArea
-                    anchors.fill: parent
-                    onClicked: {
-                        showImagePopup.close()
-                    }
-                }
-
-                Button {
-                    text: "next"
-                    onClicked: {
-                        var curIndexx = showImagePopupListView.currentIndex
-                        showImagePopup.curIndex = curIndexx + 1
-                    }
-                }
-            }
-        }
-
-        contentItem: Loader {
-            id: showImagePopupContentItemComponenetLoader
-        }
+    ImageViewer{
+        id:imageViewer
+        width: mainAppPage.width
+        height: mainAppPage.height
     }
+
+//    Popup {
+
+//        id: showImagePopup
+//        property int curIndex: -1
+//        x: mainItem.x
+//        y: mainItem.y
+//        width: mainItem.width
+//        height: mainItem.height
+//        modal: true
+//        onOpened: {
+//            showImagePopupContentItemComponenetLoader.sourceComponent
+//                    = showImagePopupContentItemComponenet
+//        }
+
+//        focus: true
+//        closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
+
+//        Component {
+//            id: showImagePopupContentItemComponenet
+
+//            Item {
+//                id: showImagePopupContentItem
+//                anchors.fill: parent
+
+//                Component {
+//                    id: showImagePopupListViewHighlight
+//                    Rectangle {
+//                        width: showImagePopupContentItem.width - 5
+//                        height: showImagePopupContentItem.height - 5
+//                        color: "transparent"
+//                        radius: 5
+//                        y: showImagePopupListView.currentItem.y
+//                    }
+//                }
+
+//                ListView {
+//                    id: showImagePopupListView
+//                    currentIndex: showImagePopup.curIndex
+//                    highlight: showImagePopupListViewHighlight
+//                    anchors.fill: parent
+//                    model: pictureModel
+//                    clip: true
+//                    delegate: Item {
+//                        id: showImagePopupDelegate
+//                        height: showImagePopupListView.height
+//                        width: showImagePopupListView.width
+
+//                        Rectangle {
+//                            id: showImagePopupDelegateBackground
+//                            anchors.fill: showImagePopupDelegate
+//                            color: Material.color(Material.BlueGrey)
+//                        }
+
+//                        Image {
+//                            id: showImagePopupDelegateImage
+//                            asynchronous: true
+//                            source: 'file:///' + thumb
+//                            sourceSize.height: parent.height
+//                            height: parent.height
+//                            fillMode: Image.PreserveAspectFit
+//                            anchors.centerIn: showImagePopupDelegateBackground
+//                        }
+
+//                        Text {
+//                            text: name
+//                            font.pixelSize: showImagePopupDelegate.height / 15
+//                            anchors.bottom: showImagePopupDelegateBackground.bottom
+//                            anchors.bottomMargin: 15
+//                        }
+//                    }
+//                }
+
+//                MouseArea {
+//                    id: popupImageMouseArea
+//                    anchors.fill: parent
+//                    onClicked: {
+//                        showImagePopup.close()
+//                    }
+//                }
+
+//                Button {
+//                    text: "next"
+//                    onClicked: {
+//                        var curIndexx = showImagePopupListView.currentIndex
+//                        showImagePopup.curIndex = curIndexx + 1
+//                    }
+//                }
+//            }
+//        }
+
+//        contentItem: Loader {
+//            id: showImagePopupContentItemComponenetLoader
+//        }
+//    }
 
     Popup {
         id: sceneViewPopup
@@ -800,129 +808,5 @@ ApplicationWindow {
 
     }
 
-//    Popup {
-//        id: taggerPopup
-//        property string itemToTagId
 
-//        width: mainItem.width / 2
-//        height: mainItem.height / 2
-//        x: mainItem.width / 4
-//        y: mainItem.height / 4
-
-//        modal: true
-
-//        contentItem: Loader {
-
-//            id: taggerPopupComponentLoader
-//            property string thumbSrc: "-1"
-//            sourceComponent: taggerContentComponent
-//        }
-
-//        Component {
-//            id: taggerContentComponent
-//            Item {
-//                id: taggerContentComponentItem
-//                anchors.fill: parent
-
-//                Item {
-//                    id: taggerPopupThumbItem
-//                    width: parent.width / 3
-//                    height: parent.height * 0.75
-//                    anchors.left: parent.left
-//                    anchors.top: parent.top
-
-//                    Image {
-//                        id: taggerPopupThumb
-//                        source: taggerPopupComponentLoader.thumbSrc
-//                        anchors.fill: parent
-//                        fillMode: Image.PreserveAspectCrop
-//                    }
-//                }
-
-//                Item {
-//                    id: taggerTagSpace
-//                    anchors.left: taggerPopupThumbItem.right
-//                    anchors.right: parent.right
-//                    anchors.bottom: parent.bottom
-//                    anchors.top: parent.top
-
-//                    TextField {
-//                        id: taggerSearchBar
-//                        anchors.left: parent.left
-//                        width: parent.width * 0.75
-//                        onTextChanged: {
-//                            qmlComm.autoCompleteSearch(taggerSearchBar.text,
-//                                                       "Tag")
-//                            taggerAutocomplete.open()
-//                        }
-
-//                        Keys.forwardTo: [taggerAutocomplete.listview, taggerAutocomplete.listview.currentItem]
-//                    }
-
-//                    AutoCompletePopup {
-//                        id: taggerAutocomplete
-//                        x: 0
-//                        y: taggerSearchBar.height
-//                        height: taggerContentComponentItem.height * 0.85
-//                        width: taggerSearchBar.width
-//                        searchedText: taggerSearchBar.text
-//                        z: 10
-//                    }
-
-//                    ListView {
-//                        id: taggerListview
-//                        signal removeClicked(string selectedItemType, string selectedItemName, string selectedItemId, string selectedItemAliasOfId)
-//                        anchors.top: taggerSearchBar.bottom
-//                        anchors.left: parent.left
-//                        anchors.right: parent.right
-//                        anchors.bottom: parent.bottom
-//                        model: tagModel
-//                        delegate: Item {
-//                            id: tagListViewDelegate
-//                            height: 50
-//                            width: taggerListview.width
-//                            Text {
-//                                text: (index + 1) + ". " + name
-//                                font.pixelSize: taggerListview.width / 22
-//                                anchors.verticalCenter: tagListViewDelegate.verticalCenter
-//                            }
-
-//                            RoundButton {
-//                                id: removeButton
-//                                width: 35
-//                                height: 35
-//                                text: "X"
-//                                anchors.right: tagListViewDelegate.right
-//                                anchors.verticalCenter: tagListViewDelegate.verticalCenter
-//                                onClicked: {
-//                                    console.log("Remove Clicked in delegate on " + id + " " + name)
-//                                    taggerListview.removeClicked("Tag",
-//                                                                 name, id, "")
-//                                }
-//                            }
-//                        }
-//                    }
-
-//                    Connections {
-//                        target: taggerAutocomplete
-//                        onSelected: {
-//                            console.log("Selected tagger autocomplete " + selectedItemName)
-//                            tagModel.addTag(selectedItemId, selectedItemName,
-//                                            "Actor", taggerPopup.itemToTagId)
-//                        }
-//                    }
-//                    Connections {
-//                        target: taggerListview
-//                        onRemoveClicked: {
-//                            console.log("Remove clicked on " + selectedItemId
-//                                        + " " + selectedItemName)
-//                            tagModel.removeTag(selectedItemId, "Actor",
-//                                               taggerPopup.itemToTagId, false)
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//        closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
-//    }
 }

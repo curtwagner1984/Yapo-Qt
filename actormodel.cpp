@@ -60,6 +60,8 @@ QVariant ActorModel::data(const QModelIndex &index, int role) const
             return currentItem["name"];
         }else if (role == DobRole){
             return currentItem["date_of_birth"];
+        }else if (role == SelectedRole){
+            return currentItem["isSelected"];
         }else if (role == AgeRole){
             QString dob = currentItem["date_of_birth"].toString();
             QDate dateDOB = QDate::fromString(dob, "yyyy-MM-dd");
@@ -74,6 +76,26 @@ QVariant ActorModel::data(const QModelIndex &index, int role) const
         }else{
             return QVariant();
         }
+
+}
+
+bool ActorModel::setData(const QModelIndex &index, const QVariant &value, int role)
+{
+    qDebug() << "Set data in ActorModel was called "
+             << "index" << index << "Value " << value << "Role " << role;
+    bool success = false;
+    if (!index.isValid()) {
+      return success;
+    }
+
+//    QMap<QString, QVariant>* currentItem = &(this->items[index.row()]);
+
+    if (role == SelectedRole) {
+      this->items[index.row()]["isSelected"] = value;
+      success = true;
+    }
+
+    return success;
 
 }
 
@@ -137,6 +159,7 @@ QHash<int, QByteArray> ActorModel::roleNames() const
             roles[DobRole] = "DOB";
             roles[AgeRole] = "age";
             roles[RatingRole] = "rating";
+            roles[SelectedRole] = "isSelected";
             return roles;
 
 }

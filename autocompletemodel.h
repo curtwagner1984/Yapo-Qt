@@ -10,13 +10,21 @@ class AutoCompleteModel : public BasicListModel {
  public:
   AutoCompleteModel();
   QVariant data(const QModelIndex& index, int role) const;
+  bool setData(const QModelIndex &index, const QVariant &value, int role);
+
   Q_INVOKABLE void search(const QString searchString, QString searchType);
-  void tagSearch(const QString searchString);
-  void generalSearch(const QString searchString);
+
+  Q_INVOKABLE QList<int> getSelectedIndices();
+
   QHash<int, QByteArray> roleNames() const;
 
  private:
   QString currentSearchString = "";
+  void tagSearch(const QString searchString);
+  void generalSearch(const QString searchString);
+  void generalMultiSearch(const QString searchString);
+
+  int getIndexOfSingleItemPerSearchTerm(QString searchTerm);
 
   enum ActorRoles {
     IdRole = Qt::UserRole + 1,
@@ -27,6 +35,7 @@ class AutoCompleteModel : public BasicListModel {
     TableNameRole = Qt::UserRole + 6,
     AliasOfRole = Qt::UserRole + 7,
     AliasOfIdRole = Qt::UserRole + 8,
+    SelectedRole = Qt::UserRole + 9,
 
   };
 
@@ -71,6 +80,8 @@ class AutoCompleteModel : public BasicListModel {
       "SELECT Tag.id as id, Tag.name as name, 'Tag' as TableName, 'na' as "
       "alias_of,'na' as alias_of_id, Tag.thumbnail as thumbnail FROM Tag "
       ")";
+
+
 };
 
 #endif  // AUTOCOMPLETEMODEL_H

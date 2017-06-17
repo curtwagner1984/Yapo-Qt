@@ -5,6 +5,8 @@ import QtQuick.Controls.Material 2.1
 Popup {
     id:autoCompletePopupTwo
 
+    property bool isMultiTag
+
     property string searchedText
     property string searchType
     property alias contentLoader: contentLoader
@@ -24,15 +26,12 @@ Popup {
         if (searchType === "Tag")
         {
             autoCompleteModel.search(searchedText,"Tag")
+        }else if (searchType === "MultiSearch"){
+            autoCompleteModel.search(searchedText,"MultiSearch")
         }else{
             autoCompleteModel.search(searchedText,"")
         }
     }
-
-
-//    Keys.onPressed: {
-//            console.log("autoCompletePopupTwo key pressed: " + event.key);
-//        }
 
 
     contentItem: Loader {
@@ -41,6 +40,14 @@ Popup {
         source: "AutoCompleteContentItem.qml"
         focus: true
 
+
+    }
+
+    Binding{
+        target: contentLoader.item
+        property: "isMultiTag"
+        value: autoCompletePopupTwo.isMultiTag
+        when: contentLoader.status === Loader.Ready
     }
 
     onOpened:

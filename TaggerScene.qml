@@ -4,6 +4,7 @@ import QtQuick.Controls.Material 2.1
 
 Item {
     id: contentPlaceHolder
+    signal removeClicked(string selectedItemType, string selectedItemName, string selectedItemId, string selectedItemAliasOfId)
 
     Text {
         id: actorLable
@@ -24,6 +25,7 @@ Item {
 
     TaggerList {
         id: actorList
+        listType: "Actor"
         anchors.right: actorLable.right
         anchors.left: actorLable.left
         anchors.top: actorLable.bottom
@@ -50,6 +52,7 @@ Item {
 
     TaggerList {
         id: tagList
+        listType: "Tag"
         anchors.right: tagLable.right
         anchors.left: tagLable.left
         anchors.top: tagLable.bottom
@@ -77,6 +80,7 @@ Item {
 
     TaggerList {
         id: websiteList
+        listType: "Website"
         anchors.right: websiteLable.right
         anchors.left: websiteLable.left
         anchors.top: websiteLable.bottom
@@ -88,6 +92,7 @@ Item {
         target: actorList
         onRemoveClicked: {
             console.log("Connections: Remove clicked on " + selectedItemId + " " + selectedItemName)
+            removeClicked(selectedItemType,selectedItemName,selectedItemId,selectedItemAliasOfId)
         }
     }
 
@@ -95,6 +100,15 @@ Item {
         target: tagList
         onRemoveClicked: {
             console.log("Connections: Remove clicked on " + selectedItemId + " " + selectedItemName)
+            removeClicked(selectedItemType,selectedItemName,selectedItemId,selectedItemAliasOfId)
+        }
+    }
+
+    Connections {
+        target: websiteList
+        onRemoveClicked: {
+            console.log("Connections: Remove clicked on " + selectedItemId + " " + selectedItemName)
+            removeClicked(selectedItemType,selectedItemName,selectedItemId,selectedItemAliasOfId)
         }
     }
 }

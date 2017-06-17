@@ -45,6 +45,7 @@ Item {
         onThumbLeftClicked:
         {
             console.log("Thumb left double clicked")
+            AuxFunc.showImage(thumbView.currentModel,index)
         }
         onThumbRightClicked:
         {

@@ -14,6 +14,9 @@ public:
     ActorModel();
 
      QVariant data(const QModelIndex &index, int role) const;
+
+     bool setData(const QModelIndex &index, const QVariant &value, int role);
+
      Q_INVOKABLE void search (const QString searchString);
      Q_INVOKABLE void searchById (const QString actorId);
      QHash<int, QByteArray> roleNames() const;
@@ -40,7 +43,8 @@ public:
             DobRole = Qt::UserRole + 9,
             AgeRole = Qt::UserRole + 10,
             RatingRole = Qt::UserRole + 11,
-            NumberOfTags = Qt::UserRole + 13
+            NumberOfTags = Qt::UserRole + 13,
+            SelectedRole = Qt::UserRole + 14
 
         };
 private:

@@ -6,8 +6,13 @@ Item {
     id:autoCompleteContnetItem
 
     property alias autoCompleteContnetItemListView: autoCompleteContnetItemListView
+    property bool isMultiTag
 
     focus: true
+
+    onIsMultiTagChanged: {
+        console.log("autoCompleteContnetItem IsMultiTagChanged!")
+    }
 
     Component {
         id: highlightBar
@@ -22,41 +27,49 @@ Item {
     }
 
 
-//    Keys.onPressed: {
-//        console.log("autoCompleteContnetItem key pressed " + event.key)
-//        console.log("autoCompleteContnetItem.currentIdnex =" + autoCompleteContnetItemListView.currentIndex)
-//        if (event.key === Qt.Key_Left) {
-//            console.log("autoCompleteContnetItem: left pressed");
-//            event.accepted = false;
-//        }else if (event.key === Qt.Key_Enter) {
-//            console.log("autoCompleteContnetItem: enter pressed");
-//            event.accepted = false;
-//        }else if (event.key === Qt.Key_Up) {
-//            console.log("autoCompleteContnetItem: up pressed");
-//            autoCompleteContnetItemListView.currentIndex = autoCompleteContnetItemListView.currentIndex - 1
-//            event.accepted = false;
-//        }else if (event.key === Qt.Key_Down) {
-//            console.log("autoCompleteContnetItem: down pressed");
-//            autoCompleteContnetItemListView.currentIndex = autoCompleteContnetItemListView.currentIndex + 1
-//            event.accepted = false;
-//        }else if (event.key === Qt.Key_Right) {
-//            console.log("autoCompleteContnetItem: right pressed");
-//            event.accepted = false;
-//        }
+//    function selected(){
+//        console.log("autoCompleteContnetItem: enter pressed on " + autoCompleteContnetItemListView.currentItem.item.name +
+//                    " current index is" + autoCompleteContnetItemListView.currentIndex);
+////        var currentIndex = autoCompleteContnetItemListView.currentIndex;
+////        var selectedItemType = autoCompleteModel.directData("tableName",currentIndex)
+////        var selectedItemName = autoCompleteModel.directData("name",currentIndex)
+////        var selectedItemId = autoCompleteModel.directData("id",currentIndex)
+////        var selectedItemAliasOfId = autoCompleteModel.directData("aliasOfId",currentIndex)
+////        autoCompletePopupTwo.selected(selectedItemType,selectedItemName,selectedItemId,selectedItemAliasOfId)
+////        console.log("Selected " + autoCompleteModel.directData("name",autoCompleteContnetItemListView.currentIndex))
+////        autoCompletePopupTwo.close()
+
+//        var currentIndex = autoCompleteContnetItemListView.currentIndex;
+//        selected(currentIndex)
 //    }
 
-    Keys.onReturnPressed: {
-        console.log("autoCompleteContnetItem: enter pressed on " + autoCompleteContnetItemListView.currentItem.item.name +
-                    " current index is" + autoCompleteContnetItemListView.currentIndex);
-        var currentIndex = autoCompleteContnetItemListView.currentIndex;
+    function selected(selectedIndex)
+    {
+
+        var currentIndex = selectedIndex;
         var selectedItemType = autoCompleteModel.directData("tableName",currentIndex)
         var selectedItemName = autoCompleteModel.directData("name",currentIndex)
         var selectedItemId = autoCompleteModel.directData("id",currentIndex)
         var selectedItemAliasOfId = autoCompleteModel.directData("aliasOfId",currentIndex)
-//        signal selected(string selectedItemType, string selectedItemName, string selectedItemId, string selectedItemAliasOfId)
         autoCompletePopupTwo.selected(selectedItemType,selectedItemName,selectedItemId,selectedItemAliasOfId)
         console.log("Selected " + autoCompleteModel.directData("name",autoCompleteContnetItemListView.currentIndex))
-        autoCompletePopupTwo.close()
+
+    }
+
+
+    Keys.onReturnPressed: {
+        if (!isMultiTag){
+            selected(autoCompleteContnetItemListView.currentIndex)
+            autoCompletePopupTwo.close()
+        }else{
+            console.log("Enter Pressed while isMutliTag == True")
+            var selectedItemsIndcies = autoCompleteModel.getSelectedIndices();
+            for (var i = 0 ; i < selectedItemsIndcies.length ; i++){
+                console.log("Selected index is " + selectedItemsIndcies[i])
+                selected(selectedItemsIndcies[i])
+            }
+            autoCompletePopupTwo.close()
+        }
 
     }
 
@@ -70,33 +83,14 @@ Item {
         anchors.fill: parent
         currentIndex: 0
         focus: true
-
-//        Keys.forwardTo: [autoCompleteContnetItemListView.currentItem]
         delegate: Component{
             Loader{
                 id:autoCompleteContnetItemListViewLoader
                 width: parent.width
                 height: parent.width / 8
                 source: "AutoCompleteListViewDelegate.qml"
-//                focus: true
-
-//                Keys.onPressed: {
-//                    if (event.key === Qt.Key_Left) {
-//                        console.log("autoCompleteContnetItem.autoCompleteContnetItemListView.autoCompleteContnetItemListViewLoader: left pressed");
-//                        event.accepted = false;
-//                    }
-//                }
             }
         }
-
-//        Keys.onPressed: {
-//            if (event.key === Qt.Key_Left) {
-//                console.log("autoCompleteContnetItem.autoCompleteContnetItemListView: left pressed");
-//                event.accepted = false;
-//            }
-//        }
-
-
 
         model: autoCompleteModel
 
