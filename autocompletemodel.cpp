@@ -99,19 +99,7 @@ void AutoCompleteModel::search(const QString searchString , QString searchType)
 
 }
 
-QList<int> AutoCompleteModel::getSelectedIndices()
-{
-    QList<int> ans;
-    for(int i = 0 ; i < this->items.length(); i++){
-        if (this->items[i]["isSelected"].toBool())
-        {
-            ans.append(i);
-        }
-    }
 
-    return ans;
-
-}
 
 void AutoCompleteModel::tagSearch(const QString searchString)
 {

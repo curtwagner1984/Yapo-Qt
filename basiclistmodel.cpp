@@ -165,6 +165,20 @@ bool BasicListModel::removeItem(QString itemToRemoveId,
   return ans;
 }
 
+QList<int> BasicListModel::getSelectedIndices()
+{
+    QList<int> ans;
+    for(int i = 0 ; i < this->items.length(); i++){
+        if (this->items[i]["isSelected"].toBool())
+        {
+            ans.append(i);
+        }
+    }
+
+    return ans;
+
+}
+
 int BasicListModel::getCount() { return this->count; }
 
 BasicListModel::~BasicListModel() { this->clear(); }

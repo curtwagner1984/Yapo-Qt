@@ -14,7 +14,7 @@ class AutoCompleteModel : public BasicListModel {
 
   Q_INVOKABLE void search(const QString searchString, QString searchType);
 
-  Q_INVOKABLE QList<int> getSelectedIndices();
+
 
   QHash<int, QByteArray> roleNames() const;
 
