@@ -5,6 +5,8 @@ import QtQuick.Controls.Material 2.1
 import QtQuick.Dialogs 1.2
 import QtQuick.Window 2.0
 import QtMultimedia 5.8
+import Qt.labs.settings 1.0
+
 
 import "qrc:/settings"
 import "qrc:/thumbview"
@@ -50,6 +52,8 @@ ApplicationWindow {
             globalSearch.focus = true;
         }
     }
+
+
 
     function changeView(viewToChangeTo,currentModel,currentIndex) {
         if (viewToChangeTo === "Actor Detail View") {

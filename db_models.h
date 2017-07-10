@@ -1,3 +1,7 @@
+/*
+ * Currently not in use, needs to be removed.
+*/
+
 #ifndef DB_MODELS_H
 #define DB_MODELS_H
 #include <QString>

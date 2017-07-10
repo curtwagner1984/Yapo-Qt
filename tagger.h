@@ -1,3 +1,8 @@
+/*
+ * This class is responsible for tagging pictures and scenes based on their file name and path.
+ *
+*/
+
 #ifndef TAGGER_H
 #define TAGGER_H
 

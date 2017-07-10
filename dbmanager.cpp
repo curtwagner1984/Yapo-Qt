@@ -12,7 +12,7 @@
 
 DbManager::DbManager(QObject *parent):QObject(parent)
 {
-
+    this->echo = false;
     qDebug() << "DB MANAGER DEFAULT CONSTRUCTOR";
 
 //    this->m_db = QSqlDatabase::addDatabase("QSQLITE");
@@ -54,6 +54,27 @@ DbManager::DbManager(const QString& path, QObject *parent):QObject(parent)
         qDebug() << "Error while trying to create tables: " << this->m_db.lastError();
     }
   }
+}
+
+void DbManager::connectToDatabase(const QString path)
+{
+    this->m_db = QSqlDatabase::addDatabase("QSQLITE");
+    //       this->m_db.setDatabaseName(path);
+    this->m_db.setDatabaseName(path);
+
+    if (!this->m_db.open()) {
+      qDebug() << "Error: connection with database fail";
+    } else {
+      qDebug() << "Database: connection ok";
+      this->m_db.transaction();
+      this->createTables();
+      if (this->m_db.commit()){
+          qDebug() << "Tables created ...";
+      }else{
+          qDebug() << "Error while trying to create tables: " << this->m_db.lastError();
+      }
+    }
+
 }
 
 

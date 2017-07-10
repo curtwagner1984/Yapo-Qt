@@ -18,37 +18,28 @@ QmlComm::QmlComm(QQmlApplicationEngine &view,DbManager* dbManager,  QObject *par
   this->tagger = new Tagger(this->dbManager);
 
   //    models
-  this->mediaFolderModel = new MediafolderModel();
-//  this->actorModel = new ActorModel(this->dbManager);
-//  this->sceneModel = new SceneModel();
-//  this->pictureModel = new PictureModel();
-//  this->tagModel = new TagModel();
-//  this->websiteModel = new WebsiteModel();
 
-//  this->generalAlias = new GeneralAlias();
+    /*
+  This part adds two global models (MediafolderModel,AutoCompleteModel) to the QML root context
+  All other models are seperate instances and are instanciated inside the QML code.
+  Maybe will need to do this with thoese models as well.
+
+    */
+  this->mediaFolderModel = new MediafolderModel();
+  this->mediaFolderModel->init(this->dbManager);
+
   this->autoCompleteModel = new AutoCompleteModel();
   this->autoCompleteModel->init(this->dbManager);
 
-//  this->detailObject = new DetailObject();
-
-//  this->treeFolderModel = new TreeFolderModel();
 
   view.rootContext()->setContextProperty("dbManager", this->dbManager);
   view.rootContext()->setContextProperty("mediaFolderModel",
                                          this->mediaFolderModel);
-//  view.rootContext()->setContextProperty("actorModel", this->actorModel);
-//  view.rootContext()->setContextProperty("sceneModel", this->sceneModel);
-//  view.rootContext()->setContextProperty("pictureModel", this->pictureModel);
-//  view.rootContext()->setContextProperty("tagModel", this->tagModel);
-//  view.rootContext()->setContextProperty("websiteModel", this->websiteModel);
 
-//  view.rootContext()->setContextProperty("generalAlias", this->generalAlias);
-
-//  view.rootContext()->setContextProperty("detailObject", this->detailObject);
   view.rootContext()->setContextProperty("autoCompleteModel",
                                          this->autoCompleteModel);
 
-//  view.rootContext()->setContextProperty("treeFolderModel", this->treeFolderModel);
+
 }
 
 bool QmlComm::addMediaFolder(QString folderPath, bool isPicture, bool isVideo) {

@@ -1,3 +1,9 @@
+
+/*
+ * This class is responsible for all database communications, Later on I should separate it to a different thread
+ * to improve performance. Also there are many deprecated functions that are no longer in use that needs to be removed.
+*/
+
 #ifndef DBMANAGER_H
 #define DBMANAGER_H
 
@@ -15,6 +21,8 @@ class DbManager: public QObject
 public:
     DbManager(QObject *parent = 0);
     DbManager(const QString& path, QObject *parent = 0);
+
+    void connectToDatabase(const QString path);
     void createTables();
 
 //    Search Functions
@@ -77,7 +85,7 @@ public:
 
 private:
     QSqlDatabase m_db;
-    bool echo;
+    bool echo = false;
     QString generateBulkInsertQueryString(QList<QStringList> bulkInsertArgumentList);
 
     QString generateUpdateQueryString(QMap<QString, QVariant> updatedObject);

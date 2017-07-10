@@ -53,7 +53,8 @@ int main(int argc, char *argv[])
     qmlRegisterType<GeneralAlias>("com.me.qmlcomponents", 1, 0, "GeneralAlias");
 
 
-    DbManager* dbManager = new DbManager("");
+    DbManager* dbManager = new DbManager();
+    dbManager->connectToDatabase("test.db"); // hardcoded db file, need to change to user defined db latter on.
 
     QQmlApplicationEngine engine;
 
