@@ -6,10 +6,13 @@
 
 #include "ffmpeghandler.h"
 
-FileImporter::FileImporter(DbManager* dbManager, QMutex* mutex) {
+FileImporter::FileImporter(DbManager* dbManager, QMutex* mutex, QSettings* settings) {
   this->dbManager = dbManager;
   this->semaphore = new QSemaphore();
+  this->settings = settings;
   this->mutex = mutex;
+
+  this->ffmpegHandler = new FfmpegHandler(settings);
 }
 
 void FileImporter::addMediaFolderToQueue(QString path, bool isVideo,
@@ -87,7 +90,7 @@ void FileImporter::walkPath(MediaFolder* mediaFolderToWalk) {
 
   for (int i = 0; i < scenesBeforeFFprobe.size(); i++) {
     QMap<QString, QVariant> temp =
-        FfmpegHandler::ffprobeTest(scenesBeforeFFprobe.at(i));
+        ffmpegHandler->ffprobeTest(scenesBeforeFFprobe.at(i));
     if (! temp.contains("failed")) {
       listOfSceneUpdates.append(temp);
     }

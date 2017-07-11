@@ -6,6 +6,8 @@
 #include <QQuickView>
 #include <QQmlApplicationEngine>
 #include <QMutex>
+#include <QSettings>
+
 
 #include "dbmanager.h"
 #include "fileimporter.h"
@@ -73,6 +75,11 @@ public:
 
     Q_INVOKABLE bool deleteAlias (QString aliasToDeleteId, QString aliasOf);
 
+    Q_INVOKABLE void setSetting (QString key, QVariant value);
+    Q_INVOKABLE QVariant getSetting (QString key);
+
+    Q_INVOKABLE void init ();
+
 
 
     ~QmlComm();
@@ -98,6 +105,8 @@ private:
 
     GeneralAlias* generalAlias;
     AutoCompleteModel* autoCompleteModel;
+
+    QSettings* settings;
 
 
 

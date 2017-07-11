@@ -86,20 +86,7 @@ Item {
             }
         }
 
-        ListView {
-            anchors.fill: parent
-            id: actorView
-            model: actorModel
-            delegate: actorDelegate
-            highlight: Rectangle {
-                color: "lightsteelblue"
-                radius: 5
-            }
-            focus: true
-            clip: true
 
-            ScrollBar.vertical: ScrollBar{}
-        }
     }
 }
 //    ColumnLayout{

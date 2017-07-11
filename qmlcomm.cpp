@@ -12,9 +12,10 @@ QmlComm::QmlComm(QQmlApplicationEngine &view,DbManager* dbManager,  QObject *par
   this->dbManager = dbManager;
 
   this->fileImporterMutex = new QMutex;
-  this->fileImporter =
-  new FileImporter(this->dbManager, this->fileImporterMutex);
-  this->scraper = new TmdbScraper(this->dbManager);
+  this->settings = new QSettings("settings.ini",QSettings::IniFormat);
+  this->fileImporter =            
+  new FileImporter(this->dbManager, this->fileImporterMutex,this->settings);
+  this->scraper = new TmdbScraper(this->dbManager,this->settings);
   this->tagger = new Tagger(this->dbManager);
 
   //    models
@@ -32,7 +33,7 @@ QmlComm::QmlComm(QQmlApplicationEngine &view,DbManager* dbManager,  QObject *par
   this->autoCompleteModel->init(this->dbManager);
 
 
-  view.rootContext()->setContextProperty("dbManager", this->dbManager);
+//  view.rootContext()->setContextProperty("dbManager", this->dbManager);
   view.rootContext()->setContextProperty("mediaFolderModel",
                                          this->mediaFolderModel);
 
@@ -235,6 +236,24 @@ bool QmlComm::deleteAlias(QString aliasToDeleteId, QString aliasOf)
 
 }
 
+void QmlComm::setSetting(QString key, QVariant value)
+{
+    settings->setValue(key,value);
+
+}
+
+QVariant QmlComm::getSetting(QString key)
+{
+    return settings->value(key);
+
+}
+
+void QmlComm::init()
+{
+    this->dbManager->connectToDatabase(settings->value("general/dbpath").toString());
+
+}
+
 QStringList QmlComm::splitCsv(QString csvString) {
   QStringList splitList = csvString.split(",", QString::SkipEmptyParts);
   return splitList;
@@ -246,4 +265,5 @@ QmlComm::~QmlComm() {
   delete this->tagger;
   delete this->fileImporterMutex;
   delete this->fileImporter;
+  delete this->settings;
 }

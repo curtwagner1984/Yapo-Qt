@@ -13,12 +13,14 @@
 #include <QUrlQuery>
 #include <QtNetwork>
 
-const QString BASE_PATH = "D:/YAPOC++/";
+//const QString BASE_PATH = "D:/YAPOC++/";
 
-TmdbScraper::TmdbScraper(DbManager* dbManager, QObject* parent)
+TmdbScraper::TmdbScraper(DbManager* dbManager,QSettings* setting, QObject* parent)
     : QObject(parent) {
   this->dbManager = dbManager;
   this->networkManager = new QNetworkAccessManager(this);
+  this->setting = setting;
+  this->_basePath = setting->value("general/homepath").toString();
 
   connect(this->networkManager, &QNetworkAccessManager::finished, this,
           &TmdbScraper::onActorSearchResult);
@@ -326,7 +328,7 @@ void TmdbScraper::onActorSearchResult(QNetworkReply* reply) {
     //        qDebug() << reply->errorString();
 
     QString basePath =
-        BASE_PATH + "actor/" + actor["id"].toString() + "/" + "profile";
+        _basePath + "/actor/" + actor["id"].toString() + "/" + "profile";
     QString outputFilename = basePath + "/profile.jpg";
 
     int tmdbId = reply->property("tmdbId").toInt();

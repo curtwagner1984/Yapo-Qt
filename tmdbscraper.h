@@ -5,12 +5,13 @@
 #include <QNetworkReply>
 #include "dbmanager.h"
 #include <QElapsedTimer>
+#include <QSettings>
 
 class TmdbScraper : public QObject
 {
     Q_OBJECT
 public:
-    explicit TmdbScraper(DbManager* dbManager, QObject *parent = 0);
+    explicit TmdbScraper(DbManager* dbManager,QSettings* setting, QObject *parent = 0);
     void setActorsToScrape (QList<QMap<QString, QVariant>> actorsToScrape);
 
     void startScrape();
@@ -20,6 +21,8 @@ private:
     QList<QStringList> actorsAliases;
     QMap<int,QMap<QString, QVariant>> updatedActors;
     DbManager* dbManager;
+    QSettings* setting;
+    QString _basePath;
     int getActorTmdbIdFromJson(QString jsonData, QMap<QString, QVariant> actor );
     QString tmdbImageBasePath = "http://image.tmdb.org/t/p/original";
     QNetworkAccessManager *networkManager;

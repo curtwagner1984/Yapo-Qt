@@ -18,6 +18,7 @@ import "qrc:/websiteView"
 import "qrc:/autoComplete"
 import "qrc:/treeFolderView"
 import "qrc:/taggerPopup"
+import "qrc:/homepage"
 
 import "qrc:/viewers"
 
@@ -39,7 +40,7 @@ ApplicationWindow {
     property alias mainStack: mainStack
 
     Component.onCompleted: {
-        mainStack.push(homepagePlaceholder, {
+        mainStack.push(homepageLoader, {
                            objectName: "Home View"
                        })
     }
@@ -52,6 +53,8 @@ ApplicationWindow {
             globalSearch.focus = true;
         }
     }
+
+
 
 
 
@@ -379,28 +382,33 @@ ApplicationWindow {
         }
     }
 
-    Component {
-        id: homepagePlaceholder
-        Item {
-
-            Rectangle {
-                id: homeRect
-                width: {
-                    Math.max((parent.width / 4), placeholdertext.width + 20)
-                }
-
-                height: parent.height / 4
-                anchors.centerIn: parent
-                color: Material.color(Material.Amber)
-            }
-            Text {
-                id: placeholdertext
-                text: "Homepage Placeholder"
-                anchors.centerIn: homeRect
-                font.pixelSize: homeRect.height / 3
-            }
-        }
+    Loader{
+        id:homepageLoader
+        source: "/homepage/Homepage.qml"
     }
+
+//    Component {
+//        id: homepagePlaceholder
+//        Item {
+
+//            Rectangle {
+//                id: homeRect
+//                width: {
+//                    Math.max((parent.width / 4), placeholdertext.width + 20)
+//                }
+
+//                height: parent.height / 4
+//                anchors.centerIn: parent
+//                color: Material.color(Material.Amber)
+//            }
+//            Text {
+//                id: placeholdertext
+//                text: "Homepage Placeholder"
+//                anchors.centerIn: homeRect
+//                font.pixelSize: homeRect.height / 3
+//            }
+//        }
+//    }
 
     Component{
         id:detailViewComponent

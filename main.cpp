@@ -23,6 +23,10 @@
 int main(int argc, char *argv[])
 {
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+    QCoreApplication::setOrganizationName("YapoSoft");
+    QCoreApplication::setOrganizationDomain("yaposoft.com");
+    QCoreApplication::setApplicationName("Yapo");
+
     QGuiApplication app(argc, argv);
 
 
@@ -54,7 +58,7 @@ int main(int argc, char *argv[])
 
 
     DbManager* dbManager = new DbManager();
-    dbManager->connectToDatabase("test.db"); // hardcoded db file, need to change to user defined db latter on.
+//    dbManager->connectToDatabase("test.db"); // hardcoded db file, need to change to user defined db latter on.
 
     QQmlApplicationEngine engine;
 

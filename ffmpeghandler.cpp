@@ -8,15 +8,25 @@
 #include <QProcess>
 #include <QScriptEngine>
 
-const QString FFPROBE_PATH = "D:/Webstorm/Yapo-Electron/app/bin/ffmpeg/ffprobe";
-const QString FFMPEG_PATH = "D:/Webstorm/Yapo-Electron/app/bin/ffmpeg/ffmpeg";
+//const QString _ffprobePath = "D:/Webstorm/Yapo-Electron/app/bin/ffmpeg/ffprobe";
+//const QString _ffmpegPath = "D:/Webstorm/Yapo-Electron/app/bin/ffmpeg/ffmpeg";
 
-const QString BASE_PATH = "D:/YAPOC++/";
+//const QString _basePath = "D:/YAPOC++/";
 
-static const int idealThreadCount = QThread::idealThreadCount();
-static int numberOfCurrentProcesses = 0;
+//static const int idealThreadCount = QThread::idealThreadCount();
+//static int numberOfCurrentProcesses = 0;
 
-FfmpegHandler::FfmpegHandler(QObject *parent) : QObject(parent) {}
+FfmpegHandler::FfmpegHandler(QSettings* settings, QObject *parent) : QObject(parent) {
+    this->settings = settings;
+
+    this->_basePath = settings->value("general/homepath").toString();
+    this->_ffmpegPath = settings->value("general/homepath").toString() + "/bin/ffmpeg";
+    this->_ffprobePath = settings->value("general/homepath").toString() + "/bin/ffprobe";
+
+    this->_idealThreadCount = QThread::idealThreadCount();
+    this->_numberOfCurrentProcesses = 0;
+
+}
 
 QMap<QString, QVariant> FfmpegHandler::ffprobeTest(
     QMap<QString, QVariant> scene) {
@@ -40,13 +50,13 @@ QMap<QString, QVariant> FfmpegHandler::ffprobeTest(
             << "-show_format"
             << "-show_streams" << filename;
 
-  QString command = FFPROBE_PATH + " -v 0 " + "-print_format json " +
+  QString command = _ffprobePath + " -v 0 " + "-print_format json " +
                     "-show_format " + "-show_streams" + '"' + filename + '"';
   qDebug() << "Command: " << command;
 
   QProcess *myProcess = new QProcess();
   myProcess->setProcessChannelMode(QProcess::MergedChannels);
-  myProcess->start(FFPROBE_PATH, arguments);
+  myProcess->start(_ffprobePath, arguments);
 
   if (!myProcess->waitForFinished()){
     qDebug() << "failed:" << myProcess->errorString();
@@ -122,7 +132,7 @@ QMap<QString, QVariant> FfmpegHandler::ffprobeTest(
 
   if (currentProbeScore > 25) {
     QString basePath =
-        BASE_PATH + "scene/" + updatedScene["id"].toString() + "/" + "screenshots";
+        _basePath + "/scene/" + updatedScene["id"].toString() + "/" + "screenshots";
     QString outputFilename = basePath + "/screenshot.jpg";
     int sceneLength = updatedScene["duration"].toInt();
     QString screenShotTime =
@@ -142,7 +152,7 @@ QMap<QString, QVariant> FfmpegHandler::ffprobeTest(
 
       QProcess *myProcess = new QProcess();
       myProcess->setProcessChannelMode(QProcess::MergedChannels);
-      myProcess->start(FFMPEG_PATH, arguments);
+      myProcess->start(_ffmpegPath, arguments);
 
       if (!myProcess->waitForFinished())
         qDebug() << "failed:" << myProcess->errorString();
@@ -168,7 +178,7 @@ QList<QMap<QString, QVariant>> FfmpegHandler::ffprobeScenes(
   int i = 0;
 
   while (i < scenesToProbeList->size() &&
-         numberOfCurrentProcesses <= idealThreadCount) {
+         _numberOfCurrentProcesses <= _idealThreadCount) {
     QMap<QString, QVariant> temp =
         FfmpegHandler::ffprobeTest(scenesToProbeList->at(i));
     listOfSceneUpdates.append(temp);

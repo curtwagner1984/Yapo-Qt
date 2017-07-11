@@ -78,4 +78,7 @@
         <file>ImageViewer.qml</file>
         <file>ImageViewerContentItem.qml</file>
     </qresource>
+    <qresource prefix="/homepage">
+        <file>Homepage.qml</file>
+    </qresource>
 </RCC>
