@@ -5,7 +5,7 @@ ThumbDelegateButton {
     id: ratingButton
     property string rating
 
-    iconPath: "file:///D:/YAPOC++/resource/icons/ic_favorite_black_24px.svg"
+    iconPath: constantClass.bUTTON_ICON_FAVORITE();
     iconText: {(rating === "") ? "?" : rating }
     backgroundColor: "transparent"
     backgroundHighlight: "white"

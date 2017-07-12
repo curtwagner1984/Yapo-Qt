@@ -15,8 +15,6 @@ Rectangle {
     property string currentRating
     property bool currentSelectedState
 
-    property string currentPlaceHolder : "file:///D:/Webstorm/Yapo-Electron/app/media/unknown/unknown scene_360.jpg"
-
     property bool isMultiSelectEnabled
 
 
@@ -34,7 +32,7 @@ Rectangle {
     Component.onCompleted: {
         if (thumbnailSource === "file:///")
         {
-            thumbnailSource =  "file:///D:/Webstorm/Yapo-Electron/app/media/unknown/unknown scene_360.jpg"
+            thumbnailSource =  constantClass.nO_IMAGE_LANDSCAPE_PLACEHOLDER();
         }
     }
 

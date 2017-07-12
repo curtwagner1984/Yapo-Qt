@@ -7,9 +7,13 @@ Item {
 
 
 
-    property string placeHolderTag: "file:///D:/YAPOC++/resource/unkown/placeHolderTag_64.jpg"
-    property string placeHolderSite: "file:///D:/YAPOC++/resource/unkown/placeHolderWebsite_64.jpg"
-    property string placeHolderActor: "file:///D:/Webstorm/Yapo-Electron/app/media/unknown/unknown female_256.jpg"
+//    property string placeHolderTag: "qrc:/placeholders/placeholders/placeHolderTag_64.jpg"
+//    property string placeHolderSite: "qrc:/placeholders/placeholders/placeHolderWebsite_64.jpg"
+//    property string placeHolderActor: "qrc:/placeholders/placeholders/unknown female_256.jpg"
+
+    property string placeHolderTag: constantClass.aUTOCOMPLETE_TAG_PLACEHOLDER()
+    property string placeHolderSite: constantClass.aUTOCOMPLETE_WEBSITE_PLACEHOLDER()
+    property string placeHolderActor: constantClass.aUTOCOMPLETE_ACTOR_PLACEHOLDER()
 
     focus: true
 

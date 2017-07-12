@@ -19,6 +19,7 @@
 #include "tagmodel.h"
 #include "websitemodel.h"
 #include "generalalias.h"
+#include "constants.h"
 
 int main(int argc, char *argv[])
 {
@@ -65,12 +66,14 @@ int main(int argc, char *argv[])
 
 
     QmlComm* qmlComm = new QmlComm(engine,dbManager);
+    Constants* constants = new Constants();
 
 
 
 
     engine.rootContext()->setContextProperty("dbManager", dbManager);
     engine.rootContext()->setContextProperty("qmlComm", qmlComm);
+    engine.rootContext()->setContextProperty("constantClass", constants);
 
 
 

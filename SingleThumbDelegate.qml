@@ -12,8 +12,8 @@ Item{
     property string imageSource: ""
     property string lableText: ""
     property string countInfoText: ""
-    property string placeholderActor: "file:///D:/Webstorm/Yapo-Electron/app/media/unknown/unknown female_256.jpg"
-    property string placeholderScene: "file:///D:/Webstorm/Yapo-Electron/app/media/unknown/unknown scene_360.jpg"
+    property string placeholderActor: constantClass.nO_IMAGE_PORTRAIT_PLACEHOLDER()
+    property string placeholderScene: constantClass.nO_IMAGE_LANDSCAPE_PLACEHOLDER()
     property string currentPlaceHolder: ""
 
 

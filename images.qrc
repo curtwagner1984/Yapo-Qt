@@ -1,0 +1,18 @@
+<RCC>
+    <qresource prefix="/icons">
+        <file>icons/close.svg</file>
+        <file>icons/ic_favorite_black_24px.svg</file>
+        <file>icons/ic_favorite_border_black_24px.svg</file>
+        <file>icons/ic_more_vert_black_24px.svg</file>
+        <file>icons/ic_play_arrow_black_24px.svg</file>
+    </qresource>
+    <qresource prefix="/placeholders">
+        <file>placeholders/placeHolderTag_64.jpg</file>
+        <file>placeholders/placeHolderWebsite_64.jpg</file>
+        <file>placeholders/unknown female.jpg</file>
+        <file>placeholders/unknown female_256.jpg</file>
+        <file>placeholders/unknown female_64.jpg</file>
+        <file>placeholders/unknown scene.jpg</file>
+        <file>placeholders/unknown scene_360.jpg</file>
+    </qresource>
+</RCC>

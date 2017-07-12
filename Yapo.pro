@@ -20,9 +20,11 @@ SOURCES += main.cpp \
     autocompletemodel.cpp \
     detailobject.cpp \
     treefolderitem.cpp \
-    treefoldermodel.cpp
+    treefoldermodel.cpp \
+    constants.cpp
 
-RESOURCES += qml.qrc
+RESOURCES += qml.qrc \
+    images.qrc
 
 # Additional import path used to resolve QML modules in Qt Creator's code model
 QML_IMPORT_PATH =
@@ -65,6 +67,7 @@ HEADERS += \
     autocompletemodel.h \
     detailobject.h \
     treefolderitem.h \
-    treefoldermodel.h
+    treefoldermodel.h \
+    constants.h
 
 DISTFILES +=

@@ -1,10 +1,11 @@
 import QtQuick 2.8
 import QtQuick.Controls.Material 2.1
 
+
 ThumbDelegateButton {
     id: playButton
 
-    iconPath: "file:///D:/YAPOC++/resource/icons/ic_play_arrow_black_24px.svg"
+    iconPath: constantClass.bUTTON_ICON_PLAY()
     iconText: ""
     backgroundColor: "transparent"
     backgroundHighlight: "white"
