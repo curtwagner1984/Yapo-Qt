@@ -33,15 +33,6 @@ public:
     void connectToDatabase(const QString path);
     void createTables();
 
-//    Search Functions (Not in use for now type specific SQL quries live in thier coresponding models.)
-//    QList<QMap<QString, QVariant>> actorSearch(const QString searchString);
-//    QList<QMap<QString, QVariant>> sceneSearch(const QString searchString);
-//    QList<QMap<QString, QVariant>> pictureSearch(const QString searchString);
-
-
-//    For now used in variuse classes like ffmpeg handelr and autotagger. Specific SQL needs to be moved to
-//    each class's specific query, dbmanager should only be used with
-//    executeArbitrarySqlWithReturnValue and executeArbitrarySqlWithoutReturnValue
     QList<QMap<QString, QVariant>> mediaFolderSearch(const QString searchString);
 
     QList<QMap<QString, QVariant>> getScenesBeforeFFprobe();

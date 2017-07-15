@@ -6,7 +6,7 @@
 #include <QList>
 #include <QHash>
 
-#include "db_models.h"
+
 #include "dbmanager.h"
 #include "basiclistmodel.h"
 

@@ -30,33 +30,11 @@
         <file>ThumbPicture.qml</file>
         <file>GeneralThumb.qml</file>
     </qresource>
-    <qresource prefix="/actorView">
-        <file>ActorView.qml</file>
-        <file>ActorDetailView.qml</file>
-    </qresource>
-    <qresource prefix="/sceneView">
-        <file>SceneView.qml</file>
-    </qresource>
-    <qresource prefix="/pictureView">
-        <file>PictureView.qml</file>
-    </qresource>
-    <qresource prefix="/tagView">
-        <file>TagView.qml</file>
-        <file>TagDetailView.qml</file>
-    </qresource>
-    <qresource prefix="/websiteView">
-        <file>WebsiteView.qml</file>
-        <file>WebsiteDetailView.qml</file>
-    </qresource>
     <qresource prefix="/autoComplete">
-        <file>AutoCompletePopup.qml</file>
         <file>AutoCompletePopupTwo.qml</file>
         <file>AutoCompleteContentItem.qml</file>
         <file>AutoCompleteListViewDelegate.qml</file>
         <file>AutoCompleteWithTextBox.qml</file>
-    </qresource>
-    <qresource prefix="/treeFolderView">
-        <file>TreeFolderView.qml</file>
     </qresource>
     <qresource prefix="/taggerPopup">
         <file>TaggerPopup.qml</file>

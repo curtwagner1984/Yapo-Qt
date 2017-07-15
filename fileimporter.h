@@ -6,10 +6,11 @@
 #include <QQueue>
 #include <QString>
 #include "dbmanager.h"
-#include "db_models.h"
 #include <QMutex>
 #include <QSettings>
 #include "ffmpeghandler.h"
+
+#include <QMap>
 
 class FileImporter  : public QThread
 {
@@ -20,8 +21,8 @@ public:
     void run() override;
 
 private:
-    void walkPath(MediaFolder* mediaFolderToWalk);
-    QQueue <MediaFolder*> mediaFoldersQueue;
+    void walkPath(QMap<QString, QVariant> mediaFolderToWalk);
+    QQueue <QMap<QString, QVariant>> mediaFoldersQueue;
     DbManager* dbManager;
     QSemaphore* semaphore;
     QSettings* settings;

@@ -10,13 +10,7 @@ import Qt.labs.settings 1.0
 
 import "qrc:/settings"
 import "qrc:/thumbview"
-import "qrc:/actorView"
-import "qrc:/sceneView"
-import "qrc:/pictureView"
-import "qrc:/tagView"
-import "qrc:/websiteView"
 import "qrc:/autoComplete"
-import "qrc:/treeFolderView"
 import "qrc:/taggerPopup"
 import "qrc:/homepage"
 

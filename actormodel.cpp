@@ -183,29 +183,11 @@ void ActorModel::getPictureActorsForTagger(const QString pictureId)
     this->baseSearch();
 }
 
-//QVariant ActorModel::directData(QString roleName, int index)
-//{
-//    QByteArray temp = roleName.toLatin1();
-//    QHash<int, QByteArray> roles = roleNames();
-//    int currentRole = roles.key(temp);
-//    QModelIndex ix = this->index(index);
-//    QVariant ans = this->data(ix,currentRole);
-//    return ans;
 
-
-//}
 
 void ActorModel::setOrder(QString orderBy, QString orderDirection)
 {
-//    QString orderByStmt = "AND %1 IS NOT NULL ORDER BY %1 %2";
-//    orderByStmt = orderByStmt.arg(orderBy,orderDirection);
 
-//    if (this->baseSqlOrder != orderByStmt){
-//        this->baseSqlOrder = orderByStmt;
-//        this->beginResetModel();
-//        this->baseSearch();
-//        this->endResetModel();
-//    }
     BasicListModel::setOrder(orderBy,orderDirection);
 
 

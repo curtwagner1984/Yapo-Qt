@@ -11,29 +11,14 @@
 
 #include <chrono>
 #include <thread>
-//QmlComm::QmlComm(DbManager* dbManager,QObject *parent) : QObject(parent)
+
 
 DbManager::DbManager()
 {
 //    this->echo = true;
     qDebug() << "DB MANAGER DEFAULT CONSTRUCTOR";
 
-//    this->m_db = QSqlDatabase::addDatabase("QSQLITE");
-//    //       this->m_db.setDatabaseName(path);
-//    this->m_db.setDatabaseName("test.db");
 
-//    if (!this->m_db.open()) {
-//      qDebug() << "Error: connection with database fail";
-//    } else {
-//      qDebug() << "Database: connection ok";
-//      this->m_db.transaction();
-//      this->createTables();
-//      if (this->m_db.commit()){
-//          qDebug() << "Tables created ...";
-//      }else{
-//          qDebug() << "Error while trying to create tables: " << this->m_db.lastError();
-//      }
-//    }
 
 }
 
@@ -306,37 +291,7 @@ void DbManager::createTables() {
 }
 
 
-//QList<QMap<QString, QVariant>> DbManager::actorSearch(const QString searchString)
-//{
 
-//  QString escapedSearchString = this->escapeSqlChars(searchString);
-//  QString stmt = "SELECT *, "
-//                 "'actor' as type, "
-//                 "(SELECT COUNT(*) FROM Scene_Actor WHERE Scene_Actor.actor_id = Actor.id) as NumberOfScenes, "
-//                 "(SELECT COUNT(*) FROM Picture_Actor WHERE Picture_Actor.actor_id = Actor.id) as NumberOfPictures "
-//                 "FROM Actor WHERE Actor.name LIKE '%" + escapedSearchString  +"%'";
-
-//  return this->executeFetchQueryWrapper(stmt,"Actor Search");
-//}
-
-//QList<QMap<QString, QVariant> > DbManager::sceneSearch(const QString searchString)
-//{
-
-//    QString escapedSearchString = this->escapeSqlChars(searchString);
-//    QString stmt = "SELECT * FROM Scene WHERE Scene.path_to_file LIKE '%" + escapedSearchString  +"%' ";
-
-//    return this->executeFetchQueryWrapper(stmt,"Scene Search");
-
-//}
-
-//QList<QMap<QString, QVariant> > DbManager::pictureSearch(const QString searchString)
-//{
-//    QString escapedSearchString = this->escapeSqlChars(searchString);
-//    QString stmt = "SELECT * FROM Picture WHERE Picture.path_to_file LIKE '%" + escapedSearchString  +"%' ";
-
-//    return this->executeFetchQueryWrapper(stmt,"Picture Search");
-
-//}
 
 QList<QMap<QString, QVariant>> DbManager::mediaFolderSearch(const QString searchString)
 {
@@ -418,12 +373,6 @@ bool DbManager::executeArbitrarySqlWithoutReturnValueForTransaction(QSqlQuery qu
     }
 
 
-//    QMapIterator<QString, QVariant> i(query.boundValues());
-//          while (i.hasNext()) {
-//              i.next();
-//              qDebug() << i.key().toUtf8().data() << ": "
-//                   << i.value().toString().toUtf8().data() << endl;
-//          }
 
     QList<QVariant> list = query.boundValues().values();
           for (int i = 0; i < list.size(); ++i)
@@ -482,12 +431,7 @@ bool DbManager::commitTransaction()
         return success;
 }
 
-//QSqlQuery DbManager::getNewScenes()
-//{
-//    QString stmt = "select * from Scene where (Scene.thumbnail is NULL and Scene.date_last_lookup is NULL)";
-//    this->executeQuery(stmt,"Get New Scenes");
 
-//}
 
 bool DbManager::addActor(QString actorName, bool isMainstream) {
   bool success = false;
@@ -884,10 +828,7 @@ QString DbManager::generateBulkInsertQueryString(QList<QStringList> bulkInsertAr
 
 QString DbManager::generateUpdateQueryString(QMap<QString, QVariant> updatedObject)
 {
-    //  UPDATE employees
-    //  SET lastname = 'Smith'
-    //  WHERE
-    //   employeeid = 3;
+
     QMapIterator<QString, QVariant> i(updatedObject);
     bool first = true;
     QString csvUpdateStatment = "";

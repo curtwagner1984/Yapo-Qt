@@ -17,20 +17,24 @@ FileImporter::FileImporter(DbManager* dbManager, QMutex* mutex, QSettings* setti
 
 void FileImporter::addMediaFolderToQueue(QString path, bool isVideo,
                                          bool isPicture) {
-  MediaFolder* tempMediaFolder = new MediaFolder();
-  tempMediaFolder->pathToFile = path;
-  tempMediaFolder->isVideo = isVideo;
-  tempMediaFolder->isPicture = isPicture;
+  QMap<QString, QVariant> tempMediaFolder;
+  tempMediaFolder["path_to_dir"] = path;
+  tempMediaFolder["is_video"] = isVideo;
+  tempMediaFolder["is_picture"] = isPicture;
 
   this->mediaFoldersQueue.enqueue(tempMediaFolder);
 }
 
-void FileImporter::walkPath(MediaFolder* mediaFolderToWalk) {
+void FileImporter::walkPath(QMap<QString, QVariant> mediaFolderToWalk) {
   QList<QStringList> videosToAdd;
   QList<QStringList> picturesToAdd;
   QList<QStringList> treeFoldersToAdd;
 
-  QDirIterator it(mediaFolderToWalk->pathToFile, QDir::Files,
+  QString pathToWalk = mediaFolderToWalk["path_to_dir"].toString();
+  bool isVideo = mediaFolderToWalk["is_video"].toBool();
+  bool isPicture = mediaFolderToWalk["is_picture"].toBool();
+
+  QDirIterator it(pathToWalk, QDir::Files,
                   QDirIterator::Subdirectories);
   while (it.hasNext()) {
     QString fileToCheck = it.next();
@@ -41,7 +45,7 @@ void FileImporter::walkPath(MediaFolder* mediaFolderToWalk) {
     QString absPath = fileInfo.absolutePath();
     QString pathLevel = QString::number(absPath.count('/'));
     bool somethingIsAdded = false;
-    if (mediaFolderToWalk->isVideo &&
+    if (isVideo &&
         this->videoExtentions.contains(extention)) {
       QStringList temp;
       temp.append(baseName);
@@ -50,7 +54,7 @@ void FileImporter::walkPath(MediaFolder* mediaFolderToWalk) {
       somethingIsAdded = true;
       //      FfmpegHandler::ffprobeTest(fileToCheck);
       qDebug() << "This is a *VIDEO*: " << fileToCheck;
-    } else if (mediaFolderToWalk->isPicture &&
+    } else if (isPicture &&
                this->pictureExtentions.contains(extention)) {
       QStringList temp;
       temp.append(baseName);
@@ -111,12 +115,11 @@ void FileImporter::run() {
   //  this->mutex->lock();
   while (!this->mediaFoldersQueue.isEmpty()) {
     //    this->mutex->unlock();
-    MediaFolder* currentMediaFolder = this->mediaFoldersQueue.dequeue();
-    if (currentMediaFolder->pathToFile == "poison") {
+    QMap<QString, QVariant> currentMediaFolder = this->mediaFoldersQueue.dequeue();
+    if (currentMediaFolder["path_to_dir"].toString() == "poison") {
       break;
     }
-    this->walkPath(currentMediaFolder);
-    delete currentMediaFolder;
+    this->walkPath(currentMediaFolder);    
   }
   qDebug() << "File importer thread exiting ...";
 }

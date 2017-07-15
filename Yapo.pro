@@ -19,8 +19,6 @@ SOURCES += main.cpp \
     generalalias.cpp \
     autocompletemodel.cpp \
     detailobject.cpp \
-    treefolderitem.cpp \
-    treefoldermodel.cpp \
     constants.cpp
 
 RESOURCES += qml.qrc \
@@ -52,7 +50,6 @@ HEADERS += \
     qmlcomm.h \
     dbmanager.h \
     mediafoldermodel.h \
-    db_models.h \
     fileimporter.h \
     basiclistmodel.h \
     ffmpeghandler.h \
@@ -66,8 +63,6 @@ HEADERS += \
     generalalias.h \
     autocompletemodel.h \
     detailobject.h \
-    treefolderitem.h \
-    treefoldermodel.h \
     constants.h
 
 DISTFILES +=

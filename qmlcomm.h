@@ -21,7 +21,7 @@
 #include "tagmodel.h"
 #include "websitemodel.h"
 
-#include "treefoldermodel.h"
+
 
 #include "generalalias.h"
 #include "autocompletemodel.h"
@@ -99,9 +99,9 @@ private:
     TagModel* tagModel;
     WebsiteModel* websiteModel;
 
-    TreeFolderModel* treeFolderModel;
 
-    DetailObject* detailObject;
+
+//    DetailObject* detailObject;
 
     GeneralAlias* generalAlias;
     AutoCompleteModel* autoCompleteModel;
