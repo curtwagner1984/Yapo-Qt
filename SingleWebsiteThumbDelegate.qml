@@ -41,7 +41,7 @@ Item {
 
         onThumbLeftDoubleClicked:
         {
-            mainAppPage.changeView("Website Detail View",thumbView.currentModel,index)
+            mainAppPage.changeView("Website Detail View",thumbView.currentModel,index,id)
         }
 
         onThumbLeftClicked:

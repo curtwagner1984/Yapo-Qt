@@ -7,12 +7,29 @@
 #define BASICLISTMODEL_H
 
 #include <QAbstractListModel>
+#include <QFuture>
+#include <QFutureWatcher>
 #include "dbmanager.h"
 
 class BasicListModel : public QAbstractListModel {
   Q_OBJECT
+  Q_PROPERTY(bool waitingForDbResponse READ waitingForDbResponse NOTIFY waitingForDbResponseChanged)
+
+ public slots:
+    void dbActionCompletedSlot(QString value);
+    void fetchedMore();
+    void baseSearchItemCountReturns();
+    void baseSearchQueryReturns();
+
+ signals:
+    void baseSearchFinished();
+    void waitingForDbResponseChanged();
+
+
  public:
   BasicListModel();
+
+  bool waitingForDbResponse();
 
   Q_INVOKABLE void init(DbManager *dbManager);
 
@@ -58,12 +75,18 @@ class BasicListModel : public QAbstractListModel {
   QList<QMap<QString, QVariant>> itemCount;
   QList<int> randomOrderList;
 
+  BasicListModel *super();
+
   QString sqlStmt();
   QString countSqlStmt();
   QString escaleSqlChars(QString unescapedString);
-  QString MODEL_TYPE;
+  QString MODEL_TYPE;    
   void generateSqlLimit();
   void baseSearch();
+
+
+
+
   void noLimitSearch();
 
   void setOrder(QString orderBy, QString orderDirection);
@@ -75,10 +98,33 @@ class BasicListModel : public QAbstractListModel {
   QString baseSqlOrder = "";
   QString baseSqlLimit = "";
 
+
+//  Qt Concurrent stuff
+  QFuture<QList<QMap<QString, QVariant>>> fetchMoreFuture;
+  QFutureWatcher <void> fetchMoreFutureWatcher;
+
+  QFuture<QList<QMap<QString, QVariant>>> itemCountFuture;
+  QFutureWatcher <void> itemCountFutureWatcher;
+
+  QFuture<QList<QMap<QString, QVariant>>> baseSearchFuture;
+  QFutureWatcher <void> baseSearchFutureWatcher;
+
+  QModelIndex currentParent;
+
+
+
   int count = 0;
-  int NUMBER_OF_ITEMS_PER_PAGE = 30;
+  int NUMBER_OF_ITEMS_PER_PAGE = 100;
   int currentPageNumber = 0;
   bool isAutoComplete = false;
+
+private:
+
+  void startWaitingForDbResponse();
+  void stopWaitingForDbResponse();
+
+  bool m_waitingForDbResponse = false;
+
 };
 
 #endif  // BASICLISTMODEL_H

@@ -42,7 +42,7 @@ Item {
 
         onThumbLeftDoubleClicked:
         {
-            mainAppPage.changeView("Tag Detail View",thumbView.currentModel,index)
+            mainAppPage.changeView("Tag Detail View",thumbView.currentModel,index,id)
         }
 
         onThumbLeftClicked:

@@ -14,9 +14,11 @@ class AutoCompleteModel : public BasicListModel {
 
   Q_INVOKABLE void search(const QString searchString, QString searchType);
 
-
-
   QHash<int, QByteArray> roleNames() const;
+
+public slots:
+
+  void searchReturned();
 
  private:
   QString currentSearchString = "";
@@ -25,6 +27,12 @@ class AutoCompleteModel : public BasicListModel {
   void generalMultiSearch(const QString searchString);
 
   int getIndexOfSingleItemPerSearchTerm(QString searchTerm);
+
+  bool waitingForGenearlSearchToReturn = false;
+  bool waitingForTagSearchToReturn = false;
+  bool waitingForGeneralMultiSearchToReturn = false;
+
+  QStringList generalMultisearchTempList;
 
   enum ActorRoles {
     IdRole = Qt::UserRole + 1,
@@ -39,7 +47,6 @@ class AutoCompleteModel : public BasicListModel {
 
   };
 
- private:
   QString SEARCH_SELECT = "SELECT *";
 
   QString SEARCH_FROM =

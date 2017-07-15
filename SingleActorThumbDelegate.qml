@@ -32,7 +32,7 @@ Item {
 
         onThumbLeftDoubleClicked:
         {
-            mainAppPage.changeView("Actor Detail View",thumbView.currentModel,index)
+            mainAppPage.changeView("Actor Detail View",thumbView.currentModel,index,id)
         }
 
         onThumbLeftClicked:

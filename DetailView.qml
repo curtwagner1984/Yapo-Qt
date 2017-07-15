@@ -6,6 +6,7 @@ Item {
 
     property var currentModel
     property int currentIndex
+    property int currentId
     property string mainContentState
 
 
@@ -35,9 +36,10 @@ Item {
         mainContentLoader.sourceComponent = undefined
     }
 
-    function init(curModel, curIndex, contentState){
+    function init(curModel, curIndex, contentState, curId){
         currentModel = curModel
         currentIndex = curIndex
+        currentId = curId
         mainContentState = contentState
         sideBarContentLoader.sourceComponent = sidebarContent
         mainContentLoader.sourceComponent = mainContent

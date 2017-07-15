@@ -29,8 +29,20 @@ Item {
             onIndexChanged: {
                 detailView.changeIndex(newIndex)
             }
+        }
 
-
+        Connections{
+            target: detailView.currentModel
+            onBaseSearchFinished :{
+                console.log("Detail view sidebar: deatilView.currentModel onBaseSearchFinished triggered")
+                /*
+                This might seem redunant but when using a global search, detailView.currentModel doesn't have the time
+                to finish it's search before this element is displayed, therefore it doesn't have the information we want.
+                So with this slot we update the displayed information when detailView.currentModel finishes it's search.
+                */
+                thumbAndName.currentModel = detailView.currentModel
+                thumbAndName.currentIndex = detailView.currentIndex
+            }
         }
     }
 

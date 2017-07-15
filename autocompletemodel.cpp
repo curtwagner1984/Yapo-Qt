@@ -20,6 +20,11 @@ AutoCompleteModel::AutoCompleteModel()
 
     this->baseSqlLimit = SEARCH_LIMIT;
 
+
+
+    QObject::connect(this->super(), &BasicListModel::baseSearchFinished, this,
+                     &AutoCompleteModel::searchReturned);
+
 }
 
 QVariant AutoCompleteModel::data(const QModelIndex &index, int role) const
@@ -112,19 +117,74 @@ void AutoCompleteModel::tagSearch(const QString searchString)
 //  Resets count and gets number of items and executes search
     this->currentSearchString = searchString;
     this->baseSearch();
-
-    QModelIndex a = QModelIndex();
-    this->beginInsertRows(a,this->items.size(), this->items.size());
+    this->waitingForTagSearchToReturn = true;
 
 
-    QMap<QString,QVariant> newTag;
-    newTag["name"] = this->currentSearchString;
-    newTag["TableName"] = QString("New Tag");
-    this->items.append(newTag);
+
+}
+
+void AutoCompleteModel::searchReturned()
+{
+    if(waitingForGenearlSearchToReturn)
+
+    {
+        QModelIndex a = QModelIndex();
+        this->beginInsertRows(a,this->items.size(), this->items.size() + 2 );
+
+        QString newName = this->currentSearchString.replace("%"," ");
+        newName = newName.replace("_",".");
+
+        QMap<QString,QVariant> newActor;
+        newActor["name"] = newName;
+        newActor["TableName"] = QString("New Actor");
+        this->items.append(newActor);
+
+        QMap<QString,QVariant> newTag;
+        newTag["name"] = newName;
+        newTag["TableName"] = QString("New Tag");
+        this->items.append(newTag);
+
+        QMap<QString,QVariant> newWebsite;
+        newWebsite["name"] = newName;
+        newWebsite["TableName"] = QString("New Website");
+        this->items.append(newWebsite);
+
+        this->endInsertRows();
+
+    }else if (waitingForTagSearchToReturn)
+    {
+
+        QModelIndex a = QModelIndex();
+        this->beginInsertRows(a,this->items.size(), this->items.size());
 
 
-    this->endInsertRows();
+        QMap<QString,QVariant> newTag;
+        newTag["name"] = this->currentSearchString;
+        newTag["TableName"] = QString("New Tag");
+        this->items.append(newTag);
 
+
+        this->endInsertRows();
+
+    }else if (waitingForGeneralMultiSearchToReturn)
+    {
+        for (int i = 0 ; i < generalMultisearchTempList.length() ; i++)
+        {
+            int singleItemIndex = getIndexOfSingleItemPerSearchTerm(generalMultisearchTempList[i]);
+            if (singleItemIndex != -1)
+            {
+
+                QModelIndex ix = this->index(singleItemIndex);
+                this->setData(ix,true,SelectedRole);
+                qDebug() << "Selected : " << this->items[singleItemIndex]["name"].toString();
+            }
+        }
+
+    }
+
+    this->waitingForGenearlSearchToReturn = false;
+    this->waitingForGeneralMultiSearchToReturn = false;
+    this->waitingForTagSearchToReturn = false;
 }
 
 void AutoCompleteModel::generalSearch(const QString searchString)
@@ -137,42 +197,23 @@ void AutoCompleteModel::generalSearch(const QString searchString)
 //  Resets count and gets number of items and executes search
     this->currentSearchString = escapedSearchString;
     this->baseSearch();
+    this->waitingForGenearlSearchToReturn = true;
 
-    QModelIndex a = QModelIndex();
-    this->beginInsertRows(a,this->items.size(), this->items.size() + 2 );
 
-    QString newName = this->currentSearchString.replace("%"," ");
-    newName = newName.replace("_",".");
-
-    QMap<QString,QVariant> newActor;
-    newActor["name"] = newName;
-    newActor["TableName"] = QString("New Actor");
-    this->items.append(newActor);
-
-    QMap<QString,QVariant> newTag;
-    newTag["name"] = newName;
-    newTag["TableName"] = QString("New Tag");
-    this->items.append(newTag);
-
-    QMap<QString,QVariant> newWebsite;
-    newWebsite["name"] = newName;
-    newWebsite["TableName"] = QString("New Website");
-    this->items.append(newWebsite);
-
-    this->endInsertRows();
 
 }
 
 void AutoCompleteModel::generalMultiSearch(const QString searchString)
 {
-    QStringList tempList = searchString.split(",");
+    generalMultisearchTempList.clear();
+    generalMultisearchTempList = searchString.split(",");
     QString generatedWhereTemplate = " name LIKE '%%1%' ";
     QString generatedWhereHeader = " WHERE ";
     QString generatedWhereStmt = "";
     bool first = true;
-    for (int i = 0 ; i < tempList.length(); i ++)
+    for (int i = 0 ; i < generalMultisearchTempList.length(); i ++)
     {
-        QString tempString = tempList[i];
+        QString tempString = generalMultisearchTempList[i];
         tempString = tempString.simplified();
         QString escapedSearchString = this->escaleSqlChars(tempString);
 
@@ -195,21 +236,7 @@ void AutoCompleteModel::generalMultiSearch(const QString searchString)
 //  Resets count and gets number of items and executes search
     this->currentSearchString = searchString;
     this->baseSearch();
-
-
-
-    for (int i = 0 ; i < tempList.length() ; i++)
-    {
-        int singleItemIndex = getIndexOfSingleItemPerSearchTerm(tempList[i]);
-        if (singleItemIndex != -1)
-        {
-
-            QModelIndex ix = this->index(singleItemIndex);
-            this->setData(ix,true,SelectedRole);
-            qDebug() << "Selected : " << this->items[singleItemIndex]["name"].toString();
-        }
-    }
-
+    this->waitingForGeneralMultiSearchToReturn = true;
 
 
 

@@ -3,126 +3,97 @@ import QtQuick.Controls 2.1
 import QtQuick.Layouts 1.3
 
 Item {
-    id:mainContent
+    id: mainContent
 
     property var tabBarModel
-
-//    property int sceneCount
-//    property int pictureCount
-//    property int tagCount
-
     property var views: []
-
     property var counts: []
 
-
-
-    function destroyViews (){
-        for (var i = 0 ; i < views.length ; i++){
-            views[i].destroy();
+    function destroyViews() {
+        for (var i = 0; i < views.length; i++) {
+            views[i].destroy()
         }
     }
 
-
     Component.onCompleted: {
 
-        var currentItemId = detailView.currentModel.directData("id", detailView.currentIndex)
+        var currentItemId = detailView.currentId
 
-        if (state === "Actor"){
+        if (state === "Actor") {
 
             var currentView = mainAppPage.createThumbView("Scene")
             currentView.currentModel.getActorScenes(currentItemId)
 
-            views.push(currentView);
-
-
+            views.push(currentView)
 
             var pictureView = mainAppPage.createThumbView("Picture")
             pictureView.currentModel.getActorPictures(currentItemId)
-            views.push(pictureView);
-
-
+            views.push(pictureView)
 
             var tagView = mainAppPage.createThumbView("Tag")
             tagView.currentModel.getActorTags(currentItemId)
-            views.push(tagView);
-
-
-
-        }else if (state === "Tag"){
+            views.push(tagView)
+        } else if (state === "Tag") {
 
             var sceneView = mainAppPage.createThumbView("Scene")
             sceneView.currentModel.getTagScenes(currentItemId)
 
-            views.push(sceneView);
+            views.push(sceneView)
 
             var pictureView = mainAppPage.createThumbView("Picture")
             pictureView.currentModel.getTagPictures(currentItemId)
 
-            views.push(pictureView);
+            views.push(pictureView)
 
             var actorView = mainAppPage.createThumbView("Actor")
             actorView.currentModel.getTagActors(currentItemId)
 
-            views.push(actorView);
-
+            views.push(actorView)
 
             var websiteView = mainAppPage.createThumbView("Website")
             websiteView.currentModel.getTagWebsites(currentItemId)
 
-            views.push(websiteView);
-        }else if (state === "Website"){
+            views.push(websiteView)
+        } else if (state === "Website") {
 
             var sceneView = mainAppPage.createThumbView("Scene")
             sceneView.currentModel.getWebsiteScenes(currentItemId)
 
-            views.push(sceneView);
+            views.push(sceneView)
 
             var pictureView = mainAppPage.createThumbView("Picture")
             pictureView.currentModel.getWebsitePictures(currentItemId)
 
-            views.push(pictureView);
+            views.push(pictureView)
 
             var tagView = mainAppPage.createThumbView("Tag")
             tagView.currentModel.getWebsiteTags(currentItemId)
 
-            views.push(tagView);
-
-
-
-        }else if (state === "Scene"){
+            views.push(tagView)
+        } else if (state === "Scene") {
 
             var actorView = mainAppPage.createThumbView("Actor")
             actorView.currentModel.getSceneActorsForTagger(currentItemId)
 
-            views.push(actorView);
+            views.push(actorView)
 
             var tagView = mainAppPage.createThumbView("Tag")
             tagView.currentModel.getSceneTagsForTagger(currentItemId)
 
-            views.push(tagView);
+            views.push(tagView)
 
             var websiteView = mainAppPage.createThumbView("Website")
             websiteView.currentModel.getSceneWebsitesForTagger(currentItemId)
 
-            views.push(websiteView);
-
-
-
+            views.push(websiteView)
         }
-
-
 
         detailStackView.push(views[0])
     }
 
-
-
-
-    function getCount(countIndex){
-        return counts[countIndex];
+    function getCount(countIndex) {
+        return counts[countIndex]
     }
-
 
     TabBar {
         id: tabBar
@@ -137,29 +108,22 @@ Item {
                 text: modelData
                 width: Math.max(100, tabBarModel.width / 5)
                 onClicked: {
-                    console.log("Clicked tab button : " + modelData + " index: " + index )
-                    if (index !== tabBar.currentTabIndex){
-                        changePage(index);
-                        tabBar.currentTabIndex = index;
+                    console.log("Clicked tab button : " + modelData + " index: " + index)
+                    if (index !== tabBar.currentTabIndex) {
+                        changePage(index)
+                        tabBar.currentTabIndex = index
                     }
-
-
-
                 }
             }
         }
     }
 
-    function changePage(ixToChangeTo){
+    function changePage(ixToChangeTo) {
         detailStackView.push(views[ixToChangeTo])
-
     }
 
-
-
-
-    StackView{
-        id:detailStackView
+    StackView {
+        id: detailStackView
         anchors.top: tabBar.bottom
         anchors.left: parent.left
         anchors.right: parent.right
@@ -170,52 +134,59 @@ Item {
         onCurrentItemChanged: {
             console.log("detailStackView current item changed")
         }
-
-
     }
 
-
-    states: [State {
-        name: "Actor"
-        PropertyChanges {
-            target: mainContent
-            tabBarModel: ["Scenes (" + detailView.currentModel.directData("numberOfScenes", detailView.currentIndex) + ")" ,
-                        "Pictures (" + detailView.currentModel.directData("numberOfPictures", detailView.currentIndex) + ")",
-                        "Tags (" + detailView.currentModel.directData("numberOfTags", detailView.currentIndex) + ")"]
-
-        }
-    },State {
+    states: [
+        State {
+            name: "Actor"
+            PropertyChanges {
+                target: mainContent
+                tabBarModel: ["Scenes (" + detailView.currentModel.directData(
+                        "numberOfScenes", detailView.currentIndex)
+                    + ")", "Pictures (" + detailView.currentModel.directData(
+                        "numberOfPictures", detailView.currentIndex)
+                    + ")", "Tags (" + detailView.currentModel.directData(
+                        "numberOfTags", detailView.currentIndex) + ")"]
+            }
+        },
+        State {
             name: "Tag"
             PropertyChanges {
                 target: mainContent
-                tabBarModel: ["Scenes (" + detailView.currentModel.directData("numberOfScenes", detailView.currentIndex) + ")" ,
-                    "Pictures (" + detailView.currentModel.directData("numberOfPictures", detailView.currentIndex) + ")",
-                    "Actors (" + detailView.currentModel.directData("numberOfActors", detailView.currentIndex) + ")",
-                    "Websites (" + detailView.currentModel.directData("numberOfWebsites", detailView.currentIndex) + ")"]
-
+                tabBarModel: ["Scenes ("
+                    + detailView.currentModel.directData("numberOfScenes",
+                                                         detailView.currentIndex) + ")", "Pictures ("
+                    + detailView.currentModel.directData("numberOfPictures",
+                                                         detailView.currentIndex) + ")", "Actors ("
+                    + detailView.currentModel.directData("numberOfActors",
+                                                         detailView.currentIndex) + ")", "Websites ("
+                    + detailView.currentModel.directData("numberOfWebsites",
+                                                         detailView.currentIndex) + ")"]
             }
-        },State {
+        },
+        State {
             name: "Website"
             PropertyChanges {
                 target: mainContent
-                tabBarModel: ["Scenes (" + detailView.currentModel.directData("numberOfScenes", detailView.currentIndex) + ")" ,
-                    "Pictures (" + detailView.currentModel.directData("numberOfPictures", detailView.currentIndex) + ")",
-                    "Tags (" + detailView.currentModel.directData("numberOfTags", detailView.currentIndex) + ")"]
-
+                tabBarModel: ["Scenes (" + detailView.currentModel.directData(
+                        "numberOfScenes", detailView.currentIndex)
+                    + ")", "Pictures (" + detailView.currentModel.directData(
+                        "numberOfPictures", detailView.currentIndex)
+                    + ")", "Tags (" + detailView.currentModel.directData(
+                        "numberOfTags", detailView.currentIndex) + ")"]
             }
-        },State {
+        },
+        State {
             name: "Scene"
             PropertyChanges {
                 target: mainContent
-                tabBarModel: ["Actors (" + detailView.currentModel.directData("numberOfScenes", detailView.currentIndex) + ")" ,
-                    "Tags (" + detailView.currentModel.directData("numberOfPictures", detailView.currentIndex) + ")",
-                    "Website (" + detailView.currentModel.directData("numberOfTags", detailView.currentIndex) + ")"]
-
+                tabBarModel: ["Actors (" + detailView.currentModel.directData(
+                        "numberOfScenes", detailView.currentIndex)
+                    + ")", "Tags (" + detailView.currentModel.directData(
+                        "numberOfPictures", detailView.currentIndex)
+                    + ")", "Website (" + detailView.currentModel.directData(
+                        "numberOfTags", detailView.currentIndex) + ")"]
             }
         }
-
     ]
-
-
-
 }

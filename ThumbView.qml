@@ -15,6 +15,12 @@ Item {
         actorModel.search(searchText)
     }
 
+    BusyIndicator {
+        anchors.centerIn: parent
+        running: currentModel.waitingForDbResponse === true
+        z:100
+    }
+
 
 
     property int portraitCellWidth: {
@@ -92,7 +98,7 @@ Item {
 
         RatingPopup{
             id:ratingPopup
-            iconPath: "file:///D:/YAPOC++/resource/icons/ic_favorite_black_24px.svg"
+            iconPath: constantClass.bUTTON_ICON_FAVORITE()
 
         }
 

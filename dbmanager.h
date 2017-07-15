@@ -12,23 +12,36 @@
 #include <QSqlQuery>
 #include <QStringList>
 #include <QObject>
+#include <QQueue>
+#include <QThread>
+#include <QMutex>
 
 
-class DbManager: public QObject
+
+
+class DbManager: public QThread
 {
     Q_OBJECT
 
+signals:
+    void queryCompleted(QString value);
+
 public:
-    DbManager(QObject *parent = 0);
-    DbManager(const QString& path, QObject *parent = 0);
+    DbManager();
+    DbManager(const QString& path);
 
     void connectToDatabase(const QString path);
     void createTables();
 
-//    Search Functions
-    QList<QMap<QString, QVariant>> actorSearch(const QString searchString);
-    QList<QMap<QString, QVariant>> sceneSearch(const QString searchString);
-    QList<QMap<QString, QVariant>> pictureSearch(const QString searchString);
+//    Search Functions (Not in use for now type specific SQL quries live in thier coresponding models.)
+//    QList<QMap<QString, QVariant>> actorSearch(const QString searchString);
+//    QList<QMap<QString, QVariant>> sceneSearch(const QString searchString);
+//    QList<QMap<QString, QVariant>> pictureSearch(const QString searchString);
+
+
+//    For now used in variuse classes like ffmpeg handelr and autotagger. Specific SQL needs to be moved to
+//    each class's specific query, dbmanager should only be used with
+//    executeArbitrarySqlWithReturnValue and executeArbitrarySqlWithoutReturnValue
     QList<QMap<QString, QVariant>> mediaFolderSearch(const QString searchString);
 
     QList<QMap<QString, QVariant>> getScenesBeforeFFprobe();
@@ -43,6 +56,9 @@ public:
 
     bool executeArbitrarySqlWithoutReturnValue(const QString sqlStatment);
     bool executeArbitrarySqlWithoutReturnValueForTransaction(QSqlQuery query);
+
+//    Async functions
+    void executeArbitrarySqlWithoutReturnValueAsync(QString id,QString sqlStatment);
 
     bool beginTransaction();
     bool commitTransaction();
@@ -81,6 +97,8 @@ public:
     bool updateScenes(QList<QMap<QString, QVariant>> scenesToUpdate);
     bool updateActors(QList<QMap<QString, QVariant>> actorsToUpdate);
 
+    void run() override;
+
 
 
 private:
@@ -100,6 +118,14 @@ private:
 
     QList<QMap<QString, QVariant>> parseQueryResult(QSqlQuery query);
     QList<QMap<QString, QVariant>> executeFetchQueryWrapper(QString sqlStmt, QString callingFunction );
+
+//    A queue that stores incoming async SQL requests
+    QQueue<QStringList> sqlExecutionQueue;
+
+//    Stores async SQL results
+    QMap<QString, QList<QMap<QString, QVariant>>> sqlQueryResults;
+
+    QMutex mutex;
 
 
 };

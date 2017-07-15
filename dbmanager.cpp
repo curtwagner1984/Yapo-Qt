@@ -7,12 +7,15 @@
 #include <QSqlRecord>
 #include <QVariantList>
 #include <QElapsedTimer>
+#include <QMutex>
 
+#include <chrono>
+#include <thread>
 //QmlComm::QmlComm(DbManager* dbManager,QObject *parent) : QObject(parent)
 
-DbManager::DbManager(QObject *parent):QObject(parent)
+DbManager::DbManager()
 {
-    this->echo = false;
+//    this->echo = true;
     qDebug() << "DB MANAGER DEFAULT CONSTRUCTOR";
 
 //    this->m_db = QSqlDatabase::addDatabase("QSQLITE");
@@ -34,10 +37,10 @@ DbManager::DbManager(QObject *parent):QObject(parent)
 
 }
 
-DbManager::DbManager(const QString& path, QObject *parent):QObject(parent)
+DbManager::DbManager(const QString& path)
 {
   //    ignoring path just for testing
-  this->echo = false;
+//  this->echo = true;
   this->m_db = QSqlDatabase::addDatabase("QSQLITE");
   //       this->m_db.setDatabaseName(path);
   this->m_db.setDatabaseName("test.db");
@@ -303,37 +306,37 @@ void DbManager::createTables() {
 }
 
 
-QList<QMap<QString, QVariant>> DbManager::actorSearch(const QString searchString)
-{
+//QList<QMap<QString, QVariant>> DbManager::actorSearch(const QString searchString)
+//{
 
-  QString escapedSearchString = this->escapeSqlChars(searchString);
-  QString stmt = "SELECT *, "
-                 "'actor' as type, "
-                 "(SELECT COUNT(*) FROM Scene_Actor WHERE Scene_Actor.actor_id = Actor.id) as NumberOfScenes, "
-                 "(SELECT COUNT(*) FROM Picture_Actor WHERE Picture_Actor.actor_id = Actor.id) as NumberOfPictures "
-                 "FROM Actor WHERE Actor.name LIKE '%" + escapedSearchString  +"%'";
+//  QString escapedSearchString = this->escapeSqlChars(searchString);
+//  QString stmt = "SELECT *, "
+//                 "'actor' as type, "
+//                 "(SELECT COUNT(*) FROM Scene_Actor WHERE Scene_Actor.actor_id = Actor.id) as NumberOfScenes, "
+//                 "(SELECT COUNT(*) FROM Picture_Actor WHERE Picture_Actor.actor_id = Actor.id) as NumberOfPictures "
+//                 "FROM Actor WHERE Actor.name LIKE '%" + escapedSearchString  +"%'";
 
-  return this->executeFetchQueryWrapper(stmt,"Actor Search");
-}
+//  return this->executeFetchQueryWrapper(stmt,"Actor Search");
+//}
 
-QList<QMap<QString, QVariant> > DbManager::sceneSearch(const QString searchString)
-{
+//QList<QMap<QString, QVariant> > DbManager::sceneSearch(const QString searchString)
+//{
 
-    QString escapedSearchString = this->escapeSqlChars(searchString);
-    QString stmt = "SELECT * FROM Scene WHERE Scene.path_to_file LIKE '%" + escapedSearchString  +"%' ";
+//    QString escapedSearchString = this->escapeSqlChars(searchString);
+//    QString stmt = "SELECT * FROM Scene WHERE Scene.path_to_file LIKE '%" + escapedSearchString  +"%' ";
 
-    return this->executeFetchQueryWrapper(stmt,"Scene Search");
+//    return this->executeFetchQueryWrapper(stmt,"Scene Search");
 
-}
+//}
 
-QList<QMap<QString, QVariant> > DbManager::pictureSearch(const QString searchString)
-{
-    QString escapedSearchString = this->escapeSqlChars(searchString);
-    QString stmt = "SELECT * FROM Picture WHERE Picture.path_to_file LIKE '%" + escapedSearchString  +"%' ";
+//QList<QMap<QString, QVariant> > DbManager::pictureSearch(const QString searchString)
+//{
+//    QString escapedSearchString = this->escapeSqlChars(searchString);
+//    QString stmt = "SELECT * FROM Picture WHERE Picture.path_to_file LIKE '%" + escapedSearchString  +"%' ";
 
-    return this->executeFetchQueryWrapper(stmt,"Picture Search");
+//    return this->executeFetchQueryWrapper(stmt,"Picture Search");
 
-}
+//}
 
 QList<QMap<QString, QVariant>> DbManager::mediaFolderSearch(const QString searchString)
 {
@@ -389,6 +392,11 @@ QList<QMap<QString, QVariant> > DbManager::executeArbitrarySqlWithReturnValue(co
        qDebug() << "DbManager: Executing: " << sqlStatment;
     }
 
+//    qDebug() << "DbManager: Wating for 2 seconds to simulate db load";
+//    std::this_thread::sleep_for(std::chrono::milliseconds(2000));
+//    qDebug() << "DbManager: finished waiting, proceeding to execute query";
+
+
     return this->executeFetchQueryWrapper(sqlStatment,sqlStatment);
 }
 
@@ -434,6 +442,20 @@ bool DbManager::executeArbitrarySqlWithoutReturnValueForTransaction(QSqlQuery qu
     return ans;
 //    return true;
 //    return this->executeQueryForTransaction(sqlStatment,"executeArbitrarySqlWithoutReturnValue");
+
+}
+
+void DbManager::executeArbitrarySqlWithoutReturnValueAsync(QString id, QString sqlStatment)
+{
+    qDebug() << "DbManager::executeArbitrarySqlWithoutReturnValueAsync: Entered executeArbitrarySqlWithoutReturnValueAsync function";
+    QStringList temp = QStringList() << id << "void" << sqlStatment;
+
+    this->sqlExecutionQueue.enqueue(temp);
+    qDebug() << "DbManager::executeArbitrarySqlWithoutReturnValueAsync: enqueued id " << id
+             << " isVoid: " << "void"<<" sqlSTMT: " << sqlStatment << " in sqlExecutionQueue";
+    this->mutex.unlock();
+
+    qDebug() << "DbManager::executeArbitrarySqlWithoutReturnValueAsync: unlocked mutex";
 
 }
 
@@ -1001,10 +1023,66 @@ QList<QMap<QString, QVariant> > DbManager::executeFetchQueryWrapper(QString sqlS
 {
     QSqlQuery query(sqlStmt);
     if (this->executeQuery(query,callingFunction)){
+//        qDebug() << "DbManager::executeFetchQueryWrapper: Line before signal *" << sqlStmt << "* is emmited";
+//        emit d("Signal Emitted from DbManager::executeFetchQueryWrapper " + sqlStmt);
         return this->parseQueryResult(query);
     }else{
         qDebug() << "DB Manager: Error in " << callingFunction << " error:" << this->m_db.lastError();
     }
+
+}
+
+void DbManager::run()
+{
+    qDebug() << "DbManager thread started !";
+    bool noPoison = true;
+
+    this->mutex.lock();
+
+    qDebug() << "DbManager: mutex locked! thread started !";
+
+    while(noPoison)
+    {
+        qDebug() << "DbManager: inside thread while loop, trying to aquaire mutex lock";
+        this->mutex.lock();
+        qDebug() << "DbManager: inside thread while loop, mutex lock aquired!";
+        while ((this->sqlExecutionQueue.size() > 0) && noPoison)
+        {
+/*            temp string list, first item is the id of the requesting model
+ *            second item is weather or not this SQL query has a return value,
+ *            third item is the SQL statment.
+ *
+ */
+            QStringList temp = this->sqlExecutionQueue.dequeue();
+
+            QString requestId = temp.at(0);
+            bool isVoid = temp.at(1) == 'void';
+            QString sqlStmt = temp.at(2);
+
+            if (requestId == "poison"){
+                noPoison = false;
+                break;
+            }
+
+            if (isVoid)
+            {
+                this->executeArbitrarySqlWithoutReturnValue(sqlStmt);
+                qDebug() << "DbManager: void sqlstmt executed";
+            }else{
+                QList<QMap<QString, QVariant> > queryResult = this->executeArbitrarySqlWithReturnValue(sqlStmt);
+                qDebug() << "DbManager: sqlstmt with return value executed";
+                this->sqlQueryResults.insert(requestId,queryResult);
+                qDebug() << "DbManager: return value was inserted into sqlQueryResults";
+                emit queryCompleted(requestId);
+
+            }
+        }
+        this->mutex.lock();
+
+    }
+
+    qDebug() << "DbManager thread exiting...";
+
 
 }
 

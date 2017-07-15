@@ -1,16 +1,38 @@
 #include "basiclistmodel.h"
 #include <QDebug>
+#include <QFuture>
+#include <QFutureWatcher>
 #include <QHash>
 #include <QModelIndex>
+#include <QtConcurrent/QtConcurrent>
 
-BasicListModel::BasicListModel():QAbstractListModel() {
+void BasicListModel::dbActionCompletedSlot(QString value) {
+  qDebug() << this << ":BasicListModel::testSlot recived signal " << value;
+}
 
+BasicListModel::BasicListModel() : QAbstractListModel() {
     this->items = QList<QMap<QString, QVariant>>();
 }
 
-void BasicListModel::init(DbManager *dbManager)
+bool BasicListModel::waitingForDbResponse()
 {
-    this->dbManager = dbManager;
+    return this->m_waitingForDbResponse;
+}
+
+void BasicListModel::init(DbManager *dbManager) {
+  this->dbManager = dbManager;
+  QObject::connect(this->dbManager, &DbManager::queryCompleted, this,
+                   &BasicListModel::dbActionCompletedSlot);
+
+  QObject::connect(&this->fetchMoreFutureWatcher, &QFutureWatcher<void>::finished, this,
+                   &BasicListModel::fetchedMore);
+
+  QObject::connect(&this->itemCountFutureWatcher, &QFutureWatcher<void>::finished, this,
+                   &BasicListModel::baseSearchItemCountReturns);
+
+  QObject::connect(&this->baseSearchFutureWatcher, &QFutureWatcher<void>::finished, this,
+                   &BasicListModel::baseSearchQueryReturns);
+
 }
 
 int BasicListModel::rowCount(const QModelIndex &parent) const {
@@ -31,37 +53,74 @@ bool BasicListModel::canFetchMore(const QModelIndex &parent) const {
 }
 
 void BasicListModel::fetchMore(const QModelIndex &parent) {
-  qDebug() << "fetchmore triggered" << parent.row();
+  qDebug() << "fetchmore triggered";
 
+  this->currentParent = parent;
   this->currentPageNumber++;
   this->generateSqlLimit();
   QString stmt = this->sqlStmt();
-  QList<QMap<QString, QVariant>> itmesToAppend =
-      this->dbManager->executeArbitrarySqlWithReturnValue(stmt);
+
+  this->fetchMoreFuture = QtConcurrent::run(
+      this->dbManager, &DbManager::executeArbitrarySqlWithReturnValue, stmt);
+
+  this->fetchMoreFutureWatcher.setFuture(this->fetchMoreFuture);
+
+  this->startWaitingForDbResponse();
+  qDebug() << "fetchmore returned";
+
+
+  //  this->future.waitForFinished();
+
+  //  QList<QMap<QString, QVariant>> itmesToAppend = this->future.result();
+
+  //  QList<QMap<QString, QVariant>> itmesToAppend =
+  //      this->dbManager->executeArbitrarySqlWithReturnValue(stmt);
+  //  if (itmesToAppend.size() == 0) {
+  //    return;
+  //  }
+  //  this->beginInsertRows(parent, this->items.size(),
+  //                        this->items.size() + itmesToAppend.size() - 1);
+  //  this->items.append(itmesToAppend);
+  //  this->endInsertRows();
+}
+
+void BasicListModel::fetchedMore() {
+  //  this->future.waitForFinished();
+
+  qDebug() << "fetchedMore slot triggered";
+
+  QList<QMap<QString, QVariant>> itmesToAppend = this->fetchMoreFuture.result();
+
+  //  QList<QMap<QString, QVariant>> itmesToAppend =
+  //      this->dbManager->executeArbitrarySqlWithReturnValue(stmt);
   if (itmesToAppend.size() == 0) {
     return;
   }
-  this->beginInsertRows(parent, this->items.size(),
+
+  qDebug() << "inserting rows";
+  this->beginInsertRows(this->currentParent, this->items.size(),
                         this->items.size() + itmesToAppend.size() - 1);
   this->items.append(itmesToAppend);
   this->endInsertRows();
+
+  this->stopWaitingForDbResponse();
+  qDebug() << "row insert finished";
+
 }
 
-bool BasicListModel::canFetchMore()
-{
-    bool ans = false;
-    QModelIndex ix;
-    if (canFetchMore(ix)){
-        fetchMore(ix);
-        ans = true;
-    }
-    return ans;
+bool BasicListModel::canFetchMore() {
+  bool ans = false;
+  QModelIndex ix;
+  if (canFetchMore(ix)) {
+    fetchMore(ix);
+    ans = true;
+  }
+  return ans;
 }
 
-int BasicListModel::rowCount()
-{
-    QModelIndex ix;
-    return rowCount(ix);
+int BasicListModel::rowCount() {
+  QModelIndex ix;
+  return rowCount(ix);
 }
 
 QVariant BasicListModel::directData(QString roleName, int index) {
@@ -115,8 +174,6 @@ bool BasicListModel::addItem(QString itemToAddId, QString itemToAddName,
   ans = true;
 
   return ans;
-
-
 }
 
 bool BasicListModel::removeItem(QString itemToRemoveId,
@@ -127,7 +184,8 @@ bool BasicListModel::removeItem(QString itemToRemoveId,
                                 QString itemRelationType, bool deleteFromDb) {
   bool ans = false;
 
-//  finds index of a specific item by 'id', maybe move to a seperate function if needed elsewhere
+  //  finds index of a specific item by 'id', maybe move to a seperate function
+  //  if needed elsewhere
   int removeIndex = -1;
   for (int i = 0; i < this->items.size(); i++) {
     QMap<QString, QVariant> temp = this->items.at(i);
@@ -142,46 +200,48 @@ bool BasicListModel::removeItem(QString itemToRemoveId,
                                    .arg(itemToRemoveTableName, itemToRemoveId);
     if (this->dbManager->executeArbitrarySqlWithoutReturnValue(
             deleteFromDbStmt)) {
-        ans = true;
-
+      ans = true;
     }
   } else {
-      QString firstColumnName = QString("%1_id").arg(itemToRemoveType).toLower();
-      QString secondColumnName = QString("%1_id").arg(itemRelationType).toLower();
-      QString removeRelationStmt = QString("DELETE FROM %1 WHERE %2=%3 AND %4=%5").arg(itemToRemoveRelationTableName,firstColumnName,itemToRemoveId,secondColumnName,itemToRemoveRelationItemId);
+    QString firstColumnName = QString("%1_id").arg(itemToRemoveType).toLower();
+    QString secondColumnName = QString("%1_id").arg(itemRelationType).toLower();
+    QString removeRelationStmt =
+        QString("DELETE FROM %1 WHERE %2=%3 AND %4=%5")
+            .arg(itemToRemoveRelationTableName, firstColumnName, itemToRemoveId,
+                 secondColumnName, itemToRemoveRelationItemId);
 
-      if (this->dbManager->executeArbitrarySqlWithoutReturnValue(
-              removeRelationStmt)) {
-          ans = true;
-
-      }
+    if (this->dbManager->executeArbitrarySqlWithoutReturnValue(
+            removeRelationStmt)) {
+      ans = true;
+    }
   }
 
-
   QModelIndex x = QModelIndex();
-  this->beginRemoveRows(x,removeIndex,removeIndex);
+  this->beginRemoveRows(x, removeIndex, removeIndex);
   this->items.removeAt(removeIndex);
   this->endRemoveRows();
   return ans;
 }
 
-QList<int> BasicListModel::getSelectedIndices()
-{
-    QList<int> ans;
-    for(int i = 0 ; i < this->items.length(); i++){
-        if (this->items[i]["isSelected"].toBool())
-        {
-            ans.append(i);
-        }
+QList<int> BasicListModel::getSelectedIndices() {
+  QList<int> ans;
+  for (int i = 0; i < this->items.length(); i++) {
+    if (this->items[i]["isSelected"].toBool()) {
+      ans.append(i);
     }
+  }
 
-    return ans;
-
+  return ans;
 }
 
 int BasicListModel::getCount() { return this->count; }
 
 BasicListModel::~BasicListModel() { this->clear(); }
+
+BasicListModel *BasicListModel::super()
+{
+    return this;
+}
 
 QString BasicListModel::sqlStmt() {
   return this->baseSqlSelect + " " + this->baseSqlFrom + " " +
@@ -210,29 +270,82 @@ void BasicListModel::generateSqlLimit() {
 
 void BasicListModel::baseSearch() {
   if (!this->isAutoComplete) {
+    qDebug() << "BasicListModel::baseSearch() entered function";
     this->currentPageNumber = 0;
     this->generateSqlLimit();
 
     QString countStmt = this->countSqlStmt();
-    this->itemCount =
-        this->dbManager->executeArbitrarySqlWithReturnValue(countStmt);
-    if (this->itemCount.size() > 0) {
-      qDebug() << "item count is: " << this->itemCount.size();
-      this->count = itemCount.at(0)["COUNT(*)"].toInt();
-    } else {
-      this->count = 0;
-    }
+
+    qDebug()<< "BasicListModel::baseSearch() quering db from another thread ...";
+    this->itemCountFuture = QtConcurrent::run(this->dbManager, &DbManager::executeArbitrarySqlWithReturnValue,countStmt);
+    this->itemCountFutureWatcher.setFuture(this->itemCountFuture);
+    qDebug() << "BasicListModel::baseSearch() returns";
+
+//    this->itemCount =
+//        this->dbManager->executeArbitrarySqlWithReturnValue(countStmt);
+//    if (this->itemCount.size() > 0) {
+//      this->count = itemCount.at(0)["COUNT(*)"].toInt();
+//      qDebug() << "item count is: " << this->count;
+//    } else {
+//      this->count = 0;
+//    }
+  }else{
+      this->baseSearchItemCountReturns();
   };
 
-  this->beginResetModel();
-  this->clear();
-  this->items =
-      this->dbManager->executeArbitrarySqlWithReturnValue(this->sqlStmt());
+  this->startWaitingForDbResponse();
 
-  if (this->isAutoComplete) {
+//  this->beginResetModel();
+//  this->clear();
+//  this->items =
+//      this->dbManager->executeArbitrarySqlWithReturnValue(this->sqlStmt());
+
+//  if (this->isAutoComplete) {
+//  }
+
+//  this->endResetModel();
+}
+
+void BasicListModel::baseSearchItemCountReturns() {
+  //  this->future.waitForFinished();
+
+  qDebug() << this->MODEL_TYPE << " BasicListModel::baseSearchItemCountReturns() slot triggered";
+
+  if (!this->isAutoComplete)
+  {
+      this->itemCount = this->itemCountFuture.result();
+
+      if (this->itemCount.size() > 0) {
+        this->count = itemCount.at(0)["COUNT(*)"].toInt();
+        qDebug() << "item count is: " << this->count;
+      } else {
+        this->count = 0;
+
+      }
+
   }
 
-  this->endResetModel();
+
+  qDebug() << "BasicListModel::baseSearchItemCountReturns() querying database for actual info in another thread: ";
+  this->baseSearchFuture = QtConcurrent::run(this->dbManager, &DbManager::executeArbitrarySqlWithReturnValue,this->sqlStmt());
+  this->baseSearchFutureWatcher.setFuture(this->baseSearchFuture);
+  qDebug() << "BasicListModel::baseSearchItemCountReturns() returns";
+
+}
+
+void BasicListModel::baseSearchQueryReturns()
+
+{
+    qDebug() << "BasicListModel::baseSearchQueryReturns() slot triggered";
+    this->beginResetModel();
+    this->clear();
+    this->items = this->baseSearchFuture.result();
+    this->endResetModel();
+    qDebug() << "BasicListModel::baseSearchQueryReturns() returns";
+    emit baseSearchFinished();
+    this->stopWaitingForDbResponse();
+
+
 }
 
 void BasicListModel::noLimitSearch() {
@@ -261,6 +374,18 @@ void BasicListModel::setOrder(QString orderBy, QString orderDirection) {
     this->baseSearch();
     this->endResetModel();
   }
+}
+
+void BasicListModel::startWaitingForDbResponse()
+{
+    this->m_waitingForDbResponse = true;
+    emit waitingForDbResponseChanged();
+}
+
+void BasicListModel::stopWaitingForDbResponse()
+{
+    this->m_waitingForDbResponse = false;
+    emit waitingForDbResponseChanged();
 }
 
 void BasicListModel::clear() {

@@ -58,28 +58,28 @@ ApplicationWindow {
 
 
 
-    function changeView(viewToChangeTo,currentModel,currentIndex) {
+    function changeView(viewToChangeTo,currentModel,currentIndex,currentItemId) {
         if (viewToChangeTo === "Actor Detail View") {
             var x = detailViewComponent.createObject();
-            x.init(currentModel,currentIndex,"Actor")
+            x.init(currentModel,currentIndex,"Actor",currentItemId)
             mainStack.push(x, {
                                objectName: "Actor Detail View"
                            })
         }else if (viewToChangeTo === "Tag Detail View") {
             var x = detailViewComponent.createObject();
-            x.init(currentModel,currentIndex,"Tag")
+            x.init(currentModel,currentIndex,"Tag",currentItemId)
             mainStack.push(x, {
                                objectName: "Tag Detail View"
                            })
         }else if (viewToChangeTo === "Website Detail View") {
             var x = detailViewComponent.createObject();
-            x.init(currentModel,currentIndex,"Website")
+            x.init(currentModel,currentIndex,"Website",currentItemId)
             mainStack.push(x, {
                                objectName: "Website Detail View"
                            })
         }else if (viewToChangeTo === "Scene Detail View") {
             var x = detailViewComponent.createObject();
-            x.init(currentModel,currentIndex,"Scene")
+            x.init(currentModel,currentIndex,"Scene",currentItemId)
             mainStack.push(x, {
                                objectName: "Scene Detail View"
                            })
