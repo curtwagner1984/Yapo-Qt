@@ -18,7 +18,6 @@ Rectangle {
     property bool isMultiSelectEnabled
 
 
-
     signal ratingClicked(real mouseX, real mouseY)
     signal thumbLeftDoubleClicked()
     signal thumbLeftClicked()
@@ -125,7 +124,14 @@ Rectangle {
             target: ratingButton
 
             onButtonClicked: {
-                ratingClicked(ratingButton.x, ratingButton.y)
+                console.log("GeneralThumb: Rating button clicked... ratingButton.x = " + ratingButton.x + " ratingButton.y = " + ratingButton.y)
+                /* Because the ratingButton is a decendant of buttonBarBackground it's position (x,y coordinates)
+                  are relative to buttonBarBackground. We use 'mapToItem()' to map the coordinates of buttonBarBackground
+                  to the coordinate system of thumbView where the RatingPopup would be displayed.
+                */
+
+                var cords = buttonBarBackground.mapToItem(thumbView,0,0);
+                ratingClicked(cords.x + ratingButton.x,cords.y + ratingButton.y)
 
             }
         }

@@ -24,9 +24,9 @@ Item {
 
     Connections{
         target: thumbActor
+//        mouseX, mouseY are coordinates of the rating button relative to ThumbView.
         onRatingClicked:
         {
-            console.log("Clicked on rating button")
             AuxFunc.showRatingPopup("Actor",id,rating,mouseX,mouseY,index)
         }
 

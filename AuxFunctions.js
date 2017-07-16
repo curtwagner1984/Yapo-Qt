@@ -16,8 +16,8 @@ function showRatingPopup(ratedItemType,ratedItemId,ratedItemRating,x,y,index) {
 
 
 
-    thumbGridView.ratingPopup.x = cords.x
-    thumbGridView.ratingPopup.y = cords.y
+    thumbGridView.ratingPopup.x = x
+    thumbGridView.ratingPopup.y = y
     thumbGridView.ratingPopup.ratedItemType = ratedItemType;
     thumbGridView.ratingPopup.ratedItemId = ratedItemId;
     thumbGridView.ratingPopup.ratedItemRating = ratedItemRating;
