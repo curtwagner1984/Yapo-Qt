@@ -14,6 +14,7 @@ Item {
     property var overlayColor
 
     signal buttonClicked (string buttonName);
+    signal ctrlButtonClicked (string buttonName);
 
 
     Rectangle{
@@ -45,8 +46,17 @@ Item {
             }
 
             onClicked: {
-                buttonContainer.buttonClicked(buttonContainer.buttonName)
-            }
+                    if ((mouse.button === Qt.LeftButton) && (mouse.modifiers & Qt.ControlModifier))
+                    {
+                        console.log("ctrl + click on button")
+                        buttonContainer.ctrlButtonClicked(buttonContainer.buttonName)
+                    }else
+                    {
+                        buttonContainer.buttonClicked(buttonContainer.buttonName)
+                    }
+
+                }
+
 
             ToolTip.delay: 500
             ToolTip.timeout: 5000

@@ -17,6 +17,8 @@ Rectangle {
 
     property bool isMultiSelectEnabled
 
+//    property string currentItemName
+
 
     signal ratingClicked(real mouseX, real mouseY)
     signal thumbLeftDoubleClicked()
@@ -24,6 +26,7 @@ Rectangle {
     signal thumbRightClicked(real mouseX, real mouseY)
     signal currentItemChecked(bool checkedState)
     signal playClicked()
+    signal deleteButtonClicked()
 
 
     color: "black"
@@ -136,6 +139,35 @@ Rectangle {
             }
         }
 
+        ThumbDelegateDeleteButton
+        {
+            id:deleteButton
+
+            height: buttonBarBackground.height
+            width: height
+
+            currentItemType: thumbnailBackground.state
+            currentItemName: {(currentItemType === "Scene" || currentItemType === "Picture" ) ? thumbnailBackground.pathToFile : thumbnailBackground.lable }
+
+            anchors.right: ratingButton.left
+            anchors.verticalCenter: buttonBarBackground.verticalCenter
+
+
+        }
+
+
+        Connections {
+            id: deleteButtonConnection
+            target: deleteButton
+
+            onButtonClicked: {
+               console.log("Delete button clicked.")
+               deleteButtonClicked()
+            }
+        }
+
+
+
     }
 
     Text {
@@ -231,6 +263,7 @@ Rectangle {
                visible: true
 
            }
+
        },
        State {
            name: "Scene"

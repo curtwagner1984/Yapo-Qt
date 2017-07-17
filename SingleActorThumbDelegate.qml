@@ -9,6 +9,7 @@ import "AuxFunctions.js" as AuxFunc
 Item {
     id: thumbDelegate
 
+
     GeneralThumb{
         id:thumbActor
         state: "Actor"
@@ -50,6 +51,14 @@ Item {
             console.log("SingleActorThumbDelegate: onCurrentItemChecked triggered")
             isSelected = checkedState;
         }
+
+        onDeleteButtonClicked:
+        {
+            console.log("Actor thumb: delete button clicked. Index: " + index)
+            thumbView.currentModel.removeItem(index,true)
+
+        }
+
 
     }
 

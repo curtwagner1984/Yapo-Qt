@@ -5,6 +5,7 @@
         <file>icons/ic_favorite_border_black_24px.svg</file>
         <file>icons/ic_more_vert_black_24px.svg</file>
         <file>icons/ic_play_arrow_black_24px.svg</file>
+        <file>icons/ic_delete_black_24px.svg</file>
     </qresource>
     <qresource prefix="/placeholders">
         <file>placeholders/placeHolderTag_64.jpg</file>

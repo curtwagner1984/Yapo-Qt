@@ -10,6 +10,8 @@ Item {
     property string searchText
 
 
+
+
     onSearchTextChanged: {
         console.log("THUMBVIEW: searchTextChanged triggered")
         actorModel.search(searchText)

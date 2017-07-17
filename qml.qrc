@@ -29,6 +29,7 @@
         <file>ThumbDelegateButtonPlay.qml</file>
         <file>ThumbPicture.qml</file>
         <file>GeneralThumb.qml</file>
+        <file>ThumbDelegateDeleteButton.qml</file>
     </qresource>
     <qresource prefix="/autoComplete">
         <file>AutoCompletePopupTwo.qml</file>

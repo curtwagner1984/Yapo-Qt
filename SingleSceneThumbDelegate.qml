@@ -49,6 +49,12 @@ Item {
             var cords = thumbDelegate.mapToItem(mainItem,0,0);
             AuxFunc.ctxMenu("Scene", cords.x + mouseX, cords.y + mouseY, index,thumbView.currentModel)
         }
+        onDeleteButtonClicked:
+        {
+            console.log("Scene thumb: delete button clicked. Index: " + index)
+            thumbView.currentModel.removeItem(index,true)
+
+        }
 
     }
 

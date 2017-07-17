@@ -3,15 +3,15 @@
 #include <QDebug>
 
 MediafolderModel::MediafolderModel()
-                :BasicListModel()
+    : BasicListModel()
 {
     qDebug() << "initiating MediafolderModel  ...";
-    this->MODEL_TYPE = "MediafolderModel";
+    this->MODEL_TYPE = "MediaFolder";
     this->baseSqlSelect =  "SELECT * ";
     this->baseSqlFrom = "FROM MediaFolder";
     this->generateSqlLimit();
     qDebug() << "MediaFolder Model initialized ...";
-//    this->search("");
+    //    this->search("");
 }
 
 //int MediafolderModel::rowCount(const QModelIndex &parent) const
@@ -24,23 +24,33 @@ MediafolderModel::MediafolderModel()
 //    return 6;
 //}
 
-QVariant MediafolderModel::data(const QModelIndex &index, int role) const
+QVariant MediafolderModel::data(const QModelIndex& index, int role) const
 {
-    if (!index.isValid()){
+    if (!index.isValid())
+    {
         return QVariant();
     }
 
-    QMap<QString,QVariant> currentItem = this->items.at(index.row());
+    QMap<QString, QVariant> currentItem = this->items.at(index.row());
 
-    if (role == IdRole){
+    if (role == IdRole)
+    {
         return currentItem["id"];
-    }else if (role == PathRole){
+    }
+    else if (role == PathRole)
+    {
         return currentItem["path_to_dir"];
-    }else if (role == IsPictureRole){
+    }
+    else if (role == IsPictureRole)
+    {
         return currentItem["is_picture"];
-    }else if (role == IsVideoRole){
+    }
+    else if (role == IsVideoRole)
+    {
         return currentItem["is_video"];
-    }else{
+    }
+    else
+    {
         return QVariant();
     }
 }
@@ -48,20 +58,19 @@ QVariant MediafolderModel::data(const QModelIndex &index, int role) const
 void MediafolderModel::search(const QString searchString)
 {
     QString escapedSearchString = this->escaleSqlChars(searchString);
-    this->baseSqlWhere = "WHERE MediaFolder.path_to_dir LIKE '%" + searchString  +"%'";
-
-//  Resets count and gets number of items and executes search
+    this->baseSqlWhere = "WHERE MediaFolder.path_to_dir LIKE '%" + searchString  + "%'";
+    //  Resets count and gets number of items and executes search
     this->baseSearch();
 }
 
 QHash<int, QByteArray> MediafolderModel::roleNames() const
 {
     QHash<int, QByteArray> roles;
-        roles[IdRole] = "id";
-        roles[PathRole] = "path";
-        roles[IsVideoRole] = "isVid";
-        roles[IsPictureRole] = "isPic";
-        return roles;
+    roles[IdRole] = "id";
+    roles[PathRole] = "path";
+    roles[IsVideoRole] = "isVid";
+    roles[IsPictureRole] = "isPic";
+    return roles;
 }
 
 

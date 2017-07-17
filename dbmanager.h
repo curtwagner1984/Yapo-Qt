@@ -21,102 +21,102 @@
 
 class DbManager: public QThread
 {
-    Q_OBJECT
+        Q_OBJECT
 
-signals:
-    void queryCompleted(QString value);
+    signals:
+        void queryCompleted(QString value);
 
-public:
-    DbManager();
-    DbManager(const QString& path);
+    public:
+        DbManager();
+        DbManager(const QString& path);
 
-    void connectToDatabase(const QString path);
-    void createTables();
+        void connectToDatabase(const QString path);
+        void createTables();
 
-    QList<QMap<QString, QVariant>> mediaFolderSearch(const QString searchString);
+        QList<QMap<QString, QVariant>> mediaFolderSearch(const QString searchString);
 
-    QList<QMap<QString, QVariant>> getScenesBeforeFFprobe();
-    QList<QMap<QString, QVariant>> getActorsBeforeScrape();
+        QList<QMap<QString, QVariant>> getScenesBeforeFFprobe();
+        QList<QMap<QString, QVariant>> getActorsBeforeScrape();
 
-    QList<QMap<QString, QVariant>> getAllScenes();
-    QList<QMap<QString, QVariant>> getAllPictures();
-    QList<QMap<QString, QVariant>> getTaggingElements();
-
-
-    QList<QMap<QString, QVariant>> executeArbitrarySqlWithReturnValue(const QString sqlStatment);
-
-    bool executeArbitrarySqlWithoutReturnValue(const QString sqlStatment);
-    bool executeArbitrarySqlWithoutReturnValueForTransaction(QSqlQuery query);
-
-//    Async functions
-    void executeArbitrarySqlWithoutReturnValueAsync(QString id,QString sqlStatment);
-
-    bool beginTransaction();
-    bool commitTransaction();
-
-//    Add Single Item Functions
-    bool addActor(QString actorName, bool isMainstream);
-    bool addTagWithRelation (QString tagId, QString tagName, QString tagType, QString tagOfId);
-
-    bool addTag(QString tagName);
-    bool addWebsite(QString websiteName);
-    bool addScene(QString name, QString path);
-    bool addPicture(QString name, QString path);
-    bool addMediaFolder(QString folderPath, bool isPicture, bool isVideo);
+        QList<QMap<QString, QVariant>> getAllScenes();
+        QList<QMap<QString, QVariant>> getAllPictures();
+        QList<QMap<QString, QVariant>> getTaggingElements();
 
 
-    //  Bulk Add functions
-    bool addActors(QList<QStringList> scenesToAdd);
-    bool addActorsAliases (QList<QStringList> aliasesToAdd);
+        QList<QMap<QString, QVariant>> executeArbitrarySqlWithReturnValue(const QString sqlStatment);
+
+        bool executeArbitrarySqlWithoutReturnValue(const QString sqlStatment);
+        bool executeArbitrarySqlWithoutReturnValueForTransaction(QSqlQuery query);
+
+        //    Async functions
+        void executeArbitrarySqlWithoutReturnValueAsync(QString id, QString sqlStatment);
+
+        bool beginTransaction();
+        bool commitTransaction();
+
+        //    Add Single Item Functions
+        bool addActor(QString actorName, bool isMainstream);
+        bool addTagWithRelation(QString tagId, QString tagName, QString tagType, QString tagOfId);
+
+        bool addTag(QString tagName);
+        bool addWebsite(QString websiteName);
+        bool addScene(QString name, QString path);
+        bool addPicture(QString name, QString path);
+        bool addMediaFolder(QString folderPath, bool isPicture, bool isVideo);
 
 
-
-    bool addSceneActors (QList<QStringList> sceneActorsToAdd);
-    bool addSceneTags (QList<QStringList> sceneTagsToAdd);
-    bool addSceneWebsites (QList<QStringList> sceneWebsitesToAdd);
-
-    bool addPictureActors (QList<QStringList> pictureActorsToAdd);
-    bool addPictureTags (QList<QStringList> pictureTagsToAdd);
-    bool addPictureWebsite (QList<QStringList> pictureWebsitesToAdd);
-
-    bool addTags(QList<QStringList> tagsToAdd);
-    bool addWebsites(QList<QStringList> websitesToAdd);
-    bool addScenes(QList<QStringList> scenesToAdd);
-    bool addPictures(QList<QStringList> picturesToAdd);
-    bool addTreeFolders(QList<QStringList> treeFoldersToAdd);
-
-    bool updateScenes(QList<QMap<QString, QVariant>> scenesToUpdate);
-    bool updateActors(QList<QMap<QString, QVariant>> actorsToUpdate);
-
-    void run() override;
+        //  Bulk Add functions
+        bool addActors(QList<QStringList> scenesToAdd);
+        bool addActorsAliases(QList<QStringList> aliasesToAdd);
 
 
 
-private:
-    QSqlDatabase m_db;
-    bool echo = false;
-    QString generateBulkInsertQueryString(QList<QStringList> bulkInsertArgumentList);
+        bool addSceneActors(QList<QStringList> sceneActorsToAdd);
+        bool addSceneTags(QList<QStringList> sceneTagsToAdd);
+        bool addSceneWebsites(QList<QStringList> sceneWebsitesToAdd);
 
-    QString generateUpdateQueryString(QMap<QString, QVariant> updatedObject);
+        bool addPictureActors(QList<QStringList> pictureActorsToAdd);
+        bool addPictureTags(QList<QStringList> pictureTagsToAdd);
+        bool addPictureWebsite(QList<QStringList> pictureWebsitesToAdd);
 
-    QString escapeSqlChars(QString string);
+        bool addTags(QList<QStringList> tagsToAdd);
+        bool addWebsites(QList<QStringList> websitesToAdd);
+        bool addScenes(QList<QStringList> scenesToAdd);
+        bool addPictures(QList<QStringList> picturesToAdd);
+        bool addTreeFolders(QList<QStringList> treeFoldersToAdd);
+
+        bool updateScenes(QList<QMap<QString, QVariant>> scenesToUpdate);
+        bool updateActors(QList<QMap<QString, QVariant>> actorsToUpdate);
+
+        void run() override;
 
 
-    bool executeQuery(QString sqlStmt, QString sendingFunction);
-    bool executeQueryForTransaction(QString sqlStmt, QString sendingFunction);
-    bool executeQuery(QSqlQuery query, QString sendingFunction);
+
+    private:
+        QSqlDatabase m_db;
+        bool echo = true;
+        QString generateBulkInsertQueryString(QList<QStringList> bulkInsertArgumentList);
+
+        QString generateUpdateQueryString(QMap<QString, QVariant> updatedObject);
+
+        QString escapeSqlChars(QString string);
 
 
-    QList<QMap<QString, QVariant>> parseQueryResult(QSqlQuery query);
-    QList<QMap<QString, QVariant>> executeFetchQueryWrapper(QString sqlStmt, QString callingFunction );
+        bool executeQuery(QString sqlStmt, QString sendingFunction);
+        bool executeQueryForTransaction(QString sqlStmt, QString sendingFunction);
+        bool executeQuery(QSqlQuery query, QString sendingFunction);
 
-//    A queue that stores incoming async SQL requests
-    QQueue<QStringList> sqlExecutionQueue;
 
-//    Stores async SQL results
-    QMap<QString, QList<QMap<QString, QVariant>>> sqlQueryResults;
+        QList<QMap<QString, QVariant>> parseQueryResult(QSqlQuery query);
+        QList<QMap<QString, QVariant>> executeFetchQueryWrapper(QString sqlStmt, QString callingFunction);
 
-    QMutex mutex;
+        //    A queue that stores incoming async SQL requests
+        QQueue<QStringList> sqlExecutionQueue;
+
+        //    Stores async SQL results
+        QMap<QString, QList<QMap<QString, QVariant>>> sqlQueryResults;
+
+        QMutex mutex;
 
 
 };

@@ -11,119 +11,127 @@
 #include <QFutureWatcher>
 #include "dbmanager.h"
 
-class BasicListModel : public QAbstractListModel {
-  Q_OBJECT
-  Q_PROPERTY(bool waitingForDbResponse READ waitingForDbResponse NOTIFY waitingForDbResponseChanged)
+class BasicListModel : public QAbstractListModel
+{
+        Q_OBJECT
+        Q_PROPERTY(bool waitingForDbResponse READ waitingForDbResponse NOTIFY waitingForDbResponseChanged)
 
- public slots:
-    void dbActionCompletedSlot(QString value);
-    void fetchedMore();
-    void baseSearchItemCountReturns();
-    void baseSearchQueryReturns();
+    public slots:
+        void dbActionCompletedSlot(QString value);
+        void fetchedMore();
+        void baseSearchItemCountReturns();
+        void baseSearchQueryReturns();
 
- signals:
-    void baseSearchFinished();
-    void waitingForDbResponseChanged();
-
-
- public:
-  BasicListModel();
-
-  bool waitingForDbResponse();
-
-  Q_INVOKABLE void init(DbManager *dbManager);
+    signals:
+        void baseSearchFinished();
+        void waitingForDbResponseChanged();
 
 
-  int rowCount(const QModelIndex &parent) const;
-  bool canFetchMore(const QModelIndex &parent) const;
-  void fetchMore(const QModelIndex &parent);
+    public:
+        BasicListModel();
 
-  virtual QHash<int, QByteArray> roleNames() const = 0;
-  virtual QVariant data(const QModelIndex &index, int role) const = 0;
+        bool waitingForDbResponse();
 
-  Q_INVOKABLE bool canFetchMore();
-  Q_INVOKABLE int rowCount();
-  Q_INVOKABLE QVariant directData(QString roleName, int index);
-
-  Q_INVOKABLE bool addItem(QString itemToAddId, QString itemToAddName,
-                           QString itemToAddTableName,
-                           QString itemToAddRelationTableName,
-                           QString itemToAddRelationItemId,
-                           QString itemToAddType,
-                           QString itemRelationType
-                           );
+        Q_INVOKABLE void init(DbManager* dbManager);
 
 
-  Q_INVOKABLE bool removeItem(QString itemToRemoveId,
-                           QString itemToRemoveTableName,
-                           QString itemToRemoveRelationTableName,
-                           QString itemToRemoveRelationItemId,
-                           QString itemToRemoveType,
-                           QString itemRelationType,
-                           bool deleteFromDb
-                           );
+        int rowCount(const QModelIndex& parent) const;
+        bool canFetchMore(const QModelIndex& parent) const;
+        void fetchMore(const QModelIndex& parent);
+
+        virtual QHash<int, QByteArray> roleNames() const = 0;
+        virtual QVariant data(const QModelIndex& index, int role) const = 0;
+
+        Q_INVOKABLE bool canFetchMore();
+        Q_INVOKABLE int rowCount();
+        Q_INVOKABLE QVariant directData(QString roleName, int index);
+
+        Q_INVOKABLE bool addItem(QString itemToAddId, QString itemToAddName,
+                                 QString itemToAddTableName,
+                                 QString itemToAddRelationTableName,
+                                 QString itemToAddRelationItemId,
+                                 QString itemToAddType,
+                                 QString itemRelationType
+                                );
 
 
-  Q_INVOKABLE QList<int> getSelectedIndices();
-  Q_INVOKABLE int getCount();
-  Q_INVOKABLE void clear();
-  ~BasicListModel();
+        Q_INVOKABLE bool removeItem(QString itemToRemoveId,
+                                    QString itemToRemoveTableName,
+                                    QString itemToRemoveRelationTableName,
+                                    QString itemToRemoveRelationItemId,
+                                    QString itemToRemoveType,
+                                    QString itemRelationType,
+                                    bool deleteFromDb
+                                   );
 
- protected:
-  DbManager *dbManager;
-  QList<QMap<QString, QVariant>> items;
-  QList<QMap<QString, QVariant>> itemCount;
-  QList<int> randomOrderList;
 
-  BasicListModel *super();
-
-  QString sqlStmt();
-  QString countSqlStmt();
-  QString escaleSqlChars(QString unescapedString);
-  QString MODEL_TYPE;    
-  void generateSqlLimit();
-  void baseSearch();
+        Q_INVOKABLE bool removeItem(int indexOfItemToRemove,
+                                    bool deleteFromDb
+                                   );
 
 
 
 
-  void noLimitSearch();
+        Q_INVOKABLE QList<int> getSelectedIndices();
+        Q_INVOKABLE int getCount();
+        Q_INVOKABLE void clear();
+        ~BasicListModel();
 
-  void setOrder(QString orderBy, QString orderDirection);
+    protected:
+        DbManager* dbManager;
+        QList<QMap<QString, QVariant>> items;
+        QList<QMap<QString, QVariant>> itemCount;
+        QList<int> randomOrderList;
 
-  QString countSqlSelect = "SELECT COUNT(*)";
-  QString baseSqlSelect = "";
-  QString baseSqlFrom = "";
-  QString baseSqlWhere = "";
-  QString baseSqlOrder = "";
-  QString baseSqlLimit = "";
+        BasicListModel* super();
 
-
-//  Qt Concurrent stuff
-  QFuture<QList<QMap<QString, QVariant>>> fetchMoreFuture;
-  QFutureWatcher <void> fetchMoreFutureWatcher;
-
-  QFuture<QList<QMap<QString, QVariant>>> itemCountFuture;
-  QFutureWatcher <void> itemCountFutureWatcher;
-
-  QFuture<QList<QMap<QString, QVariant>>> baseSearchFuture;
-  QFutureWatcher <void> baseSearchFutureWatcher;
-
-  QModelIndex currentParent;
+        QString sqlStmt();
+        QString countSqlStmt();
+        QString escaleSqlChars(QString unescapedString);
+        QString MODEL_TYPE;
+        void generateSqlLimit();
+        void baseSearch();
 
 
 
-  int count = 0;
-  int NUMBER_OF_ITEMS_PER_PAGE = 100;
-  int currentPageNumber = 0;
-  bool isAutoComplete = false;
 
-private:
+        void noLimitSearch();
 
-  void startWaitingForDbResponse();
-  void stopWaitingForDbResponse();
+        void setOrder(QString orderBy, QString orderDirection);
 
-  bool m_waitingForDbResponse = false;
+        QString countSqlSelect = "SELECT COUNT(*)";
+        QString baseSqlSelect = "";
+        QString baseSqlFrom = "";
+        QString baseSqlWhere = "";
+        QString baseSqlOrder = "";
+        QString baseSqlLimit = "";
+
+
+        //  Qt Concurrent stuff
+        QFuture<QList<QMap<QString, QVariant>>> fetchMoreFuture;
+        QFutureWatcher <void> fetchMoreFutureWatcher;
+
+        QFuture<QList<QMap<QString, QVariant>>> itemCountFuture;
+        QFutureWatcher <void> itemCountFutureWatcher;
+
+        QFuture<QList<QMap<QString, QVariant>>> baseSearchFuture;
+        QFutureWatcher <void> baseSearchFutureWatcher;
+
+        QModelIndex currentParent;
+
+
+
+        int count = 0;
+        int NUMBER_OF_ITEMS_PER_PAGE = 100;
+        int currentPageNumber = 0;
+        bool isAutoComplete = false;
+
+    private:
+
+        void startWaitingForDbResponse();
+        void stopWaitingForDbResponse();
+
+        bool m_waitingForDbResponse = false;
 
 };
 
