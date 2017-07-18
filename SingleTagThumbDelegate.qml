@@ -21,6 +21,8 @@ Item {
         numOfScenes: numberOfScenes
         numOfPics: numberOfPictures
         numOfSites: numberOfWebsites
+        multiSelect: thumbView.multiSelection
+        currentSelectedState: isSelected
 
 
 

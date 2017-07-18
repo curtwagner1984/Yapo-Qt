@@ -27,21 +27,6 @@ Item {
     }
 
 
-//    function selected(){
-//        console.log("autoCompleteContnetItem: enter pressed on " + autoCompleteContnetItemListView.currentItem.item.name +
-//                    " current index is" + autoCompleteContnetItemListView.currentIndex);
-////        var currentIndex = autoCompleteContnetItemListView.currentIndex;
-////        var selectedItemType = autoCompleteModel.directData("tableName",currentIndex)
-////        var selectedItemName = autoCompleteModel.directData("name",currentIndex)
-////        var selectedItemId = autoCompleteModel.directData("id",currentIndex)
-////        var selectedItemAliasOfId = autoCompleteModel.directData("aliasOfId",currentIndex)
-////        autoCompletePopupTwo.selected(selectedItemType,selectedItemName,selectedItemId,selectedItemAliasOfId)
-////        console.log("Selected " + autoCompleteModel.directData("name",autoCompleteContnetItemListView.currentIndex))
-////        autoCompletePopupTwo.close()
-
-//        var currentIndex = autoCompleteContnetItemListView.currentIndex;
-//        selected(currentIndex)
-//    }
 
     function selected(selectedIndex)
     {

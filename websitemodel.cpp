@@ -69,10 +69,36 @@ QVariant WebsiteModel::data(const QModelIndex& index, int role) const
     {
         return currentItem["rating"];
     }
+    else if (role == SelectedRole)
+    {
+        return currentItem["isSelected"];
+    }
     else
     {
         return QVariant();
     }
+}
+
+bool WebsiteModel::setData(const QModelIndex& index, const QVariant& value, int role)
+{
+    qDebug() << "Set data in WebsiteModel was called "
+             << "index" << index << "Value " << value << "Role " << role;
+    bool success = false;
+
+    if (!index.isValid())
+    {
+        return success;
+    }
+
+    //    QMap<QString, QVariant>* currentItem = &(this->items[index.row()]);
+
+    if (role == SelectedRole)
+    {
+        this->items[index.row()]["isSelected"] = value;
+        success = true;
+    }
+
+    return success;
 }
 
 void WebsiteModel::search(const QString searchString)
@@ -115,6 +141,7 @@ QHash<int, QByteArray> WebsiteModel::roleNames() const
     roles[NumberOfTagsRole] = "numberOfTags";
     roles[NameRole] = "name";
     roles[RatingRole] = "rating";
+    roles[SelectedRole] = "isSelected";
     return roles;
 }
 

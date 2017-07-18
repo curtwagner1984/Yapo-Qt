@@ -70,10 +70,36 @@ QVariant TagModel::data(const QModelIndex& index, int role) const
     {
         return currentItem["rating"];
     }
+    else if (role == SelectedRole)
+    {
+        return currentItem["isSelected"];
+    }
     else
     {
         return QVariant();
     }
+}
+
+bool TagModel::setData(const QModelIndex& index, const QVariant& value, int role)
+{
+    qDebug() << "Set data in TagModel was called "
+             << "index" << index << "Value " << value << "Role " << role;
+    bool success = false;
+
+    if (!index.isValid())
+    {
+        return success;
+    }
+
+    //    QMap<QString, QVariant>* currentItem = &(this->items[index.row()]);
+
+    if (role == SelectedRole)
+    {
+        this->items[index.row()]["isSelected"] = value;
+        success = true;
+    }
+
+    return success;
 }
 
 void TagModel::search(const QString searchString)
@@ -226,5 +252,6 @@ QHash<int, QByteArray> TagModel::roleNames() const
     roles[NumberOfWebsitesRole] = "numberOfWebsites";
     roles[NameRole] = "name";
     roles[RatingRole] = "rating";
+    roles[SelectedRole] = "isSelected";
     return roles;
 }

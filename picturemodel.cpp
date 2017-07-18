@@ -54,10 +54,36 @@ QVariant PictureModel::data(const QModelIndex& index, int role) const
     {
         return currentItem["rating"];
     }
+    else if (role == SelectedRole)
+    {
+        return currentItem["isSelected"];
+    }
     else
     {
         return QVariant();
     }
+}
+
+bool PictureModel::setData(const QModelIndex& index, const QVariant& value, int role)
+{
+    bool success = false;
+
+    if (!index.isValid())
+    {
+        return success;
+    }
+
+    //    QMap<QString, QVariant>* currentItem = &(this->items[index.row()]);
+
+    if (role == SelectedRole)
+    {
+        this->items[index.row()]["isSelected"] = value;
+        qDebug() << "Set data in PictureModel was called "
+                 << "index" << index << "Value " << value << "Role " << role;
+        success = true;
+    }
+
+    return success;
 }
 
 void PictureModel::search(const QString searchString)
@@ -104,6 +130,7 @@ QHash<int, QByteArray> PictureModel::roleNames() const
     roles[PathRole] = "path";
     roles[NameRole] = "name";
     roles[RatingRole] = "rating";
+    roles[SelectedRole] = "isSelected";
     return roles;
 }
 

@@ -16,6 +16,8 @@ BasicListModel::BasicListModel() : QAbstractListModel()
     this->items = QList<QMap<QString, QVariant>>();
 }
 
+
+
 bool BasicListModel::waitingForDbResponse()
 {
     return this->m_waitingForDbResponse;
@@ -254,6 +256,63 @@ bool BasicListModel::removeItem(int indexOfItemToRemove, bool deleteFromDb)
     this->items.removeAt(removeIndex);
     this->endRemoveRows();
     return true;
+}
+
+bool BasicListModel::removeSelected(bool deleteFromDb)
+{
+    QList<int> selected = this->getSelectedIndices();
+    this->beginResetModel();
+    QList<QMap<QString, QVariant>>::iterator it = this->items.begin();
+
+    while (it != this->items.end())
+    {
+        if ((*it)["isSelected"].toBool())
+        {
+            it = this->items.erase(it);
+        }
+        else
+        {
+            it++;
+        }
+    }
+
+    //    for (int i = 0 ; i < selected.size(); i++)
+    //    {
+    //        this->items.removeAt(selected.at(i));
+    //    }
+    this->endResetModel();
+    return true;
+}
+
+void BasicListModel::selectAll()
+{
+    QList<QMap<QString, QVariant>>::iterator i;
+    qDebug() << "Entered BasicListModel::selectAll()";
+    this->beginResetModel();
+
+    for (i = this->items.begin(); i != this->items.end(); ++i)
+    {
+        qDebug() << "Before change";
+        qDebug() << this->MODEL_TYPE << " Item id is: " << (*i)["id"].toInt() << " Item Selected Status is *" << (*i)["isSelected"].toBool() << "*";
+        (*i)["isSelected"] = true;
+        qDebug() << "After change";
+        qDebug() << this->MODEL_TYPE << " Item id is: " << (*i)["id"].toInt() << " Item Selected Status is *" << (*i)["isSelected"].toBool() << "*";
+    }
+
+    this->endResetModel();
+}
+
+void BasicListModel::selectNone()
+{
+    QList<QMap<QString, QVariant>>::iterator i;
+    this->beginResetModel();
+
+    for (i = this->items.begin(); i != this->items.end(); ++i)
+    {
+        (*i)["isSelected"] = false;
+    }
+
+    this->endResetModel();
 }
 
 QList<int> BasicListModel::getSelectedIndices()

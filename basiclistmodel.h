@@ -69,8 +69,12 @@ class BasicListModel : public QAbstractListModel
                                     bool deleteFromDb
                                    );
 
+        Q_INVOKABLE bool removeSelected(bool deleteFromDb
+                                       );
 
 
+        Q_INVOKABLE void selectAll();
+        Q_INVOKABLE void selectNone();
 
         Q_INVOKABLE QList<int> getSelectedIndices();
         Q_INVOKABLE int getCount();

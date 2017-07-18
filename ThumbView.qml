@@ -8,6 +8,9 @@ Item {
 
     property var currentModel
     property string searchText
+    focus: true
+
+    property bool multiSelection: false
 
 
 
@@ -55,29 +58,108 @@ Item {
             text:"M"
             anchors.centerIn: parent
             visible: optionButtonContainer.buttonVisiable
+
+
+
+
+
         }
+
+        Menu {
+                id: myMenue
+                y: optionsButton.height
+                z:10
+
+                MenuItem {
+                    text: {thumbView.multiSelection === true ? "Turn Multi Select Off" : "Turn Multi Select On"}
+                    onClicked: {
+                        console.log("ThumbView: clicked Mutli select toggle")
+                        thumbView.multiSelection = !thumbView.multiSelection
+                    }
+                }
+                MenuItem {
+                    text: "Remove Selected"
+                    onClicked: {
+                        console.log("ThumbView: clicked Remove Selected")
+                        thumbView.currentModel.removeSelected(true)
+                    }
+                }
+                MenuItem {
+                    text: "Select All"
+                    visible: thumbView.multiSelection
+                    onClicked: {
+                        console.log("ThumbView: clicked Select All")
+                        thumbView.currentModel.selectAll()
+                    }
+                }
+                MenuItem {
+                    text: "Select None"
+                    visible: thumbView.multiSelection
+                    onClicked: {
+                        console.log("ThumbView: clicked Select None")
+                        thumbView.currentModel.selectNone()
+                    }
+                }
+            }
+
+
+
 
         MouseArea{
             hoverEnabled: true
             anchors.fill: parent
 
             onEntered: {
-                console.log("Entered")
+                console.log("Entered menue button")
                 optionButtonContainer.buttonVisiable = true
             }
 
             onExited: {
                 optionButtonContainer.buttonVisiable = false
             }
+
+            onClicked: {
+                console.log("Clicked menu button")
+                myMenue.open()
+            }
+        }
+    }
+
+    Component {
+        id: highlightSquare
+        Rectangle {
+//            width: thumbGridView.cellWidth
+//            height: thumbGridView.cellHeight
+
+            width: 50
+            height: 50
+            color: Material.color(Material.Pink)
+            opacity: 0.5
+//            y: thumbGridView.currentItem.y
+//            x: thumbGridView.currentItem.x
+            y: 100
+            x: 100
+            z: 50
         }
     }
 
     GridView {
         id: thumbGridView
         property alias ratingPopup: ratingPopup
-        property bool multiSelect: false
+//        property bool multiSelect: false
 
         anchors.fill: parent
+        focus: true
+
+
+
+        Keys.onPressed: {
+//                if (event.key == Qt.Key_Left) {
+//                    console.log("move left");
+//                    event.accepted = true;
+//                }
+                  console.log("thumbGridView a key " + event.key + " was pressed!")
+            }
 
         property string delegateSource
         delegate: Component {
@@ -94,9 +176,13 @@ Item {
             }
         }
 
+        highlight: highlightSquare
+        highlightFollowsCurrentItem: false
+
         clip: true
         ScrollBar.vertical: ScrollBar {
         }
+
 
         RatingPopup{
             id:ratingPopup

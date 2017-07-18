@@ -20,6 +20,8 @@ Item {
         numOfScenes: numberOfScenes
         numOfPics: numberOfPictures
         numOfTags: numberOfTags
+        multiSelect: thumbView.multiSelection
+        currentSelectedState: isSelected
 
 
 

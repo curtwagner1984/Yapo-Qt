@@ -60,10 +60,36 @@ QVariant SceneModel::data(const QModelIndex& index, int role) const
         int dur = currentItem["duration"].toInt();
         return QDateTime::fromTime_t(dur).toUTC().toString("hh:mm:ss");
     }
+    else if (role == SelectedRole)
+    {
+        return currentItem["isSelected"];
+    }
     else
     {
         return QVariant();
     }
+}
+
+bool SceneModel::setData(const QModelIndex& index, const QVariant& value, int role)
+{
+    qDebug() << "Set data in SceneModel was called "
+             << "index" << index << "Value " << value << "Role " << role;
+    bool success = false;
+
+    if (!index.isValid())
+    {
+        return success;
+    }
+
+    //    QMap<QString, QVariant>* currentItem = &(this->items[index.row()]);
+
+    if (role == SelectedRole)
+    {
+        this->items[index.row()]["isSelected"] = value;
+        success = true;
+    }
+
+    return success;
 }
 
 void SceneModel::search(const QString searchString)
@@ -115,6 +141,7 @@ QHash<int, QByteArray> SceneModel::roleNames() const
     roles[NameRole] = "name";
     roles[DurationRole] = "duration";
     roles[RatingRole] = "rating";
+    roles[SelectedRole] = "isSelected";
     return roles;
 }
 

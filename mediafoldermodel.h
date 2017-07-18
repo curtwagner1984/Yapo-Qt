@@ -12,21 +12,22 @@
 
 class MediafolderModel : public BasicListModel
 {
-     Q_OBJECT
-public:
-    enum MediaFolderRoles {
+        Q_OBJECT
+    public:
+        enum MediaFolderRoles
+        {
             IdRole = Qt::UserRole + 1,
             PathRole = Qt::UserRole + 2,
             IsVideoRole = Qt::UserRole + 3,
             IsPictureRole = Qt::UserRole + 4
         };
 
-    MediafolderModel();
-    QVariant data(const QModelIndex &index, int role) const;
-    Q_INVOKABLE void search(const QString searchString);
-    QHash<int, QByteArray> roleNames() const;
+        MediafolderModel();
+        QVariant data(const QModelIndex& index, int role) const;
+        Q_INVOKABLE void search(const QString searchString);
+        QHash<int, QByteArray> roleNames() const;
 
-private:
+    private:
 
 
 };

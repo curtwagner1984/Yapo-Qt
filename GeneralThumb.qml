@@ -13,7 +13,10 @@ Rectangle {
     property string numOfActors
     property string pathToFile
     property string currentRating
+
+
     property bool currentSelectedState
+    property bool multiSelect
 
     property bool isMultiSelectEnabled
 
@@ -43,6 +46,7 @@ Rectangle {
         anchors.left: parent.left
         anchors.top: parent.top
         anchors.margins: 5
+        visible: multiSelect
         checked: currentSelectedState
         z:5
 
@@ -227,6 +231,7 @@ Rectangle {
 
     MouseArea {
         id: thumbnailBackgroundMouseArea
+        propagateComposedEvents: true
         anchors.top: thumbnailBackground.top
         anchors.left: thumbnailBackground.left
         anchors.right: thumbnailBackground.right
@@ -248,6 +253,7 @@ Rectangle {
                 thumbRightClicked(mouseX, mouseY)
 //                AuxFunc.ctxMenu("Actor", mouseX, mouseY, index,thumbView.currentModel)
             } else {
+                mouse.accepted = false
 //                console.log("Single Clicked on " + name)
                 thumbLeftClicked()
             }

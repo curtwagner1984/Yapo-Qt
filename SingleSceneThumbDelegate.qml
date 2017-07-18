@@ -18,6 +18,8 @@ Item {
         lable: name
         currentRating: rating
         pathToFile: path
+        multiSelect: thumbView.multiSelection
+        currentSelectedState: isSelected
 
     }
 
@@ -54,6 +56,11 @@ Item {
             console.log("Scene thumb: delete button clicked. Index: " + index)
             thumbView.currentModel.removeItem(index,true)
 
+        }
+        onCurrentItemChecked:
+        {
+            console.log("SingleActorThumbDelegate: onCurrentItemChecked triggered")
+            isSelected = checkedState;
         }
 
     }
