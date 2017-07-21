@@ -146,6 +146,8 @@ bool BasicListModel::addItem(QString itemToAddId, QString itemToAddName,
     QString createNewItemStmt = QString("INSERT INTO %1 (name) VALUES ('%2')")
                                 .arg(itemToAddTableName, itemToAddName);
 
+    // If id is empty, this means that the current item we want to add, doesn't exist in the db, so we must
+    // create it first.
     if (itemToAddId == "")
     {
         if (this->dbManager->executeArbitrarySqlWithoutReturnValue(
@@ -162,10 +164,36 @@ bool BasicListModel::addItem(QString itemToAddId, QString itemToAddName,
     {
         QString firstColumnName = QString("%1_id").arg(itemToAddType).toLower();
         QString secondColumnName = QString("%1_id").arg(itemRelationType).toLower();
-        QString relationInsertStmt =
-            QString("INSERT INTO %1 (%2,%3) VALUES (%4,%5)")
-            .arg(itemToAddRelationTableName, firstColumnName, secondColumnName,
-                 itemToAddId, itemToAddRelationItemId);
+        QString relationInsertStmt;
+
+        if (itemToAddRelationItemId.contains(','))
+        {
+            bool first = true;
+            QStringList temp = itemToAddRelationItemId.split(',');
+
+            for (int i = 0 ; i < temp.size() ; i++)
+            {
+                if (first)
+                {
+                    relationInsertStmt = QString("INSERT INTO %1 (%2,%3) VALUES (%4,%5)")
+                                         .arg(itemToAddRelationTableName, firstColumnName, secondColumnName,
+                                              itemToAddId, temp.at(i));
+                    first = false;
+                }
+                else
+                {
+                    relationInsertStmt = relationInsertStmt + "," + QString("(%1,%2)").arg(itemToAddId, temp.at(i));
+                }
+            }
+        }
+        else
+        {
+            relationInsertStmt =
+                QString("INSERT INTO %1 (%2,%3) VALUES (%4,%5)")
+                .arg(itemToAddRelationTableName, firstColumnName, secondColumnName,
+                     itemToAddId, itemToAddRelationItemId);
+        }
+
         this->dbManager->executeArbitrarySqlWithoutReturnValue(relationInsertStmt);
     }
 
@@ -219,10 +247,21 @@ bool BasicListModel::removeItem(QString itemToRemoveId,
     {
         QString firstColumnName = QString("%1_id").arg(itemToRemoveType).toLower();
         QString secondColumnName = QString("%1_id").arg(itemRelationType).toLower();
-        QString removeRelationStmt =
-            QString("DELETE FROM %1 WHERE %2=%3 AND %4=%5")
-            .arg(itemToRemoveRelationTableName, firstColumnName, itemToRemoveId,
-                 secondColumnName, itemToRemoveRelationItemId);
+        QString removeRelationStmt;
+
+        if (itemToRemoveRelationItemId.contains(','))
+        {
+            removeRelationStmt = QString("DELETE FROM %1 WHERE %2=%3 AND %4 IN (%5)")
+                                 .arg(itemToRemoveRelationTableName, firstColumnName, itemToRemoveId,
+                                      secondColumnName, itemToRemoveRelationItemId);
+        }
+        else
+        {
+            removeRelationStmt =
+                QString("DELETE FROM %1 WHERE %2=%3 AND %4=%5")
+                .arg(itemToRemoveRelationTableName, firstColumnName, itemToRemoveId,
+                     secondColumnName, itemToRemoveRelationItemId);
+        }
 
         if (this->dbManager->executeArbitrarySqlWithoutReturnValue(
                 removeRelationStmt))
@@ -260,7 +299,7 @@ bool BasicListModel::removeItem(int indexOfItemToRemove, bool deleteFromDb)
 
 bool BasicListModel::removeSelected(bool deleteFromDb)
 {
-    QList<int> selected = this->getSelectedIndices();
+    QString selected = this->getSelectedIdsCSV();
     this->beginResetModel();
     QList<QMap<QString, QVariant>>::iterator it = this->items.begin();
 
@@ -276,12 +315,16 @@ bool BasicListModel::removeSelected(bool deleteFromDb)
         }
     }
 
-    //    for (int i = 0 ; i < selected.size(); i++)
-    //    {
-    //        this->items.removeAt(selected.at(i));
-    //    }
     this->endResetModel();
-    return true;
+    QString dbDeleteStmt = QString("DELETE FROM %1 WHERE id IN (%2)").arg(this->MODEL_TYPE, selected);
+    bool ans = true;
+
+    if (deleteFromDb)
+    {
+        ans = this->dbManager->executeArbitrarySqlWithoutReturnValue(dbDeleteStmt);
+    }
+
+    return ans;
 }
 
 void BasicListModel::selectAll()
@@ -324,6 +367,30 @@ QList<int> BasicListModel::getSelectedIndices()
         if (this->items[i]["isSelected"].toBool())
         {
             ans.append(i);
+        }
+    }
+
+    return ans;
+}
+
+QString BasicListModel::getSelectedIdsCSV()
+{
+    QString ans = "";
+    bool first = true;
+
+    for (int i = 0; i < this->items.length(); i++)
+    {
+        if (this->items[i]["isSelected"].toBool())
+        {
+            if (first)
+            {
+                ans = ans + this->items[i]["id"].toString();
+                first = false;
+            }
+            else
+            {
+                ans = ans + "," + this->items[i]["id"].toString();
+            }
         }
     }
 

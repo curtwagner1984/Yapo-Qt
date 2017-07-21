@@ -52,6 +52,7 @@ ApplicationWindow {
 
 
 
+
     function changeView(viewToChangeTo,currentModel,currentIndex,currentItemId) {
         if (viewToChangeTo === "Actor Detail View") {
             var x = detailViewComponent.createObject();
@@ -362,18 +363,29 @@ ApplicationWindow {
             id: contextMenu
             property int selectedIndex
             property string selectedItemType
-            property var currentModel
+            property var currentModel            
 
             MenuItem {
                 text: "Tag..."
                 onTriggered: {
-                    tpopup.currentItemIndex = contextMenu.selectedIndex
-                    tpopup.itemToTagType = contextMenu.selectedItemType
-                    tpopup.currentModel = contextMenu.currentModel
-                    tpopup.open()
+                    openTaggerPopup(contextMenu.selectedIndex,contextMenu.selectedItemType,contextMenu.currentModel,false);
+//                    tpopup.currentItemIndex = contextMenu.selectedIndex
+//                    tpopup.itemToTagType = contextMenu.selectedItemType
+//                    tpopup.currentModel = contextMenu.currentModel
+//                    tpopup.open()
                 }
             }
         }
+    }
+
+    function openTaggerPopup(selectedIndex,selectedItemType,currentModel,isMulti)
+    {
+        tpopup.currentItemIndex = selectedIndex
+        tpopup.itemToTagType = selectedItemType
+        tpopup.currentModel = currentModel
+        tpopup.isMulti = isMulti
+        tpopup.open()
+
     }
 
     Loader{
@@ -787,13 +799,12 @@ ApplicationWindow {
         }
     }
 
-    function openTaggerPopup(thumbSrc, itemToTagType, itemToTagId, selectedIndex) {        
-//        tpopup.thumbSrc = 'file:///' + thumbSrc
-        tpopup.currentItemIndex = selectedIndex
-        tpopup.itemToTagId = itemToTagId
-        tpopup.itemToTagType = itemToTagType
-        tpopup.open()
-    }
+//    function openTaggerPopup(thumbSrc, itemToTagType, itemToTagId, selectedIndex) {
+//        tpopup.currentItemIndex = selectedIndex
+//        tpopup.itemToTagId = itemToTagId
+//        tpopup.itemToTagType = itemToTagType
+//        tpopup.open()
+//    }
 
     TaggerPopup {
         id: tpopup
@@ -806,6 +817,7 @@ ApplicationWindow {
 
     GlobalSearchPopup{
         id:globalSearch
+        focus: true
 
         width: mainItem.width * 0.75
         height: mainItem.height * 0.05

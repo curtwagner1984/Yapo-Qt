@@ -31,3 +31,12 @@ function autoCompleteSelected(selectedItemType, selectedItemName,selectedItemId,
     }
 
 }
+
+function multiTag(selectedIndex,selectedItemType,currentModel)
+{
+    tpopup.currentItemIndex = selectedIndex
+    tpopup.itemToTagType = selectedItemType
+    tpopup.currentModel = currentModel
+    tpopup.isMulti = true;
+    tpopup.open();
+}

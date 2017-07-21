@@ -145,19 +145,37 @@ QHash<int, QByteArray> WebsiteModel::roleNames() const
     return roles;
 }
 
-void WebsiteModel::getSceneWebsitesForTagger(const QString sceneId)
+void WebsiteModel::getSceneWebsitesForTagger(const QString sceneId, bool isMulti)
 {
-    this->baseSqlSelect = SEARCH_SELECT;
-    this->baseSqlWhere = SCENE_SEARCH_WHERE.arg(sceneId);
+    this->baseSqlSelect = SCENE_SEARCH_SELECT;
+
+    if (isMulti)
+    {
+        this->baseSqlWhere = SCENE_SEARCH_WHERE_MULTI.arg(sceneId);
+    }
+    else
+    {
+        this->baseSqlWhere = SCENE_SEARCH_WHERE.arg(sceneId);
+    }
+
     this->baseSqlFrom = SCENE_SEARCH_FROM;
     this->baseSqlOrder = SCENE_ORDER_BY;
     this->baseSearch();
 }
 
-void WebsiteModel::getPictureWebsitesForTagger(const QString pictureId)
+void WebsiteModel::getPictureWebsitesForTagger(const QString pictureId, bool isMulti)
 {
     this->baseSqlSelect = PICTURE_SEARCH_SELECT;
-    this->baseSqlWhere = PICTURE_SEARCH_WHERE.arg(pictureId);
+
+    if (isMulti)
+    {
+        this->baseSqlWhere = PICTURE_SEARCH_WHERE_MULTI.arg(pictureId);
+    }
+    else
+    {
+        this->baseSqlWhere = PICTURE_SEARCH_WHERE.arg(pictureId);
+    }
+
     this->baseSqlFrom = PICTURE_SEARCH_FROM;
     this->baseSqlOrder = PICTURE_ORDER_BY;
     this->baseSearch();

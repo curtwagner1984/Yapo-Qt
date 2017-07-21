@@ -18,13 +18,11 @@ class TagModel : public BasicListModel
 
 
         Q_INVOKABLE void getActorTags(const QString actorId);
-        Q_INVOKABLE void getActorTagsForTagger(const QString actorId);
-        Q_INVOKABLE void getPictureTagsForTagger(const QString pictureId);
 
-        Q_INVOKABLE void getSceneTagsForTagger(const QString sceneId);
-
-        //    Q_INVOKABLE bool addTag(QString tagToAddId, QString tagToAddName, QString tagOfType, QString tagOfId);
-        //    Q_INVOKABLE bool removeTag(QString tagToRemoveId, QString tagOfType, QString tagOfId , bool removeFromDb);
+        Q_INVOKABLE void getActorTagsForTagger(const QString actorId, bool isMulti);
+        Q_INVOKABLE void getPictureTagsForTagger(const QString pictureId, bool isMulti);
+        Q_INVOKABLE void getSceneTagsForTagger(const QString sceneId, bool isMulti);
+        Q_INVOKABLE void getWebsiteTagsForTagger(const QString websiteId, bool isMulti);
 
         Q_INVOKABLE void getWebsiteTags(const QString websiteId);
         QHash<int, QByteArray> roleNames() const;
@@ -116,24 +114,28 @@ class TagModel : public BasicListModel
 
 
 
-        QString ACTOR_SEARCH_SELECT = "SELECT * ";
+        QString ACTOR_SEARCH_SELECT = "SELECT DISTINCT Tag.* ";
         QString ACTOR_SEARCH_FROM = "FROM Tag JOIN Actor_Tag ON Tag.id = Actor_Tag.tag_id ";
         QString ACTOR_SEARCH_WHERE = "WHERE Actor_Tag.actor_id = %1";
+        QString ACTOR_SEARCH_WHERE_MULTI = "WHERE Actor_Tag.actor_id IN (%1)";
         QString ACTOR_ORDER_BY = " ORDER BY Tag.name";
 
-        QString WEBSITE_SEARCH_SELECT = "SELECT * ";
+        QString WEBSITE_SEARCH_SELECT = "SELECT DISTINCT Tag.* ";
         QString WEBSITE_SEARCH_FROM = "FROM Tag JOIN Website_Tag ON Tag.id = Website_Tag.tag_id ";
         QString WEBSITE_SEARCH_WHERE = "WHERE Website_Tag.website_id = %1";
+        QString WEBSITE_SEARCH_WHERE_MULTI = "WHERE Website_Tag.website_id IN (%1)";
+        QString WEBSITE_ORDER_BY = " ORDER BY Tag.name";
 
-
-        QString SCENE_SEARCH_SELECT = "SELECT * ";
+        QString SCENE_SEARCH_SELECT = "SELECT DISTINCT Tag.* ";
         QString SCENE_SEARCH_FROM = "FROM Tag JOIN Scene_Tag ON Tag.id = Scene_Tag.tag_id ";
         QString SCENE_SEARCH_WHERE = "WHERE Scene_Tag.scene_id = %1";
+        QString SCENE_SEARCH_WHERE_MULTI = "WHERE Scene_Tag.scene_id IN (%1)";
         QString SCENE_ORDER_BY = " ORDER BY Tag.name";
 
-        QString PICTURE_SEARCH_SELECT = "SELECT * ";
+        QString PICTURE_SEARCH_SELECT = "SELECT DISTINCT Tag.* ";
         QString PICTURE_SEARCH_FROM = "FROM Tag JOIN Picture_Tag ON Tag.id = Picture_Tag.tag_id ";
         QString PICTURE_SEARCH_WHERE = "WHERE Picture_Tag.picture_id = %1";
+        QString PICTURE_SEARCH_WHERE_MULTI = "WHERE Picture_Tag.picture_id IN (%1)";
         QString PICTURE_ORDER_BY = " ORDER BY Tag.name";
 
 

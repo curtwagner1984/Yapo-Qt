@@ -100,6 +100,15 @@ Item {
                         thumbView.currentModel.selectNone()
                     }
                 }
+
+                MenuItem {
+                    text: "Tag Selected"
+                    visible: thumbView.multiSelection
+                    onClicked: {
+                        console.log("ThumbView: clicked Select None")
+                        mainAppPage.openTaggerPopup(0,thumbView.state,thumbView.currentModel,true)
+                    }
+                }
             }
 
 

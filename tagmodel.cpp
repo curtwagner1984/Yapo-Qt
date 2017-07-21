@@ -125,35 +125,79 @@ void TagModel::searchById(const QString tagId)
 void TagModel::getActorTags(const QString actorId)
 {
     this->baseSqlSelect = SEARCH_SELECT;
-    this->baseSqlWhere = ACTOR_SEARCH_WHERE.arg(actorId);
     this->baseSqlFrom = ACTOR_SEARCH_FROM;
     this->baseSearch();
 }
 
-void TagModel::getActorTagsForTagger(const QString actorId)
+void TagModel::getActorTagsForTagger(const QString actorId, bool isMulti)
 {
     this->baseSqlSelect = ACTOR_SEARCH_SELECT;
-    this->baseSqlWhere = ACTOR_SEARCH_WHERE.arg(actorId);
+
+    if (isMulti)
+    {
+        this->baseSqlWhere = ACTOR_SEARCH_WHERE_MULTI.arg(actorId) ;
+    }
+    else
+    {
+        this->baseSqlWhere = ACTOR_SEARCH_WHERE.arg(actorId);
+    }
+
     this->baseSqlFrom = ACTOR_SEARCH_FROM;
     this->baseSqlOrder = ACTOR_ORDER_BY;
     this->baseSearch();
 }
 
-void TagModel::getPictureTagsForTagger(const QString pictureId)
+void TagModel::getPictureTagsForTagger(const QString pictureId, bool isMulti)
 {
     this->baseSqlSelect = PICTURE_SEARCH_SELECT;
-    this->baseSqlWhere = PICTURE_SEARCH_WHERE.arg(pictureId);
+
+    if (isMulti)
+    {
+        this->baseSqlWhere = PICTURE_SEARCH_WHERE_MULTI.arg(pictureId) ;
+    }
+    else
+    {
+        this->baseSqlWhere = PICTURE_SEARCH_WHERE.arg(pictureId);
+    }
+
     this->baseSqlFrom = PICTURE_SEARCH_FROM;
     this->baseSqlOrder = PICTURE_ORDER_BY;
     this->baseSearch();
 }
 
-void TagModel::getSceneTagsForTagger(const QString sceneId)
+void TagModel::getSceneTagsForTagger(const QString sceneId, bool isMulti)
 {
-    this->baseSqlSelect = SEARCH_SELECT;
-    this->baseSqlWhere = SCENE_SEARCH_WHERE.arg(sceneId);
+    this->baseSqlSelect = SCENE_SEARCH_SELECT;
+
+    if (isMulti)
+    {
+        this->baseSqlWhere = SCENE_SEARCH_WHERE_MULTI.arg(sceneId) ;
+    }
+    else
+    {
+        this->baseSqlWhere = SCENE_SEARCH_WHERE.arg(sceneId);
+    }
+
     this->baseSqlFrom = SCENE_SEARCH_FROM;
     this->baseSqlOrder = SCENE_ORDER_BY;
+    this->baseSearch();
+}
+
+void TagModel::getWebsiteTagsForTagger(const QString websiteId, bool isMulti)
+{
+    this->baseSqlSelect = WEBSITE_SEARCH_SELECT;
+
+    if (isMulti)
+    {
+        this->baseSqlWhere = WEBSITE_SEARCH_WHERE_MULTI.arg(websiteId) ;
+    }
+    else
+    {
+        this->baseSqlWhere = WEBSITE_SEARCH_WHERE.arg(websiteId);
+    }
+
+    this->baseSqlFrom = WEBSITE_SEARCH_FROM;
+    this->baseSqlOrder = WEBSITE_ORDER_BY;
     this->baseSearch();
 }
 

@@ -77,6 +77,8 @@ class BasicListModel : public QAbstractListModel
         Q_INVOKABLE void selectNone();
 
         Q_INVOKABLE QList<int> getSelectedIndices();
+        Q_INVOKABLE QString getSelectedIdsCSV();
+
         Q_INVOKABLE int getCount();
         Q_INVOKABLE void clear();
         ~BasicListModel();
