@@ -28,7 +28,7 @@ Item {
 
         onPlayClicked:
         {
-            mainAppPage.showVideo.setupVideo(path)
+            mainAppPage.showVideo.setupVideo(path,0)
         }
 
         onRatingClicked:
@@ -57,6 +57,12 @@ Item {
             thumbView.currentModel.removeItem(index,true)
 
         }
+
+        onPreviewClicked:{
+            console.log("Scene thumb: preview button clicked. Index: " + index + "Scene id = " + id)
+            thumbView.openPreviewPopup(id,path)
+        }
+
         onCurrentItemChecked:
         {
             console.log("SingleActorThumbDelegate: onCurrentItemChecked triggered")

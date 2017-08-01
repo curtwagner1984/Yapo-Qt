@@ -5,6 +5,7 @@ import QtQuick.Controls.Material 2.1
 Rectangle {
     id: thumbnailBackground
     property string thumbnailSource
+    property string previewSource
     property string lable
     property string numOfScenes
     property string numOfPics
@@ -19,6 +20,7 @@ Rectangle {
     property bool multiSelect
 
     property bool isMultiSelectEnabled
+    property bool previewMode: false
 
 //    property string currentItemName
 
@@ -29,6 +31,7 @@ Rectangle {
     signal thumbRightClicked(real mouseX, real mouseY)
     signal currentItemChecked(bool checkedState)
     signal playClicked()
+    signal previewClicked()
     signal deleteButtonClicked()
 
 
@@ -63,24 +66,33 @@ Rectangle {
         running: thumbnail.status === Image.Loading
     }
 
-    Image {
-        id: thumbnail
-
+    Item{
+        id:imageWrapperItem
         anchors.fill: parent
-        anchors.margins: 0.5
+//        clip: true
 
-        source: thumbnailBackground.thumbnailSource
-        asynchronous: true
-        fillMode: Image.PreserveAspectCrop
-        sourceSize.height: thumbnail.height
-        sourceSize.width: thumbnail.width
+        Image {
+            id: thumbnail
 
-//        onStatusChanged: {
-//            if (thumbnail.status == Image.Error) {
-//                thumbnail.source = currentPlaceHolder
-//            }
-//        }
+            anchors.fill: parent
+            anchors.margins: 0.5
+
+            source: thumbnailBackground.thumbnailSource
+            asynchronous: true
+            fillMode: Image.PreserveAspectCrop
+            sourceSize.height: thumbnail.height
+            sourceSize.width: thumbnail.width
+
+        }
+
+        Loader{
+            id:previewLoader
+            anchors.fill: parent
+
+        }
     }
+
+
 
     Rectangle {
         id: buttonBarBackground
@@ -112,6 +124,31 @@ Rectangle {
                 playClicked()
             }
         }
+
+
+        ThumbDelegateButtonPlay {
+            id: previewButton
+            height: buttonBarBackground.height
+            width: height
+
+            anchors.left: playButton.right
+            anchors.verticalCenter: buttonBarBackground.verticalCenter
+
+            toolTipText: "Preview " + pathToFile
+            visible: thumbnailBackground.state === "Scene"
+
+        }
+
+        Connections {
+            id: previewButtonConnection
+            target: previewButton
+
+            onButtonClicked: {
+                previewClicked()
+            }
+        }
+
+
 
 
 
@@ -232,6 +269,7 @@ Rectangle {
     MouseArea {
         id: thumbnailBackgroundMouseArea
         propagateComposedEvents: true
+        hoverEnabled: true
         anchors.top: thumbnailBackground.top
         anchors.left: thumbnailBackground.left
         anchors.right: thumbnailBackground.right
@@ -248,6 +286,17 @@ Rectangle {
             }
         }
 
+        onExited: {
+
+
+
+        }
+
+        onMouseXChanged: {
+            if (thumbnailBackground.previewMode)
+            {}
+        }
+
         onClicked: {
             if (mouse.button & Qt.RightButton) {
                 thumbRightClicked(mouseX, mouseY)
@@ -255,6 +304,17 @@ Rectangle {
             } else {
                 mouse.accepted = false
 //                console.log("Single Clicked on " + name)
+                if (thumbnailBackground.state === "Scene"){
+                    thumbnailBackground.previewMode = !thumbnailBackground.previewMode
+                    if (thumbnailBackground.previewMode){
+
+
+
+                    }else{
+
+                    }
+                }
+
                 thumbLeftClicked()
             }
         }

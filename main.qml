@@ -662,10 +662,18 @@ ApplicationWindow {
         y: mainItem.y
         focus: true
 
-        function setupVideo(source) {
+
+        function setupVideo(source,seek) {
             sceneViewPopup.open()
             console.log("Source:" + source)
             popupVideo.source = source
+            if (seek !== 0)
+            {
+                popupVideo.muted = false
+                popupContentItemTimer.stop()
+                popupVideo.isPreview = false
+                popupVideo.seek(seek)
+            }
         }
 
         contentItem: Item {
@@ -706,6 +714,7 @@ ApplicationWindow {
                 width: sceneViewPopup.width
                 height: sceneViewPopup.height
                 fillMode: VideoOutput.PreserveAspectFit
+                property bool isPreview: true
 
                 //                playbackRate: 2
                 onStatusChanged: {
@@ -718,7 +727,7 @@ ApplicationWindow {
                         sceneViewPopup.seekSum = sceneViewPopup.seekValue
                         console.log("Seek value is: " + sceneViewPopup.seekValue
                                     + " duration is " + popupVideo.duration)
-                        if (!(popupVideo.duration < 60000)) {
+                        if (!(popupVideo.duration < 60000) && isPreview) {
                             popupContentItemTimer.running = true
                         } else {
                             console.log("This is a short Video")
@@ -784,8 +793,10 @@ ApplicationWindow {
                 onClicked: {
                     if (sceneViewPopup.timerIsOn) {
                         popupContentItemTimer.stop()
+                        popupVideo.muted = false
                     } else {
                         popupContentItemTimer.start()
+                        popupVideo.muted = true
                     }
                 }
             }
@@ -795,6 +806,7 @@ ApplicationWindow {
         onClosed: {
             console.log("On Closed Event triggered ...")
             popupContentItemTimer.stop()
+            popupVideo.source = ""
             popupVideo.stop()
         }
     }

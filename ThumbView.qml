@@ -12,9 +12,6 @@ Item {
 
     property bool multiSelection: false
 
-
-
-
     onSearchTextChanged: {
         console.log("THUMBVIEW: searchTextChanged triggered")
         actorModel.search(searchText)
@@ -23,98 +20,91 @@ Item {
     BusyIndicator {
         anchors.centerIn: parent
         running: currentModel.waitingForDbResponse === true
-        z:100
+        z: 100
     }
 
-
-
     property int portraitCellWidth: {
-        if (thumbView.width >= 1900){
+        if (thumbView.width >= 1900) {
             return thumbView.width / 6
-        }else if (thumbView.width < 1900 &&  thumbView.width >= 1000){
+        } else if (thumbView.width < 1900 && thumbView.width >= 1000) {
             return thumbView.width / 5
-        }else if (thumbView.width < 1000 &&  thumbView.width >= 500){
+        } else if (thumbView.width < 1000 && thumbView.width >= 500) {
             return thumbView.width / 3
-        }else if (thumbView.width < 500 &&  thumbView.width >= 0){
+        } else if (thumbView.width < 500 && thumbView.width >= 0) {
             return thumbView.width / 2
         }
     }
 
-//    anchors.fill: parent
 
-
-    Item{
-        id:optionButtonContainer
+    //    anchors.fill: parent
+    Item {
+        id: optionButtonContainer
         width: parent.width / 10
         height: parent.height / 10
         anchors.right: parent.right
         anchors.top: parent.top
 
         property bool buttonVisiable: false
-        z:10
+        z: 10
 
-        RoundButton{
+        RoundButton {
             id: optionsButton
-            text:"M"
+            text: "M"
             anchors.centerIn: parent
             visible: optionButtonContainer.buttonVisiable
-
-
-
-
-
         }
 
         Menu {
-                id: myMenue
-                y: optionsButton.height
-                z:10
+            id: myMenue
+            y: optionsButton.height
+            z: 10
 
-                MenuItem {
-                    text: {thumbView.multiSelection === true ? "Turn Multi Select Off" : "Turn Multi Select On"}
-                    onClicked: {
-                        console.log("ThumbView: clicked Mutli select toggle")
-                        thumbView.multiSelection = !thumbView.multiSelection
-                    }
+            MenuItem {
+                text: {
+                    thumbView.multiSelection
+                            === true ? "Turn Multi Select Off" : "Turn Multi Select On"
                 }
-                MenuItem {
-                    text: "Remove Selected"
-                    onClicked: {
-                        console.log("ThumbView: clicked Remove Selected")
-                        thumbView.currentModel.removeSelected(true)
-                    }
+                onClicked: {
+                    console.log("ThumbView: clicked Mutli select toggle")
+                    thumbView.multiSelection = !thumbView.multiSelection
                 }
-                MenuItem {
-                    text: "Select All"
-                    visible: thumbView.multiSelection
-                    onClicked: {
-                        console.log("ThumbView: clicked Select All")
-                        thumbView.currentModel.selectAll()
-                    }
+            }
+            MenuItem {
+                text: "Remove Selected"
+                onClicked: {
+                    console.log("ThumbView: clicked Remove Selected")
+                    thumbView.currentModel.removeSelected(true)
                 }
-                MenuItem {
-                    text: "Select None"
-                    visible: thumbView.multiSelection
-                    onClicked: {
-                        console.log("ThumbView: clicked Select None")
-                        thumbView.currentModel.selectNone()
-                    }
+            }
+            MenuItem {
+                text: "Select All"
+                visible: thumbView.multiSelection
+                onClicked: {
+                    console.log("ThumbView: clicked Select All")
+                    thumbView.currentModel.selectAll()
                 }
-
-                MenuItem {
-                    text: "Tag Selected"
-                    visible: thumbView.multiSelection
-                    onClicked: {
-                        console.log("ThumbView: clicked Select None")
-                        mainAppPage.openTaggerPopup(0,thumbView.state,thumbView.currentModel,true)
-                    }
+            }
+            MenuItem {
+                text: "Select None"
+                visible: thumbView.multiSelection
+                onClicked: {
+                    console.log("ThumbView: clicked Select None")
+                    thumbView.currentModel.selectNone()
                 }
             }
 
+            MenuItem {
+                text: "Tag Selected"
+                visible: thumbView.multiSelection
+                onClicked: {
+                    console.log("ThumbView: clicked Select None")
+                    mainAppPage.openTaggerPopup(0, thumbView.state,
+                                                thumbView.currentModel, true)
+                }
+            }
+        }
 
-
-
-        MouseArea{
+        MouseArea {
             hoverEnabled: true
             anchors.fill: parent
 
@@ -137,38 +127,50 @@ Item {
     Component {
         id: highlightSquare
         Rectangle {
-//            width: thumbGridView.cellWidth
-//            height: thumbGridView.cellHeight
 
+            //            width: thumbGridView.cellWidth
+            //            height: thumbGridView.cellHeight
             width: 50
             height: 50
             color: Material.color(Material.Pink)
             opacity: 0.5
-//            y: thumbGridView.currentItem.y
-//            x: thumbGridView.currentItem.x
+            //            y: thumbGridView.currentItem.y
+            //            x: thumbGridView.currentItem.x
             y: 100
             x: 100
             z: 50
         }
     }
 
+    function openPreviewPopup(selectedSceneId,selectedScenePath) {
+        scenePreviewPopup.sceneId = selectedSceneId
+        scenePreviewPopup.scenePath = selectedScenePath
+        scenePreviewPopup.open()
+    }
+
+    ScenePreviewPopup {
+        id: scenePreviewPopup
+        x:thumbView.width * 0.1
+        y:thumbView.height * 0.1
+        width: thumbView.width * 0.8
+        height: thumbView.height * 0.8
+    }
+
     GridView {
         id: thumbGridView
         property alias ratingPopup: ratingPopup
-//        property bool multiSelect: false
 
+        //        property bool multiSelect: false
         anchors.fill: parent
         focus: true
 
-
-
         Keys.onPressed: {
-//                if (event.key == Qt.Key_Left) {
-//                    console.log("move left");
-//                    event.accepted = true;
-//                }
-                  console.log("thumbGridView a key " + event.key + " was pressed!")
-            }
+            //                if (event.key == Qt.Key_Left) {
+            //                    console.log("move left");
+            //                    event.accepted = true;
+            //                }
+            console.log("thumbGridView a key " + event.key + " was pressed!")
+        }
 
         property string delegateSource
         delegate: Component {
@@ -178,10 +180,9 @@ Item {
 
                 width: thumbGridView.cellWidth
                 height: thumbGridView.cellHeight
-//                asynchronous: true
 
+                //                asynchronous: true
                 source: thumbGridView.delegateSource
-
             }
         }
 
@@ -192,22 +193,11 @@ Item {
         ScrollBar.vertical: ScrollBar {
         }
 
-
-        RatingPopup{
-            id:ratingPopup
+        RatingPopup {
+            id: ratingPopup
             iconPath: constantClass.bUTTON_ICON_FAVORITE()
-
         }
-
-
     }
-
-
-
-
-
-
-
 
     states: [
         State {
@@ -215,12 +205,11 @@ Item {
             PropertyChanges {
                 target: thumbGridView
                 delegateSource: "SingleActorThumbDelegate.qml"
-//                cellWidth: thumbGridView.width / 6
+                //                cellWidth: thumbGridView.width / 6
                 cellWidth: portraitCellWidth
                 cellHeight: cellWidth * 1.8
-                model:currentModel
+                model: currentModel
             }
-
         },
 
         State {
@@ -232,7 +221,6 @@ Item {
                 cellHeight: cellWidth * 0.56
                 model: currentModel
             }
-
         },
 
         State {
@@ -244,7 +232,6 @@ Item {
                 cellHeight: cellWidth * 1.8
                 model: currentModel
             }
-
         },
 
         State {
@@ -256,7 +243,6 @@ Item {
                 cellHeight: cellWidth * 0.56
                 model: currentModel
             }
-
         },
 
         State {
@@ -268,9 +254,6 @@ Item {
                 cellHeight: cellWidth * 0.56
                 model: currentModel
             }
-
         }
     ]
-
-
 }

@@ -19,7 +19,8 @@ SOURCES += main.cpp \
     generalalias.cpp \
     autocompletemodel.cpp \
     detailobject.cpp \
-    constants.cpp
+    constants.cpp \
+    scenepreviewmodel.cpp
 
 RESOURCES += qml.qrc \
     images.qrc
@@ -63,6 +64,7 @@ HEADERS += \
     generalalias.h \
     autocompletemodel.h \
     detailobject.h \
-    constants.h
+    constants.h \
+    scenepreviewmodel.h
 
 DISTFILES +=
