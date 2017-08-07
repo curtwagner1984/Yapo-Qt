@@ -37,6 +37,8 @@ QmlComm::QmlComm(QQmlApplicationEngine& view, DbManager* dbManager,  QObject* pa
                                            this->autoCompleteModel);
     view.rootContext()->setContextProperty("scenePreview",
                                            this->scenePreview);
+    view.rootContext()->setContextProperty("fileImporter",
+                                           this->fileImporter);
 }
 
 bool QmlComm::addMediaFolder(QString folderPath, bool isPicture, bool isVideo)

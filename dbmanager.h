@@ -90,6 +90,8 @@ class DbManager: public QThread
 
         void run() override;
 
+        static QString escapeSqlChars(QString string);
+
 
 
     private:
@@ -99,7 +101,7 @@ class DbManager: public QThread
 
         QString generateUpdateQueryString(QMap<QString, QVariant> updatedObject);
 
-        QString escapeSqlChars(QString string);
+
 
 
         bool executeQuery(QString sqlStmt, QString sendingFunction);

@@ -21,7 +21,22 @@ class FileImporter : public QThread
         void run() override;
 
     private:
-        void walkPath(QMap<QString, QVariant> mediaFolderToWalk);
+        void walkPath();
+
+        bool existsInDb(QString tableName, QString columnName, QString columnValue);
+        int  getNextInsertedId(QString tableName);
+
+        bool saveToDb(QMap<QString, QVariant> objectToSave, QString tableToSaveTo);
+
+        void findItemsToAdd(QMap<QString, QVariant> mediaFolderToWalk);
+
+        QQueue<QMap<QString, QVariant>> videosToAdd;
+        QQueue<QMap<QString, QVariant>> picturesToAdd;
+        QQueue<QMap<QString, QVariant>> treeFoldersToAdd;
+
+
+
+
         QQueue<QMap<QString, QVariant>> mediaFoldersQueue;
         DbManager* dbManager;
         QSemaphore* semaphore;
@@ -44,7 +59,7 @@ class FileImporter : public QThread
                                       << "wmv"
                                       << "rm"
                                       << "m4v"
-                                      << "mov";
+                                      << "mov" << "divx";
 
         QMutex* mutex;
 };
