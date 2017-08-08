@@ -10,6 +10,60 @@ Item {
         mediaFolderModel.search("")
     }
 
+    Connections{
+        target: fileImporter
+        onStartedScanningFolders: {
+            console.log("Got signal from fileImporter")
+            progressIndicator.visible = true
+            progressIndicator.myProgress = 0.0
+        }
+        onFoundFiles: {
+            console.log("MEDIAFOLDERSETTINGS.qml: found " + numberOfVideos + " vidoes, " + numberOfPictures + " pictures and " + numberOfFolders + "folders" )
+        }
+
+        onProgressChanged:{
+            console.log("Got Progress " + currentProgress)
+            progressIndicator.myProgress = currentProgress
+        }
+
+        onFinishedImporting:{
+            progressIndicator.visible = false
+        }
+    }
+
+    Rectangle{
+        id: progressIndicator
+
+        property bool startedScanning
+        property alias myProgress: myProgressBar.value
+
+        width: parent.width / 4
+        height: parent.height / 8
+        anchors.bottom: parent.bottom
+        anchors.left: parent.left
+        color: "blue"
+        visible: false
+        z:200
+
+
+        ProgressBar {
+            id:myProgressBar
+            anchors.centerIn: parent
+            width: parent.width
+
+        }
+
+        Label{
+            id:percentCompleted
+            text: (myProgressBar.value * 100 | 0) + "% Completed"
+            anchors.verticalCenter: myProgressBar.verticalCenter
+            anchors.top: myProgressBar.bottom
+            anchors.topMargin: 5
+            font.pixelSize: parent.height / 4
+        }
+    }
+
+
     FileDialog {
         id: fileDialog
         title: "Please choose a file"

@@ -14,7 +14,6 @@ FileImporter::FileImporter(DbManager* dbManager, QMutex* mutex,
     this->semaphore = new QSemaphore();
     this->settings = settings;
     this->mutex = mutex;
-    this->ffmpegHandler = new FfmpegHandler(settings);
 }
 
 void FileImporter::addMediaFolderToQueue(QString path, bool isVideo,
@@ -29,27 +28,6 @@ void FileImporter::addMediaFolderToQueue(QString path, bool isVideo,
 
 void FileImporter::walkPath()
 {
-    //    this->videosToAdd.clear();
-    //    this->picturesToAdd.clear();
-    //    this->treeFoldersToAdd.clear();
-    //    QString pathToWalk = mediaFolderToWalk["path_to_dir"].toString();
-    //    bool isVideo = mediaFolderToWalk["is_video"].toBool();
-    //    bool isPicture = mediaFolderToWalk["is_picture"].toBool();
-    //    QDirIterator it(pathToWalk, QDir::Files, QDirIterator::Subdirectories);
-    //    QElapsedTimer timer;
-    //    while (it.hasNext())
-    //    {
-    //        timer.restart();
-    //        QString fileToCheck = it.next();
-    //        qDebug() << "Going to add file " << fileToCheck << " to database";
-    //        QFile f(fileToCheck);
-    //        QFileInfo fileInfo(f.fileName());
-    //        QString extention = fileInfo.suffix();
-    //        QString baseName = fileInfo.completeBaseName();
-    //        QString absPath = fileInfo.absolutePath();
-    //        QString pathLevel = QString::number(absPath.count('/') + 1) ;
-    //        if (isVideo && this->videoExtentions.contains(extention))
-    //        {
     int videoCounter = 1;
     int videoTotal = this->videosToAdd.size();
     int pictureCounter = 1;
@@ -60,13 +38,14 @@ void FileImporter::walkPath()
     QElapsedTimer pictureTimer;
     QElapsedTimer folderTimer;
     QElapsedTimer totalTimer;
-    totalTimer.start();
+    totalTimer.restart();
     qDebug() << "Starting to add videos...";
+    videoTimer.restart();
 
     while (!this->videosToAdd.isEmpty())
     {
-        videoTimer.start();
         qDebug() << "Video " << QString::number(videoCounter) << " Out of " << QString::number(videoTotal);
+        emit progressChanged((double)videoCounter / videoTotal);
         auto currentVideo = this->videosToAdd.dequeue();
         QString fileToCheck = currentVideo["fileToCheck"].toString();
         QString baseName = currentVideo["baseName"].toString();
@@ -112,16 +91,17 @@ void FileImporter::walkPath()
     QString elapsedTimeVideo = QDateTime::fromTime_t(videoTimer.elapsed() / 1000).toUTC().toString("hh:mm:ss");
     qDebug() << " Finished inserting videos ... Proccess took " << elapsedTimeVideo;
     qDebug() << " Start adding pictures";
+    pictureTimer.restart();
 
     while (!this->picturesToAdd.isEmpty())
     {
-        pictureTimer.start();
         qDebug() << "Picture " << QString::number(pictureCounter) << " Out of " << QString::number(pictureTotal);
+        emit progressChanged((double)pictureCounter / pictureTotal);
         auto currentPictureToAdd = this->picturesToAdd.dequeue();
         QString fileToCheck = currentPictureToAdd["fileToCheck"].toString();
         QString baseName = currentPictureToAdd["baseName"].toString();
 
-        if (!existsInDb("Picture", "path_to_file", QString("'%1'").arg(fileToCheck)))
+        if (!existsInDb("Picture", "path_to_file", fileToCheck))
         {
             QMap<QString, QVariant> pictureToAddToDb;
             pictureToAddToDb["name"] = baseName;
@@ -131,33 +111,43 @@ void FileImporter::walkPath()
 
             if (success)
             {
-                QString elapsedTime = QDateTime::fromTime_t(pictureTimer.elapsed() / 1000).toUTC().toString("hh:mm:ss");
-                qDebug() << "Finished inserting picture " << pictureToAddToDb["path_to_file"].toString() << " process took *" << elapsedTime ;
+                //                QString elapsedTime = QDateTime::fromTime_t(pictureTimer.elapsed() / 1000).toUTC().toString("hh:mm:ss");
+                //                qDebug() << "Finished inserting picture " << pictureToAddToDb["path_to_file"].toString() << " process took *" << elapsedTime ;
             }
         }
         else
         {
             qDebug() << "Picture " << fileToCheck << " already exists in DB";
         }
+
+        pictureCounter++;
     }
 
-    pictureCounter++;
     QString elapsedTimePictures = QDateTime::fromTime_t(pictureTimer.elapsed() / 1000).toUTC().toString("hh:mm:ss");
     qDebug() << " Finished inserting " << QString::number(pictureTotal) << " pictures ... Proccess took " << elapsedTimePictures;
     qDebug() << "Starting to add folder";
 
     while (!this->treeFoldersToAdd.isEmpty())
     {
-        folderTimer.start();
+        folderTimer.restart();
         qDebug() << "Folder " << QString::number(folderCounter) << " Out of " << QString::number(folderTotal);
         auto currentFolder = this->treeFoldersToAdd.dequeue();
-        bool success = saveToDb(currentFolder, "TreeFolder");
 
-        if (success)
+        if (!existsInDb("TreeFolder", "path_to_dir", currentFolder["path_to_dir"].toString()))
         {
-            //            QString elapsedTime = QDateTime::fromTime_t(timer.elapsed() / 1000).toUTC().toString("hh:mm:ss");
-            //            qDebug() << "Finished inserting treefolder " << currentFolder["path_to_dir"].toString() << " process took *" << elapsedTime ;
+            bool success = saveToDb(currentFolder, "TreeFolder");
         }
+        else
+        {
+            qDebug() << "Folder " << currentFolder["path_to_dir"].toString() << "already exist in db";
+        }
+
+        //        if (success)
+        //        {
+        //            //            QString elapsedTime = QDateTime::fromTime_t(timer.elapsed() / 1000).toUTC().toString("hh:mm:ss");
+        //            //            qDebug() << "Finished inserting treefolder " << currentFolder["path_to_dir"].toString() << " process took *" << elapsedTime ;
+        //        }
+        folderCounter++;
     }
 
     folderCounter++;
@@ -165,6 +155,7 @@ void FileImporter::walkPath()
     qDebug() << " Finished inserting " << QString::number(folderTotal) << " folders ... Proccess took " << elapsedTimeFolders;
     QString elapsedTimeTotal = QDateTime::fromTime_t(totalTimer.elapsed() / 1000).toUTC().toString("hh:mm:ss");
     qDebug() << " Finished inserting everything ... process took " << elapsedTimeTotal;
+    emit finishedImporting();
 }
 
 
@@ -308,6 +299,7 @@ void FileImporter::findItemsToAdd(QMap<QString, QVariant> mediaFolderToWalk)
     QString elapsedTime = QDateTime::fromTime_t(timer.elapsed() / 1000).toUTC().toString("hh:mm:ss");
     qDebug() << "Finished scanning folder " << pathToWalk;
     qDebug() << "Found " << QString::number(this->videosToAdd.size()) << " Videos and " << QString::number(this->picturesToAdd.size()) << " pictures  process took " << elapsedTime ;
+    emit foundFiles(this->videosToAdd.size(), this->picturesToAdd.size(), this->treeFoldersToAdd.size());
     this->walkPath();
 }
 
@@ -402,6 +394,7 @@ void FileImporter::run()
             break;
         }
 
+        emit startedScanningFolders();
         this->findItemsToAdd(currentMediaFolder);
         //            this->walkPath(currentMediaFolder);
     }

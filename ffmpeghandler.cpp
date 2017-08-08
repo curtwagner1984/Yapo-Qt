@@ -368,7 +368,6 @@ int FfmpegHandler::getPictureFfprobeInfo(QMap<QString, QVariant>& picture, QSett
         QJsonValue value = jsonObj.value(QString("streams"));
         QJsonArray streams = value.toArray();
         QJsonObject videoStream;
-        QScriptEngine expression;
         //        double my_val = expression.evaluate(expression_string).toNumber();
 
         for (int i = 0; i < streams.size(); i++)
@@ -392,7 +391,7 @@ int FfmpegHandler::getPictureFfprobeInfo(QMap<QString, QVariant>& picture, QSett
         picture["width"] = width.toInt();
         //        qDebug() << "height" << height.toInt();
         picture["height"] = height.toInt();
-        picture["megapixel"] = width.toInt() * height.toInt();
+        picture["megapixel"] = width.toDouble() * height.toDouble() / 1000000;
         //        qDebug() << "frameRate"
         //                 << expression.evaluate(frameRate.toString()).toNumber();
         picture["size"] = size.toVariant().toLongLong();

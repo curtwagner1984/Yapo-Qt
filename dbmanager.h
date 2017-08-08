@@ -96,7 +96,7 @@ class DbManager: public QThread
 
     private:
         QSqlDatabase m_db;
-        bool echo = true;
+        bool echo = false;
         QString generateBulkInsertQueryString(QList<QStringList> bulkInsertArgumentList);
 
         QString generateUpdateQueryString(QMap<QString, QVariant> updatedObject);

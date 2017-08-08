@@ -19,6 +19,11 @@ class FileImporter : public QThread
         FileImporter(DbManager* dbManager, QMutex* mutex, QSettings* settings);
         void addMediaFolderToQueue(QString path, bool isVideo, bool isPicture);
         void run() override;
+    signals:
+        void startedScanningFolders();
+        void foundFiles(int numberOfVideos, int numberOfPictures, int numberOfFolders);
+        void progressChanged(double currentProgress);
+        void finishedImporting();
 
     private:
         void walkPath();
@@ -41,7 +46,7 @@ class FileImporter : public QThread
         DbManager* dbManager;
         QSemaphore* semaphore;
         QSettings* settings;
-        FfmpegHandler* ffmpegHandler;
+        //        FfmpegHandler* ffmpegHandler;
         QStringList pictureExtentions = QStringList() << "jpg"
                                         << "jpeg"
                                         << "bmp"
